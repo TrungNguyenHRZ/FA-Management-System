@@ -1,4 +1,7 @@
+@import url("https://fonts.cdnfonts.com/css/quicksand");
+
 .home-container {
+  font-family: "Quicksand Bold", sans-serif;
   display: flex;
   height: 100vh;
 }
@@ -8,10 +11,16 @@
   flex-direction: column;
   align-items: center;
   flex: 1; /* Sidebar chiếm 1 phần */
-  background-color: #a181fe;
-  color: #fff;
+  background-color: #fff;
+  color: #2a00b7;
+  margin: 10px 5px 10px 10px;
+  padding: 10px;
+  border-radius: 10px;
 }
-
+.title-sidebar {
+  font-size: 25px;
+  text-align: center;
+}
 .sidebar-container ul {
   list-style-type: none;
   padding: 0;
@@ -27,17 +36,46 @@
 }
 
 .sidebar-container ul li:hover {
-  background-color: #d97bc5;
+  background-color: #2a00b7;
   border-radius: 10px;
-}
-
-.home-link {
-  text-decoration: none;
   color: #fff;
 }
+.sidebar-container ul li:hover .home-link {
+  color: #fff;
+}
+.sidebar-container ul li:nth-child(2) {
+  position: relative;
+}
+.home-link {
+  text-decoration: none;
+  color: #2a00b7;
+}
+
+/* CSS cho submenu */
+.sub-menu {
+  display: none; /* Ẩn submenu ban đầu */
+  list-style-type: none;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 10px;
+  z-index: 1; /* Đảm bảo submenu hiển thị trên mọi nội dung khác */
+  width: 150px; /* Đặt chiều rộng của submenu */
+}
+.sub-menu li {
+  padding: 10px;
+}
+
+/* CSS khi submenu được hiển thị */
+.show-sub-menu {
+  display: block;
+  margin-left: 20px;
+}
 .content-container {
-  flex: 5; /* Nội dung chiếm 3 phần */
+  flex: 7; /* Nội dung chiếm 3 phần */
   padding: 20px;
+  background-color: #fff;
+  margin: 10px 10px 10px 5px;
+  border-radius: 10px;
 }
 
 .content-container h1 {
