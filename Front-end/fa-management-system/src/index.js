@@ -1,18 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Login from './screens/Login/login';
-import Sidebar from './screens/Home/Dashboard/sidebar';
-import Syllabus from './screens/Home/Content/Syllabus/syllabus';
-import Home from './screens/Home/Content/Home/home';
-import Course from './screens/Home/Content/Course/course';
-
-
-
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from "./screens/Login/login";
+import Sidebar from "./screens/Home/Dashboard/sidebar";
+import Syllabus from "./screens/Home/Content/Syllabus/syllabus";
+import Home from "./screens/Home/Content/Home/home";
+import Course from "./screens/Home/Content/Course/course";
+import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
 
 const router = createBrowserRouter([
   {
@@ -22,24 +19,26 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Sidebar />,
-    children:
-      [
-        {
-          path: "/home",
-          element: <Home />
-        },
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
 
-        {
-          path: "/syllabus",
-          element: <Syllabus />
-        },
-
-        {
-          path: "/course",
-          element: <Course />
-        }
-      ]
-  }
+      {
+        path: "/view-syllabus",
+        element: <Syllabus />,
+      },
+      {
+        path: "/create-syllabus",
+        element: <CreateSyllabus />,
+      },
+      {
+        path: "/course",
+        element: <Course />,
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

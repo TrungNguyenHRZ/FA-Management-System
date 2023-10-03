@@ -3,7 +3,7 @@ import React from "react";
 const Syllabus = () => {
   return (
     <div>
-      <h1>My Content</h1>
+      <h1>View Syllabus</h1>
     </div>
   );
 };
