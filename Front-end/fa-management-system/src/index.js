@@ -5,12 +5,41 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Login from './screens/Login/login';
+import Sidebar from './screens/Home/Dashboard/sidebar';
+import Syllabus from './screens/Home/Content/Syllabus/syllabus';
+import Home from './screens/Home/Content/Home/home';
+import Course from './screens/Home/Content/Course/course';
+
+
+
+
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
   },
+  {
+    path: "/",
+    element: <Sidebar />,
+    children:
+      [
+        {
+          path: "/home",
+          element: <Home />
+        },
+
+        {
+          path: "/syllabus",
+          element: <Syllabus />
+        },
+
+        {
+          path: "/course",
+          element: <Course />
+        }
+      ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
