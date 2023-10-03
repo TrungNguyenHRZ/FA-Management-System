@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "./login.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { FaUserLarge, FaLock } from "react-icons/fa6";
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +27,7 @@ const Login = () => {
       </div>
       <div className="inputs">
         <div className="input">
-          <FontAwesomeIcon className="FontAwesomeIcon" icon={faUser} />
+          <FaUserLarge className="input-icon" />
           <input
             type="text"
             placeholder="Usename"
@@ -38,7 +36,7 @@ const Login = () => {
           />
         </div>
         <div className="input">
-          <FontAwesomeIcon className="FontAwesomeIcon" icon={faLock} />
+          <FaLock className="input-icon" />
           <input
             type="password"
             placeholder="Password"
