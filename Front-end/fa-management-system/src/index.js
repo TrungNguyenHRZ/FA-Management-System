@@ -1,15 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+// import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
 import Syllabus from "./screens/Home/Content/Syllabus/syllabus";
 import Home from "./screens/Home/Content/Home/home";
-import Course from "./screens/Home/Content/Course/course";
+import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
 import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
+import UserList from "./screens/Home/Content/User/UserList/user-list";
+import UserPermission from "./screens/Home/Content/User/UserPermission/user-permission";
 
 const router = createBrowserRouter([
   {
@@ -34,9 +36,17 @@ const router = createBrowserRouter([
         element: <CreateSyllabus />,
       },
       {
-        path: "/course",
-        element: <Course />,
+        path: "/training-program",
+        element: <TrainingProgram />,
       },
+      {
+        path: "/user-list",
+        element: <UserList />
+      },
+      {
+        path: "/user-permission",
+        element: <UserPermission />,
+      }
     ],
   },
 ]);
