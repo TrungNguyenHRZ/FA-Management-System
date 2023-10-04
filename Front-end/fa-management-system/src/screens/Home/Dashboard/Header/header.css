@@ -1,0 +1,35 @@
+@import url("https://fonts.cdnfonts.com/css/quicksand");
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-title {
+  margin: 10px;
+}
+
+.header-title > h1 {
+  font-size: 25px;
+  text-align: center;
+  color: #fff;
+}
+
+.header-login {
+  margin: 10px;
+  padding-right: 25px;
+}
+
+.header-login > button {
+  font-family: "Quicksand Bold", sans-serif;
+  color: #2a00b7;
+  background-color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px 15px;
+}
+.header-login > button:hover {
+  background-color: #d97bc5;
+  cursor: pointer;
+}

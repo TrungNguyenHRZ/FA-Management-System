@@ -1,9 +1,12 @@
 @import url("https://fonts.cdnfonts.com/css/quicksand");
 
-.home-container {
+.dashboard-container {
   font-family: "Quicksand Bold", sans-serif;
-  display: flex;
   height: 100vh;
+}
+.home-container {
+  display: flex;
+  height: 80vh;
 }
 
 .sidebar-container {
@@ -16,10 +19,6 @@
   margin: 10px 5px 10px 10px;
   padding: 10px;
   border-radius: 10px;
-}
-.title-sidebar {
-  font-size: 25px;
-  text-align: center;
 }
 .sidebar-container ul {
   list-style-type: none;
