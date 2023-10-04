@@ -1,6 +1,5 @@
 package com.example.BE.model.entity;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,6 +69,9 @@ public class User {
 
 	// @OneToMany(mappedBy = "user")
     // private Set<ClassUser> userList = new HashSet<>();
+
+	@OneToMany(mappedBy = "user_syllabus")
+	Set<Syllabus> syllabusList = new HashSet<>();
 
 	@OneToMany(mappedBy ="user_training")
 	Set<TrainingProgram> trainingPrograms = new HashSet<>();

@@ -1,7 +1,5 @@
 package com.example.BE.model.entity;
 
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
