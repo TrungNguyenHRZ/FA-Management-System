@@ -2,13 +2,23 @@ import React, { useState } from "react";
 import "./sidebar.css";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
-import { FaHouseChimney, FaBookOpen, FaLightbulb } from "react-icons/fa6";
+import {
+  FaHouseChimney,
+  FaBookOpen,
+  FaLightbulb,
+  FaUserGroup,
+} from "react-icons/fa6";
 
 const Sidebar = () => {
-  const [isSubMenuVisible, setSubMenuVisible] = useState(false);
+  const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
+  const [isSubMenuUser, setSubMenuUser] = useState(false);
 
-  const toggleSubMenu = () => {
-    setSubMenuVisible(!isSubMenuVisible);
+  const toggleSubMenuSyllabus = () => {
+    setSubMenuSyllabus(!isSubMenuSyllabus);
+  };
+
+  const toggleSubMenuUser = () => {
+    setSubMenuUser(!isSubMenuUser);
   };
 
   return (
@@ -22,11 +32,13 @@ const Sidebar = () => {
               Home
             </Link>
           </li>
-          <li onClick={toggleSubMenu}>
+          <li onClick={toggleSubMenuSyllabus}>
             <FaBookOpen className="icon-sidebar" />
             <span className="home-link">Syllabus</span>
           </li>
-          <ul className={`sub-menu ${isSubMenuVisible ? "show-sub-menu" : ""}`}>
+          <ul
+            className={`sub-menu ${isSubMenuSyllabus ? "show-sub-menu" : ""}`}
+          >
             <li>
               <Link to={"/view-syllabus"} className="home-link">
                 View Syllabus
@@ -40,10 +52,26 @@ const Sidebar = () => {
           </ul>
           <li>
             <FaLightbulb className="icon-sidebar" />
-            <Link to={"/course"} className="home-link">
-              Course
+            <Link to={"/training-program"} className="home-link">
+              Training program
             </Link>
           </li>
+          <li onClick={toggleSubMenuUser}>
+            <FaUserGroup className="icon-sidebar" />
+            <span className="home-link">User management</span>
+          </li>
+          <ul className={`sub-menu ${isSubMenuUser ? "show-sub-menu" : ""}`}>
+            <li>
+              <Link to={"/user-list"} className="home-link">
+                User list
+              </Link>
+            </li>
+            <li>
+              <Link to={"/user-permission"} className="home-link">
+                User permission
+              </Link>
+            </li>
+          </ul>
         </ul>
       </div>
       <div className="content-container">
