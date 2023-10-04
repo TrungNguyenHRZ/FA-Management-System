@@ -70,6 +70,9 @@ public class User {
 	// @OneToMany(mappedBy = "user")
     // private Set<ClassUser> userList = new HashSet<>();
 
+	@OneToMany(mappedBy = "user_syllabus")
+	Set<Syllabus> syllabusList = new HashSet<>();
+
 	@OneToMany(mappedBy ="user_training")
 	Set<TrainingProgram> trainingPrograms = new HashSet<>();
 	

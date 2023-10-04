@@ -8,6 +8,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+<<<<<<< Updated upstream
+=======
+import jakarta.persistence.JoinColumn;
+>>>>>>> Stashed changes
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
@@ -71,6 +75,10 @@ public class Syllabus {
 
 	// @OneToMany(mappedBy="syllabus_object_code")
 	// Set<SyllabusObject> syllabus_object = new HashSet<>();
+
+	@ManyToOne
+	@JoinColumn(name="userid")
+	private User user_syllabus;
 
 	@OneToMany(mappedBy="unit_topic_code")
 	Set<TrainingUnit> syllabus_unit = new HashSet<>();

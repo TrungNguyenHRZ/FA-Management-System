@@ -20,6 +20,9 @@ import lombok.Data;
 public class UserPermission {
 
 	@Id
+	@Column(name="Role")
+	public String role;
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PermissionID")
 	public int permissionID;
@@ -36,8 +39,7 @@ public class UserPermission {
 	@Column(name="UserManagement")
 	public String user_management;
 
-	@Column(name="Role")
-	public String role;
+
 
 	@Column(name="Class")
 	private String class_name;
