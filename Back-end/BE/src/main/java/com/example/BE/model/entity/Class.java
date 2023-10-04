@@ -1,6 +1,5 @@
 package com.example.BE.model.entity;
 
-
 import java.util.Date;
 
 import jakarta.persistence.Column;
