@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -13,11 +14,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "Classes")
 @Data
-public class Class {
+public class Class implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +53,11 @@ public class Class {
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "Start_Date")
-	private String start_date;
+	private Date start_date;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "End_Date")
-	private String end_date;
+	private Date end_date;
 
 	@Column(name = "Create_By")
 	private String create_by;

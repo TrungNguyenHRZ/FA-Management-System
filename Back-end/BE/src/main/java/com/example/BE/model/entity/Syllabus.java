@@ -6,10 +6,7 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-<<<<<<< Updated upstream
-=======
 import jakarta.persistence.JoinColumn;
->>>>>>> Stashed changes
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
