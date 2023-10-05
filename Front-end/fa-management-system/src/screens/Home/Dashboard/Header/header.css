@@ -23,18 +23,19 @@
 
 .header-login > button {
   font-family: "Quicksand Bold", sans-serif;
-  color: #2a00b7;
-  background-color: #fff;
+  color: #fff;
+  background-color: #2a00b7;
   border: none;
   border-radius: 5px;
   font-size: 20px;
   padding: 5px 15px;
 }
 .header-login > button:hover {
-  background-color: #d97bc5;
+  background-color: #0077ff;
   color: #fff;
   cursor: pointer;
 }
 button > a {
   text-decoration: none;
+  color: #fff;
 }

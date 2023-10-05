@@ -12,6 +12,7 @@ import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-pro
 import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
 import UserList from "./screens/Home/Content/User/UserList/user-list";
 import UserPermission from "./screens/Home/Content/User/UserPermission/user-permission";
+import Class from "./screens/Home/Content/Class/class";
 
 const router = createBrowserRouter([
   {
@@ -40,13 +41,17 @@ const router = createBrowserRouter([
         element: <TrainingProgram />,
       },
       {
+        path: "/class",
+        element: <Class />,
+      },
+      {
         path: "/user-list",
-        element: <UserList />
+        element: <UserList />,
       },
       {
         path: "/user-permission",
         element: <UserPermission />,
-      }
+      },
     ],
   },
 ]);
