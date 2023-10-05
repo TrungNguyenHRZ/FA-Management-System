@@ -7,14 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Embeddable
-public class CompositeClassUser {
+public class CompositeClassUser implements Serializable{
 	
 	@ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     
 	@ManyToOne
-    @JoinColumn(name = "classid")
-    private Class class_object;
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    private Class classObject;
 }

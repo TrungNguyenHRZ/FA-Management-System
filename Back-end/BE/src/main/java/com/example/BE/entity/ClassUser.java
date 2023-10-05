@@ -1,7 +1,9 @@
 package com.example.BE.entity;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.BE.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -16,14 +18,14 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "UserClass")
+@Table(name = "user_class")
 @Data
-public class ClassUser {
+public class ClassUser implements Serializable {
 
     @EmbeddedId
     private CompositeClassUser class_user_id;
 
-	@Column(name="UserType")
-	private String userType;
+	@Column(name="user_type")
+	private Role userType;
 
 }
