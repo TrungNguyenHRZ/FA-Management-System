@@ -1,5 +1,6 @@
 import React from "react";
 import "./header.css";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -8,7 +9,9 @@ const Header = () => {
         <h1>Fresher Academy Management System</h1>
       </div>
       <div className="header-login">
-        <button>Login</button>
+        <button>
+          <Link to={"/login"}>Login</Link>
+        </button>
       </div>
     </div>
   );
