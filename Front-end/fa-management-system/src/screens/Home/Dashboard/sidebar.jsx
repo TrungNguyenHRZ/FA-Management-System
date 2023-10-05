@@ -7,8 +7,10 @@ import {
   FaBookOpen,
   FaLightbulb,
   FaUserGroup,
+  FaGraduationCap,
 } from "react-icons/fa6";
 import Header from "./Header/header";
+import Footer from "./Footer/footer";
 
 const Sidebar = () => {
   const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
@@ -60,6 +62,12 @@ const Sidebar = () => {
                 Training program
               </Link>
             </li>
+            <li>
+              <FaGraduationCap className="icon-sidebar" />
+              <Link to={"/class"} className="home-link">
+                Class
+              </Link>
+            </li>
             <li onClick={toggleSubMenuUser}>
               <FaUserGroup className="icon-sidebar" />
               <span className="home-link">User management</span>
@@ -81,6 +89,9 @@ const Sidebar = () => {
         <div className="content-container">
           <Outlet />
         </div>
+      </div>
+      <div className="dashboard-footer">
+        <Footer />
       </div>
     </div>
   );
