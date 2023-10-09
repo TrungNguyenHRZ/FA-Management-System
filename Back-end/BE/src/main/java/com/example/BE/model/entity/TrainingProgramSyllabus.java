@@ -1,9 +1,6 @@
 package com.example.BE.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -11,8 +8,17 @@ import lombok.Data;
 @Data
 public class TrainingProgramSyllabus {
 
-	@EmbeddedId
-	private CompositeTrainingSyllabus training_syllabus_id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "topic_code")
+	private Syllabus syllabus;
+
+	@ManyToOne
+	@JoinColumn(name = "training_code")
+	private TrainingProgram trainingProgram;
 
 	@Column
 	private String sequence;

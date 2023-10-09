@@ -1,18 +1,10 @@
 package com.example.BE.model.entity;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Syllabus")
@@ -20,8 +12,9 @@ import lombok.Data;
 public class Syllabus {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="topic_code")
-	private String topic_code;
+	private int topic_code;
 
 	@Column(name="topic_name")
 	private String topic_name;
@@ -63,6 +56,8 @@ public class Syllabus {
 
 	@Column(name = "Modified_By")
 	private String modified_by;
+	@Column(name = "Level")
+	private String level;
 
 	// @OneToMany(mappedBy="program_topic")
 	// Set<TrainingProgramSyllabus> training_program = new HashSet<>();
@@ -74,6 +69,25 @@ public class Syllabus {
 	@JoinColumn(name="userid")
 	private User user_syllabus;
 
-	@OneToMany(mappedBy="unit_topic_code")
-	Set<TrainingUnit> syllabus_unit = new HashSet<>();
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "Training_Program_Syllabus",
+			joinColumns = {
+					@JoinColumn(name = "topic_code")
+			}, inverseJoinColumns = @JoinColumn(name = "training_code")
+	)
+	List<TrainingProgram> trainingProgramList;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {
+			CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH
+	})
+	@JoinTable (
+			name = "syllabus_object",
+			joinColumns = {
+					@JoinColumn(name = "topic_code")
+			},
+			inverseJoinColumns = @JoinColumn(name = "learning_objective_code")
+	)
+	private List<LearningObject> learningObjects;
 }

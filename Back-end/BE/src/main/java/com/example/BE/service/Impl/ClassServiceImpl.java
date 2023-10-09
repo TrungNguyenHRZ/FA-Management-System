@@ -23,4 +23,14 @@ public class ClassServiceImpl implements ClassService {
     public List<Class> findAllClass() {
         return classRepository.findAll();
     }
+
+    @Override
+    public boolean searchClassByClassCode(String classCode) {
+        return classRepository.findByClassCode(classCode);
+    }
+
+    @Override
+    public boolean searchClassByClassName(String className) {
+        return classRepository.findByClassName(className);
+    }
 }
