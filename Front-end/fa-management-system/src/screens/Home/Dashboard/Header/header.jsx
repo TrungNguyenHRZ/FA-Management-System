@@ -9,9 +9,9 @@ const Header = () => {
         <h1>Fresher Academy Management System</h1>
       </div>
       <div className="header-login">
-        <button>
+        {/* <button>
           <Link to={"/login"}>Login</Link>
-        </button>
+        </button> */}
       </div>
     </div>
   );
