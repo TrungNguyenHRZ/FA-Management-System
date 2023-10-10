@@ -1,13 +1,21 @@
 package com.example.BE.model.entity;
 
-import jakarta.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Setter
@@ -26,6 +34,9 @@ public class Class implements Serializable {
 
 	@Column(name = "ClassCode")
 	private String classCode;
+
+	@Column(name = "Training_Code")
+	private String training_code;
 
 	@Temporal(TemporalType.TIME)
 	@Column(name = "Duration")
@@ -65,30 +76,8 @@ public class Class implements Serializable {
 	// @OneToMany(mappedBy = "class_object")
     // private Set<ClassUser> userClasses = new HashSet<>();
 
-//	@ManyToMany(fetch = FetchType.LAZY, cascade = {
-//			CascadeType.DETACH, CascadeType.MERGE,
-//			CascadeType.PERSIST, CascadeType.REFRESH
-//	})
-//	@JoinTable (
-//			name = "class_user",
-//			joinColumns = @JoinColumn(name = "classID"),
-//			inverseJoinColumns = @JoinColumn(name = "userID")
-//	)
-//	private List<TrainingProgram> trainingPrograms;
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {
-			CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH
-	})
-	@JoinTable (
-			name = "class_user",
-			joinColumns = {
-					@JoinColumn(name = "classID")
-			},
-			inverseJoinColumns = @JoinColumn(name = "userID")
-	)
-	private List<User> users;
-
 	@ManyToOne
-	@JoinColumn(name="training_code")
-	private TrainingProgram trainingProgram;
+	@JoinColumn(name="program_id")
+	private TrainingProgram program_class;
+
 }

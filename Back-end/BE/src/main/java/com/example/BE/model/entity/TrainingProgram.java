@@ -1,11 +1,21 @@
 package com.example.BE.model.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
 
 @Entity
 @Table(name = "Training_Program")
@@ -52,10 +62,10 @@ public class TrainingProgram {
 	@JoinColumn(name="userid")
 	private User user_training;
 
-	// @OneToMany(mappedBy="program")
-	// Set<TrainingProgramSyllabus> syllabus = new HashSet<>();
+	@OneToMany(mappedBy="program")
+	Set<TrainingProgramSyllabus> syllabus = new HashSet<>();
 
-	@OneToMany(mappedBy="trainingProgram")
+	@OneToMany(mappedBy="program_class")
 	Set<Class>  training_class = new HashSet<>();
 
 

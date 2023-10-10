@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ClassMapper {
     @Mapping(source = "class1.classID", target = "classID")
-    @Mapping(source = "class1.trainingProgram", target = "trainingProgram")
+    @Mapping(source = "class1.training_code", target = "training_code")
     @Mapping(source = "class1.className", target = "className")
     @Mapping(source = "class1.classCode", target = "classCode")
     @Mapping(source = "class1.duration", target = "duration")

@@ -1,28 +1,21 @@
 package com.example.BE.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Setter
-@Getter
-@Table(name = "class_user")
+@Table(name = "UserClass")
 @Data
 public class ClassUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "classID")
-    private Class classEntity;
+    @EmbeddedId
+    private CompositeClassUser class_user_id;
 
-    @ManyToOne
-    @JoinColumn(name = "userID")
-    private User user;
+	@Column(name="UserType")
+	private String userType;
 
-    @Column(name = "UserType")
-    private String userType;
 }
