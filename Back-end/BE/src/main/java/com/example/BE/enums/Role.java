@@ -2,7 +2,7 @@ package com.example.BE.enums;
 
 public enum Role {
     SUPER_ADMIN("Supper_Admin"),
-    CLASS_ADMIN("Class_Admin"),
+    ADMIN("Admin"),
     TRAINER("Trainer");
 
     private String role;

@@ -38,10 +38,10 @@ public class User {
     private String gender;
 
     @Column(name = "status")
-    private String status;
+    private boolean status;
 
     @Column(name = "create_by")
-    private LocalDateTime createBy;
+    private String createBy;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "create_date")
