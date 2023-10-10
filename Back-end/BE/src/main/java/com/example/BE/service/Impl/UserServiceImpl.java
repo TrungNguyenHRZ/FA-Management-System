@@ -2,6 +2,7 @@ package com.example.BE.service.Impl;
 
 import com.example.BE.dto.request.user.CreateUserRequest;
 import com.example.BE.dto.request.user.GetAllRequest;
+import com.example.BE.dto.request.user.UpdateUserRequest;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.enums.ErrorMessage;
@@ -16,6 +17,7 @@ import com.example.BE.service.UserService;
 import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
             user.setDob(dateOfBirth);
             user.setGender(gender);
             user.setEmail(request.getEmail());
-            user.setStatus(true);
+            user.setStatus(request.isStatus());
             user.setPermission(userPermission);
             user.setPassword(password);
             user.setCreateBy(userAdmin.getName());
@@ -95,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public UserPageResponse getAllUser(GetAllRequest request) {
         Pageable pageable = request.getPageable();
         Page<User> page = userRepository.findAllWithSearch(request.getKeyword(), pageable);
-        return  new UserPageResponse()
+        return new UserPageResponse()
             .setPage(page.getNumber())
             .setPageSize(page.getSize())
             .setTotalElement(page.getNumberOfElements())
@@ -120,8 +122,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateInfoUser() {
-        return null;
+    public UserResponse updateInfoUser(UpdateUserRequest request) {
+        try {
+            log.info("Update user with request :{}", request.toString());
+            User userAdmin = userRepository.findByUserId(request.getUserAdminId()).orElse(null);
+            log.info("User Admin : {}", userAdmin);
+            if (Objects.isNull(userAdmin)) {
+                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
+            }
+            if (!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+
+            }
+
+            User user = userRepository.findByUserId(request.getId()).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+
+            if (StringUtils.isNoneBlank(request.getName())) {
+                user.setName(request.getName());
+            }
+
+            if (StringUtils.isNotBlank(request.getDob())) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date dateOfBirth = dateFormat.parse(request.getDob());
+                user.setDob(dateOfBirth);
+            }
+
+            if (StringUtils.isNotBlank(request.getPhone())) {
+                user.setPhone(request.getPhone());
+            }
+
+            if (Objects.nonNull(request.getGenderTrueMale())) {
+                String gender = request.getGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
+                user.setGender(gender);
+            }
+            if (Objects.nonNull(request.getStatus())) {
+
+                user.setStatus(request.getStatus());
+            }
+
+            user.setModifiedBy(userAdmin.getName());
+            user.setModifiedDate(new Date());
+            user = userRepository.save(user);
+            return new UserResponse(user);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
+        }
     }
 
     @Override

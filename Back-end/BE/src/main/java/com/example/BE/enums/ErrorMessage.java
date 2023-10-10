@@ -8,6 +8,7 @@ public enum ErrorMessage {
     USER_EMAIL_EXISTED("Email existed"),
     USER_EMAIL_FORMAT_INCORRECT("Email incorrect format"),
     USER_CREATE_FAIL("Create user fail"),
+    USER_UPDATE_FAIL("Create user fail"),
 
     USER_PERMISSION_INVALID("User type invalid"),
     USER_DO_NOT_PERMISSION("User do not permission"),

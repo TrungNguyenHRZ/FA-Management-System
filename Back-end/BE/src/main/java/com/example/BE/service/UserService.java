@@ -2,6 +2,7 @@ package com.example.BE.service;
 
 import com.example.BE.dto.request.user.CreateUserRequest;
 import com.example.BE.dto.request.user.GetAllRequest;
+import com.example.BE.dto.request.user.UpdateUserRequest;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 
@@ -14,6 +15,6 @@ public interface UserService {
     UserPageResponse getAllUser(GetAllRequest request);
 
     UserResponse getUserById(int id);
-    UserResponse updateInfoUser();
+    UserResponse updateInfoUser(UpdateUserRequest request);
     UserResponse gantPermissionUser();
 }

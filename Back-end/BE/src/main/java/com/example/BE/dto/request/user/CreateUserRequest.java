@@ -22,13 +22,12 @@ public class CreateUserRequest {
     @NotBlank
     private String email;
     @NotBlank
-    private String address;
-    @NotBlank
     private String phone;
     @NotBlank
     private String dob; // dd/MM/yyyy
     @NotNull
     private boolean genderTrueMale; // true : male / false: female
+    private boolean status;
 
-    private int userAdminId;
+    private int userAdminId = 1;
 }

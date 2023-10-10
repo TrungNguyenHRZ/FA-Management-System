@@ -2,10 +2,12 @@ package com.example.BE.controller.user;
 
 import com.example.BE.dto.request.user.CreateUserRequest;
 import com.example.BE.dto.request.user.GetAllRequest;
+import com.example.BE.dto.request.user.UpdateUserRequest;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.handle.GlobalExceptionHandler;
 import com.example.BE.service.UserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
@@ -49,14 +51,12 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
-
-
-
-
-
-
-
-
+	@PutMapping("/update/{id}")
+	public ResponseEntity<UserResponse> updateUSer(@PathVariable(name = "id") int id, UpdateUserRequest request){
+		request.setId(id);
+		UserResponse userResponse = userService.updateInfoUser(request);
+		return ResponseEntity.ok(userResponse);
+	}
 	
 	
 
