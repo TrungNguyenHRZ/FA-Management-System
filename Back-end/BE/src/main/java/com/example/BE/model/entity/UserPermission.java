@@ -18,29 +18,29 @@ import lombok.Data;
 public class UserPermission {
 
 	@Id
-	@Column(name="Role")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "permission_id")
+	public int permissionId;
+
+	@Column(name="role")
 	public String role;
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PermissionID")
-	public int permissionID;
-
-	@Column(name="Training_Program")
+	@Column(name="training_program")
 	public String trainingProgram;
 
-	@Column(name="Syllabus")
+	@Column(name="syllabus")
 	public String syllabus;
 
-	@Column(name="Learning_Material")
+	@Column(name="learning_material")
 	public String material;
 
-	@Column(name="UserManagement")
-	public String user_management;
+	@Column(name="user_anagement")
+	public String userManagement;
 
 
 
-	@Column(name="Class")
-	private String class_name;
+	@Column(name="class_name")
+	private String className;
 
 	@OneToMany(mappedBy = "permission")
 	private Set<User> userList = new HashSet<>();
