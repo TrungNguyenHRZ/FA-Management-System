@@ -87,6 +87,7 @@ public class Class implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "userID")
 	)
 	private List<User> users;
+
 	@ManyToOne
 	@JoinColumn(name="training_code")
 	private TrainingProgram trainingProgram;
