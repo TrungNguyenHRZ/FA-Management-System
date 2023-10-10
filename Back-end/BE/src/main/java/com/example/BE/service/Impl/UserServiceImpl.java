@@ -1,6 +1,7 @@
 package com.example.BE.service.Impl;
 
 import com.example.BE.dto.request.user.CreateUserRequest;
+import com.example.BE.dto.request.user.GantPermissionUserRequest;
 import com.example.BE.dto.request.user.GetAllRequest;
 import com.example.BE.dto.request.user.UpdateUserRequest;
 import com.example.BE.dto.response.user.UserPageResponse;
@@ -175,7 +176,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse gantPermissionUser() {
-        return null;
+    public UserResponse gantPermissionUser(GantPermissionUserRequest request) {
+        try {
+            log.info("Create user with request :{}", request.toString());
+            User userAdmin = userRepository.findByUserId(request.getUserAdminId()).orElse(null);
+            log.info("User Admin : {}", userAdmin);
+            if (Objects.isNull(userAdmin)) {
+                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
+            }
+            if (!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+
+            }
+
+            User user = userRepository.findByUserId(request.getId()).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+
+            UserPermission userPermission = userPermissionRepository.findFirstByRole(request.getNewPermission().getRole()).orElse(null);
+            if (Objects.isNull(userPermission)) {
+                throw new BusinessException(ErrorMessage.USER_PERMISSION_INVALID);
+            }
+            user.setPermission(userPermission);
+            user.setModifiedBy(userAdmin.getName());
+            user.setModifiedDate(new Date());
+            user = userRepository.save(user);
+            return new UserResponse(user);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
+        }
     }
 }

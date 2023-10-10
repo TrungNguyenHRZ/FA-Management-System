@@ -2,6 +2,7 @@ package com.example.BE.dto.request.user;
 
 
 import com.example.BE.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UpdateUserRequest {
+    @JsonIgnore
     private int id;
 
     private String name;
