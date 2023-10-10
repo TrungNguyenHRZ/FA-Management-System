@@ -76,6 +76,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             user.setStatus(true);
             user.setPermission(userPermissionSa);
             user.setUserId(1);
+            user.setUserIdSearch(String.valueOf(1));
             user.setPassword("Password123@");
             user = userRepository.save(user);
         }

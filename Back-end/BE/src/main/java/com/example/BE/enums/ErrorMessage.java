@@ -11,6 +11,9 @@ public enum ErrorMessage {
 
     USER_PERMISSION_INVALID("User type invalid"),
     USER_DO_NOT_PERMISSION("User do not permission"),
+    USER_NOT_FOUND("User not found"),
+    USER_GET_FAIL("User get fail"),
+
 
     ;
 

@@ -1,6 +1,8 @@
 package com.example.BE.service.Impl;
 
 import com.example.BE.dto.request.user.CreateUserRequest;
+import com.example.BE.dto.request.user.GetAllRequest;
+import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.enums.ErrorMessage;
 import com.example.BE.enums.Gender;
@@ -14,11 +16,14 @@ import com.example.BE.service.UserService;
 import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +79,8 @@ public class UserServiceImpl implements UserService {
             user.setCreateBy(userAdmin.getName());
 
             user = userRepository.save(user);
+            user.setUserIdSearch(String.valueOf(user.getUserId()));
+            user = userRepository.save(user);
             return new UserResponse(user);
 
         } catch (BusinessException e) {
@@ -81,5 +88,44 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new BusinessException(ErrorMessage.USER_CREATE_FAIL);
         }
+    }
+
+
+    @Override
+    public UserPageResponse getAllUser(GetAllRequest request) {
+        Pageable pageable = request.getPageable();
+        Page<User> page = userRepository.findAllWithSearch(request.getKeyword(), pageable);
+        return  new UserPageResponse()
+            .setPage(page.getNumber())
+            .setPageSize(page.getSize())
+            .setTotalElement(page.getNumberOfElements())
+            .setTotalPage(page.getTotalPages())
+            .setUserResponseList(page.getContent().stream().map(UserResponse::new).collect(Collectors.toList()));
+    }
+
+    @Override
+    public UserResponse getUserById(int id) {
+        try {
+            User user = userRepository.findByUserId(id).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+            return new UserResponse(user);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorMessage.USER_GET_FAIL);
+        }
+    }
+
+    @Override
+    public UserResponse updateInfoUser() {
+        return null;
+    }
+
+    @Override
+    public UserResponse gantPermissionUser() {
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -19,7 +20,7 @@ public class UserResponse {
     private String name;
     private String email;
     private String address;
-    private Date dob; // dd/MM/yyyy
+    private String dob; // dd/MM/yyyy
     private String gender; // true : male / false: female
     private boolean status;
     private Date createdAt;
@@ -33,7 +34,8 @@ public class UserResponse {
         this.name = user.getName();
         this.email = user.getEmail();
         this.address = user.getCreateBy();
-        this.dob = user.getDob();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        this.dob = simpleDateFormat.format(user.getDob());
         this.gender = user.getGender();
         this.status = user.isStatus();
         this.createdAt = user.getCreatedDate();

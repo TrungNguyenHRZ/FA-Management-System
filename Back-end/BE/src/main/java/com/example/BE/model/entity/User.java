@@ -3,7 +3,6 @@ package com.example.BE.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class User {
     @Column(name = "modified_by")
     private String modifiedBy;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role")
     private UserPermission permission;
 
@@ -66,4 +65,6 @@ public class User {
 
     @OneToMany(mappedBy = "user_training")
     Set<TrainingProgram> trainingPrograms = new HashSet<>();
+    @Column(name = "user_id_search")
+    private String userIdSearch;
 }
