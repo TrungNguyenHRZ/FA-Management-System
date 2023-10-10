@@ -16,7 +16,7 @@ public class ClassDTO {
 
     protected String classCode;
 
-    protected int trainingProgram;
+    protected String training_code;
 
     protected java.util.Date duration;
 

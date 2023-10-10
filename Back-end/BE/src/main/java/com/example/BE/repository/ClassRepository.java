@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ClassRepository extends JpaRepository<Class, Integer> {
-    boolean findByClassCode(String clasCode);
-    boolean findByClassName(String clasName);
+
 }
