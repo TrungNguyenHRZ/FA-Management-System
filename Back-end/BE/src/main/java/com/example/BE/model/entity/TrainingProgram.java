@@ -40,9 +40,8 @@ public class TrainingProgram {
 	@Column(name = "Start_Time")
 	private String start_time;
 
-	@Temporal(TemporalType.TIME)
 	@Column(name = "Duration")
-	private String duration;
+	private int duration;
 
 	@Column(name = "Create_By")
 	private String create_by;

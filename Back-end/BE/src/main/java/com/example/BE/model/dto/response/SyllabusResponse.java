@@ -2,8 +2,10 @@ package com.example.BE.model.dto.response;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import com.example.BE.model.dto.request.TrainingUnit;
+import com.example.BE.model.dto.request.TrainingUnitRequest;
+import com.example.BE.model.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +29,8 @@ public class SyllabusResponse {
 	private Date createdDate;
 	private Date modified_date;
 	private String modified_by;
-	List<TrainingUnit> unitList;
+	private int userId;
+	private String userName;
+	// private User user;
+	List<TrainingUnitResponse> unitList;
 }

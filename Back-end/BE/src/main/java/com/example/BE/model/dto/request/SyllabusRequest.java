@@ -25,5 +25,5 @@ public class SyllabusRequest {
 	private Date createdDate;
 	private Date modified_date;
 	private String modified_by;
-	List<TrainingUnit> unitList;
+	List<TrainingUnitRequest> unitList;
 }

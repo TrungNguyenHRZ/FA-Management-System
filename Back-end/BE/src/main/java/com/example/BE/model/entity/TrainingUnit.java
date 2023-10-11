@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -31,8 +32,8 @@ public class TrainingUnit {
 
 	@ManyToOne
 	@JoinColumn(name="topic_code")
-	private Syllabus  unit_topic_code;
+	private Syllabus unit_topic_code;
 
 	@OneToMany(mappedBy="unitCode")
-	Set<TrainingContent> training_content = new HashSet<>();
+	private List<TrainingContent> training_content;
 }

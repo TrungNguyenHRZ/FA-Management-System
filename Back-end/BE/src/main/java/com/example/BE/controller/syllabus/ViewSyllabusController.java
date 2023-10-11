@@ -37,19 +37,22 @@ public class ViewSyllabusController {
 
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus(){
-		List<Syllabus> syllabusList;
-		syllabusList = syllabusService.getAllSyllabus();
-		return syllabusMapper.toSyllabusResponseList(syllabusList);
+		return syllabusService.getAll();
 	}
 
 	@GetMapping("/view/{keyword}")
-	public List<Syllabus> getAllSyllabusByKeyword(@PathVariable String keyword){
+	public List<SyllabusResponse> getAllSyllabusByKeyword(@PathVariable String keyword){
 		return syllabusService.getAllSyllabusByKey(keyword);
 	}
 
 	@GetMapping("/search/{date}")
-	public List<Syllabus> getAllSyllabusByDate(@PathVariable String date){
+	public List<SyllabusResponse> getAllSyllabusByDate(@PathVariable String date){
 		return syllabusService.getAllSyllabusByCreateDate(date);
+	}
+	
+	@GetMapping("viewSyllabus/{code}")
+	public SyllabusResponse getSyllabusByTopicCode(@PathVariable int code){
+		return syllabusService.getSyllabusByTopicCode(code);
 	}
 
 	@PostMapping("/saveSyllabus/{id}")
