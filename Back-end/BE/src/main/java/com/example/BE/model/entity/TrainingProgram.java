@@ -16,10 +16,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Training_Program")
 @Data
+@Setter
+@Getter
 public class TrainingProgram {
 	
 	@Id
