@@ -29,7 +29,7 @@ public interface SyllabusMapper {
 	@Mapping(source = "syllabus.modified_date",target = "modified_date")
 	@Mapping(source = "syllabus.modified_by",target = "modified_by")
 	// @Mapping(source = "user_syllabus",target = "user")
-	@Mapping(source = "user_syllabus.userID",target = "userId")
+	@Mapping(source = "user_syllabus.userId",target = "userId")
 	@Mapping(source = "user_syllabus.name",target = "userName")
 	@Mapping(source = "syllabus_unit",target = "unitList")
 	// @Mapping(source = "syllabus_unit.training_content",target = "unitList.contentList")

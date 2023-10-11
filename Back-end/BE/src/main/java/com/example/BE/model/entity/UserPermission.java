@@ -12,12 +12,14 @@ import java.util.Set;
 public class UserPermission {
 
     @Id
+    @Column(name = "role")
+    public String role;
+    
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permission_id")
     public int permissionId;
 
-    @Column(name = "role")
-    public String role;
+    
 
     @Column(name = "training_program")
     public String trainingProgram;
