@@ -63,23 +63,23 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             userPermissionRepository.save(userPermission);
         }
 
-        User user = userRepository.findByEmail("Admin@Email.com").orElse(null);
-        UserPermission userPermissionSa = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
-        if(Objects.isNull(user)){
-            user = new User();
-            user.setName("admin");
-            user.setCreatedDate(new Date());
-            user.setPhone("0300000000");
-            user.setDob(new Date());
-            user.setGender(Gender.MALE.getGender());
-            user.setEmail("Admin@Email.com");
-            user.setStatus(true);
-            user.setPermission(userPermissionSa);
-            user.setUserId(1);
-            user.setUserIdSearch(String.valueOf(1));
-            user.setPassword("Password123@");
-            user = userRepository.save(user);
-        }
+//        User user = userRepository.findByEmail("Admin@Email.com").orElse(null);
+//        UserPermission userPermissionSa = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
+//        if(Objects.isNull(user)){
+//            user = new User();
+//            user.setName("admin");
+//            user.setCreatedDate(new Date());
+//            user.setPhone("0300000000");
+//            user.setDob(new Date());
+//            user.setGender(Gender.MALE.getGender());
+//            user.setEmail("Admin@Email.com");
+//            user.setStatus(true);
+//            user.setPermission(userPermissionSa);
+//            user.setUserId(1);
+//            user.setUserIdSearch(String.valueOf(1));
+//            user.setPassword("Password123@");
+//            user = userRepository.save(user);
+//        }
 
     }
 }

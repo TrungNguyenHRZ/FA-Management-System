@@ -1,13 +1,16 @@
 package com.example.BE.controller.user;
 
-import com.example.BE.dto.request.user.CreateUserRequest;
-import com.example.BE.dto.request.user.GantPermissionUserRequest;
-import com.example.BE.dto.request.user.GetAllRequest;
-import com.example.BE.dto.request.user.UpdateUserRequest;
+import com.example.BE.config.OpenApiConfig;
+import com.example.BE.dto.request.user.*;
+import com.example.BE.dto.response.user.LoginResponse;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.handle.GlobalExceptionHandler;
 import com.example.BE.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -32,6 +35,13 @@ public class UserController {
 	private final UserRepository repo;
 	private final UserService userService;
 
+	@Operation(summary = "Dang nhap")
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+		LoginResponse response = userService.login(request);
+		return ResponseEntity.ok(response);
+	}
+
 
 	@GetMapping(value="/view/{id}")
 	public User getUserById(@PathVariable(name = "id") int id){
@@ -47,12 +57,14 @@ public class UserController {
 
 
 	@GetMapping("/all")
+	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
 	public ResponseEntity<UserPageResponse> getAllUser(@ParameterObject GetAllRequest request){
 		UserPageResponse response = userService.getAllUser(request);
 		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/update/{id}")
+	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
 	public ResponseEntity<UserResponse> updateUSer(@PathVariable(name = "id") int id, UpdateUserRequest request){
 		request.setId(id);
 		UserResponse userResponse = userService.updateInfoUser(request);
@@ -61,12 +73,14 @@ public class UserController {
 
 
 	@GetMapping(value="/{id}")
+	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
 	public ResponseEntity<UserResponse> getUser2ById(@PathVariable int id){
 		UserResponse userResponse = userService.getUserById(id);
 		return ResponseEntity.ok(userResponse);
 	}
 
 	@PutMapping(value = "/gant-permission/{id}")
+	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
 	public ResponseEntity<UserResponse> changePermission(@PathVariable(name = "id") int id, @RequestBody GantPermissionUserRequest request){
 		request.setId(id);
 		UserResponse userResponse = userService.gantPermissionUser(request);

@@ -1,9 +1,7 @@
 package com.example.BE.service.Impl;
 
-import com.example.BE.dto.request.user.CreateUserRequest;
-import com.example.BE.dto.request.user.GantPermissionUserRequest;
-import com.example.BE.dto.request.user.GetAllRequest;
-import com.example.BE.dto.request.user.UpdateUserRequest;
+import com.example.BE.dto.request.user.*;
+import com.example.BE.dto.response.user.LoginResponse;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.enums.ErrorMessage;
@@ -14,6 +12,8 @@ import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
 import com.example.BE.repository.UserPermissionRepository;
 import com.example.BE.repository.UserRepository;
+import com.example.BE.security.UserDetailsImpl;
+import com.example.BE.security.jwt.JWTUtils;
 import com.example.BE.service.UserService;
 import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -67,8 +68,10 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(userPermission)) {
                 throw new BusinessException(ErrorMessage.USER_PERMISSION_INVALID);
             }
-            String password = RandomStringGenerator.generateRandomString(8);
 
+            String password = RandomStringGenerator.generateRandomString(8);
+            log.info("Gerate random : {}", password);
+            password = RandomStringGenerator.sha256(password);
             user = new User();
             user.setName(request.getName());
             user.setCreatedDate(new Date());
@@ -208,5 +211,30 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
         }
+    }
+
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+      try {
+          User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+          if(Objects.isNull(user)) {
+              throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+          }
+          String passHash = RandomStringGenerator.sha256(request.getPassword());
+          if(!passHash.equals(user.getPassword())) {
+              throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+          }
+
+          UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+          String accessToken= JWTUtils.generateAccessToken(userDetails);
+          return new LoginResponse(user, accessToken);
+
+      } catch (BusinessException e) {
+            throw e;
+      } catch (Exception e) {
+          e.printStackTrace();
+          throw new BusinessException(ErrorMessage.USER_LOGIN_FAIL);
+      }
     }
 }
