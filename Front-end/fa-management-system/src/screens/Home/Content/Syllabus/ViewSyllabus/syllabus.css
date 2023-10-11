@@ -1,0 +1,62 @@
+.head-syllabus-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.search-text,
+.search-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid black;
+  padding: 3px 5px 3px 5px;
+  border-radius: 5px;
+}
+.search-input-text {
+  border: none;
+}
+.search-input-text:focus {
+  outline-width: 0;
+}
+
+.search-input-date {
+  border: none;
+}
+.action-syllabus-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.button-import-syllabus,
+.button-add-syllabus {
+  display: flex;
+  align-items: center;
+  border: none;
+  gap: 5px;
+  border-radius: 5px;
+  padding: 7px;
+  cursor: pointer;
+}
+
+.button-import-syllabus {
+  background-color: #2a00b7;
+  color: #fff;
+}
+
+.button-import-syllabus:hover {
+  opacity: 0.8;
+}
+
+.button-add-syllabus:hover {
+  text-decoration: underline;
+}
+
+.table-syllabus-container {
+  margin-top: 20px;
+}

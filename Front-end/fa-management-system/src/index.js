@@ -6,13 +6,13 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
-import Syllabus from "./screens/Home/Content/Syllabus/syllabus";
 import Home from "./screens/Home/Content/Home/home";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
 import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
 import UserList from "./screens/Home/Content/User/UserList/user-list";
 import UserPermission from "./screens/Home/Content/User/UserPermission/user-permission";
 import Class from "./screens/Home/Content/Class/class";
+import Syllabus from './screens/Home/Content/Syllabus/ViewSyllabus/syllabus';
 
 const router = createBrowserRouter([
   {
