@@ -16,7 +16,7 @@ public class ClassDTO {
 
     protected String classCode;
 
-    protected java.util.Date duration;
+    protected int duration;
 
     protected String status;
 

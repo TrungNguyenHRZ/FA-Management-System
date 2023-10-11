@@ -2,7 +2,6 @@ package com.example.BE.controller.Class;
 
 import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
-import com.example.BE.model.dto.ClassDTO;
 import com.example.BE.model.dto.response.ClassResponse;
 import com.example.BE.model.entity.Class;
 import com.example.BE.model.entity.TrainingProgram;

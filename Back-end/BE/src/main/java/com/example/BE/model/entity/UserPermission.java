@@ -19,8 +19,6 @@ public class UserPermission {
     @Column(name = "permission_id")
     public int permissionId;
 
-    
-
     @Column(name = "training_program")
     public String trainingProgram;
 

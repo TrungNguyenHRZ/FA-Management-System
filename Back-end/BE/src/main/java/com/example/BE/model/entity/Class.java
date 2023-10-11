@@ -35,9 +35,8 @@ public class Class implements Serializable {
 	@Column(name = "ClassCode")
 	private String classCode;
 
-	@Temporal(TemporalType.TIME)
 	@Column(name = "Duration")
-	private Date duration;
+	private int duration;
 
 	@Column(name = "Status")
 	private String status;

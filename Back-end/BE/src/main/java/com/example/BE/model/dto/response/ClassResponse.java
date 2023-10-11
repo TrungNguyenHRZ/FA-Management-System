@@ -15,7 +15,7 @@ public class ClassResponse {
 
     protected String classCode;
 
-    protected java.util.Date duration;
+    protected int duration;
 
     protected String status;
 
@@ -53,7 +53,7 @@ public class ClassResponse {
         this.TrainingProgram_id = classEntity.getProgram_class().getTraining_code();
     }
 
-    public ClassResponse(int classId, String className, String classCode, Date duration, String status, String location, String fsu, Date start_date, Date end_date, String create_by, Date createdDate, Date modified_date, String modified_by, int trainingProgram_id) {
+    public ClassResponse(int classId, String className, String classCode, int duration, String status, String location, String fsu, Date start_date, Date end_date, String create_by, Date createdDate, Date modified_date, String modified_by, int trainingProgram_id) {
         this.classId = classId;
         this.className = className;
         this.classCode = classCode;
