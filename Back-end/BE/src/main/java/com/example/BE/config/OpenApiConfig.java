@@ -13,7 +13,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info().title("API Documentation").version(appVersion)
-                .description("API documentation for my Spring Boot project"));
+            .description("API documentation for my Spring Boot project"));
     }
 
 }
