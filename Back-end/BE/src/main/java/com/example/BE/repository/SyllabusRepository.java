@@ -4,9 +4,11 @@ package com.example.BE.repository;
 import java.sql.Date;
 // import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.BE.model.entity.Syllabus;
 
@@ -19,7 +21,16 @@ public interface SyllabusRepository  extends JpaRepository<Syllabus,Integer> {
 	@Query(value = "Select * from syllabus where create_date = :date",nativeQuery = true)
 	List<Syllabus> getSyllabusByCreateDate(String date);
 
-	
+	@Query(value = "Select * from syllabus where userid = :userid",
+	nativeQuery = true)
+	Syllabus getSyllabusByUser(int userid);
+
+	@Query(value = "Select * from syllabus where topic_code = :topicCode",
+	nativeQuery = true)
+	Syllabus getSyllabusByTopicCode(int topicCode);
+
+	@Query("Select sy from Syllabus sy JOIN FETCH sy.syllabus_unit where sy.topic_code = :topic_code")
+	Optional<Syllabus> getSyllabusWithTrainingUnit(@Param("topic_code") Integer topic_code);
 
 
 }

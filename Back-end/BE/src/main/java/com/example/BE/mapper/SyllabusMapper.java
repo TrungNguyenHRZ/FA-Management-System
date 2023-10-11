@@ -4,7 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.example.BE.model.dto.response.SyllabusResponse;
+import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.Syllabus;
+import com.example.BE.model.entity.TrainingUnit;
+
 import java.util.List;
 @Mapper(componentModel = "spring")
 
@@ -25,8 +28,13 @@ public interface SyllabusMapper {
 	@Mapping(source = "syllabus.createdDate",target = "createdDate")
 	@Mapping(source = "syllabus.modified_date",target = "modified_date")
 	@Mapping(source = "syllabus.modified_by",target = "modified_by")
+	// @Mapping(source = "user_syllabus",target = "user")
+	@Mapping(source = "user_syllabus.userID",target = "userId")
+	@Mapping(source = "user_syllabus.name",target = "userName")
 	@Mapping(source = "syllabus_unit",target = "unitList")
+	// @Mapping(source = "syllabus_unit.training_content",target = "unitList.contentList")
 
-	// SyllabusResponse toResponse(Syllabus syllabus);
+	SyllabusResponse toResponse(Syllabus syllabus);
+	// TrainingUnitResponse unitResponse(TrainingUnit trainingUnit);
 	List<SyllabusResponse> toSyllabusResponseList(List<Syllabus> syllabusList);
 }

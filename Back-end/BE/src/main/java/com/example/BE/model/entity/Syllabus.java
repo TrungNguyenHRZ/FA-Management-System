@@ -1,6 +1,7 @@
 package com.example.BE.model.entity;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -81,5 +82,5 @@ public class Syllabus {
 	private User user_syllabus;
 
 	@OneToMany(mappedBy="unit_topic_code")
-	Set<TrainingUnit> syllabus_unit = new HashSet<>();
+	List<TrainingUnit> syllabus_unit;
 }
