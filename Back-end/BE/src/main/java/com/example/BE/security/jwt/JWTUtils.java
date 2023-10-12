@@ -23,6 +23,7 @@ public class JWTUtils {
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(new Date().getTime() + 86400000))
                 .withClaim("userInfo", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("id", userDetails.getId())
                 .sign(algorithm);
     }
 

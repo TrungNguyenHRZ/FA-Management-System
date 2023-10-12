@@ -5,26 +5,17 @@ import com.example.BE.dto.request.user.*;
 import com.example.BE.dto.response.user.LoginResponse;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
-import com.example.BE.handle.GlobalExceptionHandler;
 import com.example.BE.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.BE.model.entity.User;
 import com.example.BE.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Objects;
 
 
 @RestController
@@ -50,6 +41,7 @@ public class UserController {
 
 
 	@PostMapping("/create")
+	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
 	public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
 		UserResponse userResponse = userService.createUser(request);
 		return ResponseEntity.ok(userResponse);
@@ -72,10 +64,10 @@ public class UserController {
 	}
 
 
-	@GetMapping(value="/{id}")
+	@GetMapping(value="/info")
 	@SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
-	public ResponseEntity<UserResponse> getUser2ById(@PathVariable int id){
-		UserResponse userResponse = userService.getUserById(id);
+	public ResponseEntity<UserResponse> getUser2ById(){
+		UserResponse userResponse = userService.getUserInfo();
 		return ResponseEntity.ok(userResponse);
 	}
 

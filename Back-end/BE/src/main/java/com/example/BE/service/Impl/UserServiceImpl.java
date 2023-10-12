@@ -8,10 +8,12 @@ import com.example.BE.enums.ErrorMessage;
 import com.example.BE.enums.Gender;
 import com.example.BE.enums.Role;
 import com.example.BE.handle.BusinessException;
+import com.example.BE.model.Mail;
 import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
 import com.example.BE.repository.UserPermissionRepository;
 import com.example.BE.repository.UserRepository;
+import com.example.BE.security.SecurityUtils;
 import com.example.BE.security.UserDetailsImpl;
 import com.example.BE.security.jwt.JWTUtils;
 import com.example.BE.service.UserService;
@@ -19,13 +21,15 @@ import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -36,13 +40,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserPermissionRepository userPermissionRepository;
+    private final EmailSenderService emailSenderService;
+
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
 
     @Override
     public UserResponse createUser(CreateUserRequest request) {
         try {
             log.info("Create user with request :{}", request.toString());
-            User userAdmin = userRepository.findByUserId(request.getUserAdminId()).orElse(null);
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
             log.info("User Admin : {}", userAdmin);
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
@@ -71,7 +80,6 @@ public class UserServiceImpl implements UserService {
 
             String password = RandomStringGenerator.generateRandomString(8);
             log.info("Gerate random : {}", password);
-            password = RandomStringGenerator.sha256(password);
             user = new User();
             user.setName(request.getName());
             user.setCreatedDate(new Date());
@@ -81,12 +89,26 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
             user.setStatus(request.isStatus());
             user.setPermission(userPermission);
-            user.setPassword(password);
+            user.setPassword(RandomStringGenerator.sha256(password));
             user.setCreateBy(userAdmin.getName());
 
             user = userRepository.save(user);
             user.setUserIdSearch(String.valueOf(user.getUserId()));
             user = userRepository.save(user);
+
+            // send email:
+            log.info("START... Sending email");
+            Mail mail = new Mail();
+            mail.setFrom(mailFrom);//replace with your desired email
+            mail.setTo(user.getEmail());//replace with your desired email
+            mail.setSubject("Cap Tai Khoan");
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", user.getEmail());
+            model.put("password", password);
+            mail.setPros(model);
+            mail.setTemplate("index");
+            emailSenderService.sendEmail(mail);
+            log.info("END... Email sent success");
             return new UserResponse(user);
 
         } catch (BusinessException e) {
@@ -110,9 +132,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserById(int id) {
+    public UserResponse getUserInfo() {
         try {
-            User user = userRepository.findByUserId(id).orElse(null);
+            String email = SecurityUtils.getUsernameAuth();
+            User user = userRepository.findByEmail(email).orElse(null);
             if (Objects.isNull(user)) {
                 throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
             }
@@ -129,7 +152,8 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateInfoUser(UpdateUserRequest request) {
         try {
             log.info("Update user with request :{}", request.toString());
-            User userAdmin = userRepository.findByUserId(request.getUserAdminId()).orElse(null);
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
             log.info("User Admin : {}", userAdmin);
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
@@ -182,7 +206,8 @@ public class UserServiceImpl implements UserService {
     public UserResponse gantPermissionUser(GantPermissionUserRequest request) {
         try {
             log.info("Create user with request :{}", request.toString());
-            User userAdmin = userRepository.findByUserId(request.getUserAdminId()).orElse(null);
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
             log.info("User Admin : {}", userAdmin);
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
@@ -216,25 +241,57 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-      try {
-          User user = userRepository.findByEmail(request.getEmail()).orElse(null);
-          if(Objects.isNull(user)) {
-              throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
-          }
-          String passHash = RandomStringGenerator.sha256(request.getPassword());
-          if(!passHash.equals(user.getPassword())) {
-              throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
-          }
+        try {
+            User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+            String passHash = RandomStringGenerator.sha256(request.getPassword());
+            if (!passHash.equals(user.getPassword())) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
 
-          UserDetailsImpl userDetails = UserDetailsImpl.build(user);
-          String accessToken= JWTUtils.generateAccessToken(userDetails);
-          return new LoginResponse(user, accessToken);
+            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+            String accessToken = JWTUtils.generateAccessToken(userDetails);
+            return new LoginResponse(user, accessToken);
 
-      } catch (BusinessException e) {
+        } catch (BusinessException e) {
             throw e;
-      } catch (Exception e) {
-          e.printStackTrace();
-          throw new BusinessException(ErrorMessage.USER_LOGIN_FAIL);
-      }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorMessage.USER_LOGIN_FAIL);
+        }
+    }
+
+
+    @Override
+    public UserResponse createUserSA(CreateUserSARequest request) {
+        try {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateOfBirth = dateFormat.parse(request.getDob());
+            String gender = request.isGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
+            UserPermission userPermission = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
+
+            User user = new User();
+            user.setName(request.getName());
+            user.setCreatedDate(new Date());
+            user.setPhone(request.getPhone());
+            user.setDob(dateOfBirth);
+            user.setGender(gender);
+            user.setEmail(request.getEmail());
+            user.setStatus(request.isStatus());
+            user.setPermission(userPermission);
+            user.setPassword(RandomStringGenerator.sha256(request.getPassword()));
+            user = userRepository.save(user);
+            user.setUserIdSearch(String.valueOf(user.getUserId()));
+            user = userRepository.save(user);
+            return new UserResponse(user);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorMessage.USER_CREATE_FAIL);
+        }
     }
 }

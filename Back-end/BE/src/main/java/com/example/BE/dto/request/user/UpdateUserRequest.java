@@ -20,5 +20,4 @@ public class UpdateUserRequest {
     private String dob; // dd/MM/yyyy
     private Boolean genderTrueMale; // true : male / false: female
     private Boolean status;
-    private int userAdminId = 1;
 }
