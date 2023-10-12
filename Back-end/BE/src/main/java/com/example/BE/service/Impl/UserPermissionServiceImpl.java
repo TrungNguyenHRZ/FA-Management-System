@@ -39,7 +39,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             userPermission = new UserPermission();
             userPermission.setPermissionId(2);
             userPermission.setRole(Role.ADMIN.getRole());
-            userPermission.setUserManagement(Permission.ACCESS_DENIED.getPermission());
+            userPermission.setUserManagement(Permission.VIEW.getPermission());
             userPermission.setTrainingProgram(Permission.FULL_ACCESS.getPermission());
             userPermission.setSyllabus(Permission.FULL_ACCESS.getPermission());
             userPermission.setClassName(Permission.FULL_ACCESS.getPermission());
@@ -52,11 +52,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             userPermission = new UserPermission();
             userPermission.setPermissionId(3);
             userPermission.setRole(Role.TRAINER.getRole());
-            userPermission.setUserManagement(Permission.ACCESS_DENIED.getPermission());
+            userPermission.setUserManagement(Permission.VIEW.getPermission());
             userPermission.setTrainingProgram(Permission.VIEW.getPermission());
             userPermission.setSyllabus(Permission.FULL_ACCESS.getPermission());
             userPermission.setClassName(Permission.VIEW.getPermission());
-            userPermission.setMaterial(Permission.CREATE.getPermission());
+            userPermission.setMaterial(Permission.VIEW.getPermission());
             userPermissionRepository.save(userPermission);
         }
     }
