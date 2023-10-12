@@ -25,25 +25,27 @@ public class ViewSyllabusController {
     @Autowired
     UserRepository repoUser;
 
-    @Autowired
-    SyllabusMapper syllabusMapper;
 
-    @GetMapping("/view")
-    public List<SyllabusResponse> getAllSyllabus() {
-        List<Syllabus> syllabusList;
-        syllabusList = syllabusService.getAllSyllabus();
-        return syllabusMapper.toSyllabusResponseList(syllabusList);
-    }
+	@GetMapping("/view")
+	public List<SyllabusResponse> getAllSyllabus(){
+		return syllabusService.getAll();
+	}
 
-    @GetMapping("/view/{keyword}")
-    public List<Syllabus> getAllSyllabusByKeyword(@PathVariable String keyword) {
-        return syllabusService.getAllSyllabusByKey(keyword);
-    }
+	@GetMapping("/view/{keyword}")
+	public List<SyllabusResponse> getAllSyllabusByKeyword(@PathVariable String keyword){
+		return syllabusService.getAllSyllabusByKey(keyword);
+	}
 
-    @GetMapping("/search/{date}")
-    public List<Syllabus> getAllSyllabusByDate(@PathVariable String date) {
-        return syllabusService.getAllSyllabusByCreateDate(date);
-    }
+	@GetMapping("/search/{date}")
+	public List<SyllabusResponse> getAllSyllabusByDate(@PathVariable String date){
+		return syllabusService.getAllSyllabusByCreateDate(date);
+	}
+	
+	@GetMapping("viewSyllabus/{code}")
+	public SyllabusResponse getSyllabusByTopicCode(@PathVariable int code){
+		return syllabusService.getSyllabusByTopicCode(code);
+	}
+
 
     @PostMapping("/saveSyllabus/{id}")
     public Syllabus saveSyllabus(@RequestBody Syllabus syllabus, @PathVariable int id) {

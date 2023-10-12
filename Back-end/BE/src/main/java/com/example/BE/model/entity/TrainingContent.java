@@ -5,16 +5,41 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
+// import java.util.UUID;
+
 
 @Entity
 @Table(name = "Training_Content")
 @Data
 public class TrainingContent {
 
-    @Id
-    @Column(name = "content")
-    private String content;
+
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(name = "content_id")
+	private String contentId;
+
+	@Column(name = "content")
+	private String content;
+
 
     @Column(name = "learning_objective")
     private String learningObjective;
@@ -22,9 +47,10 @@ public class TrainingContent {
     @Column(name = "delivery_type")
     private String deliveryType;
 
-    @Temporal(TemporalType.TIME)
-    @Column(name = "Duration")
-    public Date duration;
+
+	@Column(name = "Duration")
+	private int duration;
+
 
     @Column(name = "Training_Format")
     private String trainingFormat;
@@ -36,7 +62,7 @@ public class TrainingContent {
     @JoinColumn(name = "unit_code")
     private TrainingUnit unitCode;
 
-    @OneToMany(mappedBy = "delivery_type")
-    Set<LearningObject> learning_objects = new HashSet<>();
+	@OneToMany(mappedBy = "delivery_type")
+	List<LearningObject> learning_objects;
 
 }

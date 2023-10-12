@@ -1,11 +1,16 @@
 import React from "react";
 import "./user-permission.css";
+import { FaRegStar, FaCirclePlus, FaEye } from "react-icons/fa6";
 
 const UserPermission = () => {
   const roles = [
-    { roleName: "Super admin", rolePermission: "Full access" },
-    { roleName: "Admin", rolePermission: "Create" },
-    { roleName: "Trainer", rolePermission: "View" },
+    {
+      roleName: "Super admin",
+      rolePermission: "Full access",
+      icon: <FaRegStar />,
+    },
+    { roleName: "Admin", rolePermission: "Create", icon: <FaCirclePlus /> },
+    { roleName: "Trainer", rolePermission: "View", icon: <FaEye /> },
   ];
 
   const permissionOptions = [
@@ -18,7 +23,7 @@ const UserPermission = () => {
 
   const renderSelect = () => {
     return (
-      <select name="" id="">
+      <select name="" id="" defaultValue="Permission">
         <option selected disabled>
           Permission
         </option>
@@ -54,11 +59,18 @@ const UserPermission = () => {
                 <td>{renderSelect()}</td>
                 <td>{renderSelect()}</td>
                 <td>{renderSelect()}</td>
-                <td>{role.rolePermission}</td>
+                <td>
+                  <span className="icon">{role.icon}</span>
+                  {role.rolePermission}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="button-container">
+        <button className="cancel-button">Cancel</button>
+        <button className="save-button">Save</button>
       </div>
     </div>
   );

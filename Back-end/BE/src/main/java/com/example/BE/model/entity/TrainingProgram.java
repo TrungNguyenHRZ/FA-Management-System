@@ -7,9 +7,27 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "Training_Program")
 @Data
+@Setter
+@Getter
 public class TrainingProgram {
 
     @Id
@@ -30,9 +48,9 @@ public class TrainingProgram {
     @Column(name = "Start_Time")
     private String start_time;
 
-    @Temporal(TemporalType.TIME)
-    @Column(name = "Duration")
-    private String duration;
+
+	@Column(name = "Duration")
+	private int duration;
 
     @Column(name = "Create_By")
     private String create_by;

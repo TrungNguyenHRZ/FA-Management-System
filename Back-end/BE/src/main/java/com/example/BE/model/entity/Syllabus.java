@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -71,6 +72,6 @@ public class Syllabus {
     @JoinColumn(name = "userid")
     private User user_syllabus;
 
-    @OneToMany(mappedBy = "unit_topic_code")
-    Set<TrainingUnit> syllabus_unit = new HashSet<>();
+	@OneToMany(mappedBy="unit_topic_code")
+	List<TrainingUnit> syllabus_unit;
 }

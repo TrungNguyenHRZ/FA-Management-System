@@ -47,21 +47,19 @@
   color: #2a00b7;
 }
 
-/* CSS cho submenu */
 .sub-menu {
-  display: none; /* Ẩn submenu ban đầu */
+  display: none;
   list-style-type: none;
   padding: 0;
   background-color: #fff;
   border-radius: 10px;
-  z-index: 1; /* Đảm bảo submenu hiển thị trên mọi nội dung khác */
-  width: 150px; /* Đặt chiều rộng của submenu */
+  z-index: 1;
+  width: 150px;
 }
 .sub-menu li {
   padding: 10px;
 }
 
-/* CSS khi submenu được hiển thị */
 .show-sub-menu {
   display: block;
   margin-left: 30px;

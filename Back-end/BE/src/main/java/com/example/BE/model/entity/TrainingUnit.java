@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,10 +23,10 @@ public class TrainingUnit {
     @Column(name = "day_number")
     private int day_number;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_code")
-    private Syllabus unit_topic_code;
+	@ManyToOne
+	@JoinColumn(name="topic_code")
+	private Syllabus unit_topic_code;
 
-    @OneToMany(mappedBy = "unitCode")
-    Set<TrainingContent> training_content = new HashSet<>();
+	@OneToMany(mappedBy="unitCode")
+	private List<TrainingContent> training_content;
 }
