@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
 import lombok.Data;
 
 @Entity
@@ -15,7 +14,7 @@ public class ClassUser {
     @EmbeddedId
     private CompositeClassUser class_user_id;
 
-	@Column(name="UserType")
-	private String userType;
+    @Column(name = "UserType")
+    private String userType;
 
 }

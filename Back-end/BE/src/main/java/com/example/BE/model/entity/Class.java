@@ -1,21 +1,12 @@
 package com.example.BE.model.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Setter
@@ -23,57 +14,57 @@ import lombok.Setter;
 @Table(name = "Classes")
 @Data
 public class Class implements Serializable {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ClassID")
     private int classID;
 
-	@Column(name = "ClassName")
-	private String className;
+    @Column(name = "ClassName")
+    private String className;
 
-	@Column(name = "ClassCode")
-	private String classCode;
+    @Column(name = "ClassCode")
+    private String classCode;
 
 	@Column(name = "Duration")
 	private int duration;
 
-	@Column(name = "Status")
-	private String status;
+    @Column(name = "Status")
+    private String status;
 
-	@Column(name="Location")
-	private String location;
+    @Column(name = "Location")
+    private String location;
 
-	@Column(name="FSU")
-	private String fsu;
+    @Column(name = "FSU")
+    private String fsu;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "Start_Date")
-	private Date start_date;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Start_Date")
+    private Date start_date;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "End_Date")
-	private Date end_date;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "End_Date")
+    private Date end_date;
 
-	@Column(name = "Create_By")
-	private String create_by;
+    @Column(name = "Create_By")
+    private String create_by;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "Create_Date")
-	private Date createdDate;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Create_Date")
+    private Date createdDate;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "Modified_Date")
-	private Date modified_date;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Modified_Date")
+    private Date modified_date;
 
-	@Column(name = "Modified_By")
-	private String modified_by;
+    @Column(name = "Modified_By")
+    private String modified_by;
 
-	// @OneToMany(mappedBy = "class_object")
+    // @OneToMany(mappedBy = "class_object")
     // private Set<ClassUser> userClasses = new HashSet<>();
 
-	@ManyToOne
-	@JoinColumn(name="program_id")
-	private TrainingProgram program_class;
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    private TrainingProgram program_class;
 
 }

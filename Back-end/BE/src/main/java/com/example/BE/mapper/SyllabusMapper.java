@@ -1,14 +1,14 @@
 package com.example.BE.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.Syllabus;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import com.example.BE.model.entity.TrainingUnit;
 
 import java.util.List;
+
 @Mapper(componentModel = "spring")
 
 public interface SyllabusMapper {

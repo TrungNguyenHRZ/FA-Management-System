@@ -6,13 +6,13 @@ import jakarta.persistence.ManyToOne;
 
 @Embeddable
 public class CompositeClassUser {
-	
-	@ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
 
-    
-	@ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "classid")
     private Class class_object;
 }

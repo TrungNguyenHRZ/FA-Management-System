@@ -1,5 +1,8 @@
 package com.example.BE.model.dto.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -10,9 +13,11 @@ import com.example.BE.model.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Setter
 @Getter
 public class SyllabusResponse {
+
 
 	private int topic_code;
 	private String topic_name;

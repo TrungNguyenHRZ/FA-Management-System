@@ -2,16 +2,17 @@ package com.example.BE.handle;
 
 import com.example.BE.enums.ErrorMessage;
 
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
 
-    private String message ;
-    private BusinessException(String message){
+    private String message;
+
+    private BusinessException(String message) {
         super(message);
         this.message = message;
     }
 
 
-    public BusinessException(ErrorMessage message){
+    public BusinessException(ErrorMessage message) {
         super(message.getMessage());
         this.message = message.getMessage();
     }

@@ -12,7 +12,8 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class UserResponse {
+public class LoginResponse {
+
     private int id;
     private String userType;
     private String name;
@@ -24,9 +25,9 @@ public class UserResponse {
     private Date createdAt;
     private String createdBy;
     private String phone;
+    private String accessToken;
 
-
-    public UserResponse(User user) {
+    public LoginResponse(User user, String accessToken) {
         this.id = user.getUserId();
         this.userType = user.getPermission().getRole();
         this.name = user.getName();
@@ -39,5 +40,6 @@ public class UserResponse {
         this.createdAt = user.getCreatedDate();
         this.createdBy = user.getCreateBy();
         this.phone = user.getPhone();
+        this.accessToken = accessToken;
     }
 }

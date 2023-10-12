@@ -1,9 +1,7 @@
 package com.example.BE.dto.request.user;
 
 
-import com.example.BE.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,5 +18,4 @@ public class UpdateUserRequest {
     private String dob; // dd/MM/yyyy
     private Boolean genderTrueMale; // true : male / false: female
     private Boolean status;
-    private int userAdminId = 1;
 }

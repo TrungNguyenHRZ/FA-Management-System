@@ -1,9 +1,7 @@
 package com.example.BE.service.Impl;
 
-import com.example.BE.enums.Gender;
 import com.example.BE.enums.Permission;
 import com.example.BE.enums.Role;
-import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
 import com.example.BE.repository.UserPermissionRepository;
 import com.example.BE.repository.UserRepository;
@@ -12,7 +10,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -24,9 +21,9 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
 
     @PostConstruct
-    public void importPermissionDefault(){
+    public void importPermissionDefault() {
         UserPermission userPermission = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
-        if(Objects.isNull(userPermission)){
+        if (Objects.isNull(userPermission)) {
             userPermission = new UserPermission();
             userPermission.setPermissionId(1);
             userPermission.setRole(Role.SUPER_ADMIN.getRole());
@@ -38,7 +35,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             userPermissionRepository.save(userPermission);
         }
         userPermission = userPermissionRepository.findFirstByRole(Role.ADMIN.getRole()).orElse(null);
-        if(Objects.isNull(userPermission)){
+        if (Objects.isNull(userPermission)) {
             userPermission = new UserPermission();
             userPermission.setPermissionId(2);
             userPermission.setRole(Role.ADMIN.getRole());
@@ -51,7 +48,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         }
 
         userPermission = userPermissionRepository.findFirstByRole(Role.TRAINER.getRole()).orElse(null);
-        if(Objects.isNull(userPermission)){
+        if (Objects.isNull(userPermission)) {
             userPermission = new UserPermission();
             userPermission.setPermissionId(3);
             userPermission.setRole(Role.TRAINER.getRole());
@@ -62,24 +59,39 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             userPermission.setMaterial(Permission.CREATE.getPermission());
             userPermissionRepository.save(userPermission);
         }
+    }
 
-        User user = userRepository.findByEmail("Admin@Email.com").orElse(null);
-        UserPermission userPermissionSa = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
-        if(Objects.isNull(user)){
-            user = new User();
-            user.setName("admin");
-            user.setCreatedDate(new Date());
-            user.setPhone("0300000000");
-            user.setDob(new Date());
-            user.setGender(Gender.MALE.getGender());
-            user.setEmail("Admin@Email.com");
-            user.setStatus(true);
-            user.setPermission(userPermissionSa);
-            user.setUserId(1);
-            user.setUserIdSearch(String.valueOf(1));
-            user.setPassword("Password123@");
-            user = userRepository.save(user);
+
+    @Override
+    public boolean checkCreatePermission(String userPermission) {
+        if (Permission.CREATE.getPermission().equals(userPermission) || Permission.FULL_ACCESS.getPermission().equals(userPermission)) {
+            return true;
         }
+        return false;
+    }
 
+    @Override
+    public boolean checkReadPermission(String userPermission) {
+        if (Permission.VIEW.getPermission().equals(userPermission) || Permission.FULL_ACCESS.getPermission().equals(userPermission)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkUpdatePermission(String userPermission) {
+        if (Permission.MODIFY.getPermission().equals(userPermission) || Permission.FULL_ACCESS.getPermission().equals(userPermission)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean checkImportPermission(String userPermission) {
+        if (Permission.FULL_ACCESS.getPermission().equals(userPermission)) {
+            return true;
+        }
+        return false;
     }
 }

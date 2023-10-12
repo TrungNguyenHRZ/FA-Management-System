@@ -1,85 +1,76 @@
 package com.example.BE.model.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Data;
-
 @Entity
 @Table(name = "Syllabus")
 @Data
 public class Syllabus {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="topic_code")
-	private int topic_code;
 
-	@Column(name="topic_name")
-	private String topic_name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "topic_code")
+    private int topic_code;
 
-	@Column(name="technical_group")
-	private String technical_group;
+    @Column(name = "topic_name")
+    private String topic_name;
 
-	@Column(name="version")
-	private String version;
+    @Column(name = "technical_group")
+    private String technical_group;
 
-	@Column(name="training_audience")
-	private String training_audience;
+    @Column(name = "version")
+    private String version;
 
-	@Column(name="topic_outline")
-	private String topic_outline;
+    @Column(name = "training_audience")
+    private String training_audience;
 
-	@Column(name="training_materials")
-	private String training_materials;
+    @Column(name = "topic_outline")
+    private String topic_outline;
 
-	@Column(name="training_principles")
-	private String training_principles;
+    @Column(name = "training_materials")
+    private String training_materials;
 
-	@Column(name="priority")
-	private String priority;
+    @Column(name = "training_principles")
+    private String training_principles;
 
-	@Column(name= "level")
-	private String level;
+    @Column(name = "priority")
+    private String priority;
 
-	@Column(name="publish_status")
-	private String publish_status;
+    @Column(name = "level")
+    private String level;
 
-	@Column(name = "Create_By")
-	private String create_by;
+    @Column(name = "publish_status")
+    private String publish_status;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "Create_Date")
-	private Date createdDate;
+    @Column(name = "Create_By")
+    private String create_by;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "Modified_Date")
-	private Date modified_date;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Create_Date")
+    private Date createdDate;
 
-	@Column(name = "Modified_By")
-	private String modified_by;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "Modified_Date")
+    private Date modified_date;
 
-	@OneToMany(mappedBy="program_topic")
-	Set<TrainingProgramSyllabus> training_program = new HashSet<>();
+    @Column(name = "Modified_By")
+    private String modified_by;
 
-	// @OneToMany(mappedBy="syllabus_object_code")
-	// Set<SyllabusObject> syllabus_object = new HashSet<>();
+    @OneToMany(mappedBy = "program_topic")
+    Set<TrainingProgramSyllabus> training_program = new HashSet<>();
 
-	@ManyToOne
-	@JoinColumn(name="userid")
-	private User user_syllabus;
+    // @OneToMany(mappedBy="syllabus_object_code")
+    // Set<SyllabusObject> syllabus_object = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private User user_syllabus;
 
 	@OneToMany(mappedBy="unit_topic_code")
 	List<TrainingUnit> syllabus_unit;
