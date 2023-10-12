@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorMessage {
-    USER_ADMIN_INVALID ("User Super Admin Invalid"),
+    USER_ADMIN_INVALID("User Super Admin Invalid"),
     USER_EMAIL_EXISTED("Email existed"),
     USER_EMAIL_FORMAT_INCORRECT("Email incorrect format"),
     USER_CREATE_FAIL("Create user fail"),
@@ -23,7 +23,7 @@ public enum ErrorMessage {
 
     private String message;
 
-    ErrorMessage(String message){
+    ErrorMessage(String message) {
         this.message = message;
     }
 }

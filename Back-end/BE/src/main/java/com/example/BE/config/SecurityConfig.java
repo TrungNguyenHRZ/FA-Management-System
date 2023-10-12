@@ -1,7 +1,6 @@
 package com.example.BE.config;
 
 
-import com.example.BE.model.entity.User;
 import com.example.BE.security.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +23,14 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
-                    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                    .requestMatchers(
-                        "/api-docs",
-                        "/swagger-ui/**",
-                        "/swagger-ui",
-                        "/user/login",
-                        "/dev/**"
-                    ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(
+                    "/api-docs",
+                    "/swagger-ui/**",
+                    "/swagger-ui",
+                    "/user/login",
+                    "/dev/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)

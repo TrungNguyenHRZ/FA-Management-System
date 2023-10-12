@@ -24,5 +24,5 @@ public class ClassServiceImpl implements ClassService {
         return classRepository.findAll();
     }
 
-    
+
 }

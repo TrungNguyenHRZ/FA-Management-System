@@ -3,17 +3,16 @@ package com.example.BE.enums;
 public enum Gender {
 
     MALE("Male"),
-    FEMALE("Female")
-    ;
+    FEMALE("Female");
 
     private String gender;
 
-    Gender(String gender){
+    Gender(String gender) {
         this.gender = gender;
     }
 
 
-    public String getGender(){
+    public String getGender() {
         return this.gender;
     }
 }

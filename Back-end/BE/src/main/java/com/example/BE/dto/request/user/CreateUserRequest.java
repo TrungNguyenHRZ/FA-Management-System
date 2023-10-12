@@ -1,7 +1,6 @@
 package com.example.BE.dto.request.user;
 
 
-import com.example.BE.enums.Gender;
 import com.example.BE.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

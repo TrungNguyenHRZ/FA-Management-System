@@ -16,6 +16,7 @@ import com.example.BE.repository.UserRepository;
 import com.example.BE.security.SecurityUtils;
 import com.example.BE.security.UserDetailsImpl;
 import com.example.BE.security.jwt.JWTUtils;
+import com.example.BE.service.UserPermissionService;
 import com.example.BE.service.UserService;
 import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final EmailSenderService emailSenderService;
+    private final UserPermissionService userPermissionService;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
@@ -56,11 +58,14 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
             }
-            if (!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
-                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
 
+            // check permission
+            boolean isPermission = userPermissionService.checkCreatePermission(userAdmin.getPermission().userManagement);
+            if (!isPermission) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
 
+            //
             if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
                 throw new BusinessException(ErrorMessage.USER_EMAIL_FORMAT_INCORRECT);
             }
@@ -76,6 +81,11 @@ public class UserServiceImpl implements UserService {
             UserPermission userPermission = userPermissionRepository.findFirstByRole(request.getUserType().getRole()).orElse(null);
             if (Objects.isNull(userPermission)) {
                 throw new BusinessException(ErrorMessage.USER_PERMISSION_INVALID);
+            }
+
+            if (userPermission.getRole().equals(Role.SUPER_ADMIN.getRole())
+                && !userAdmin.getPermission().getRole().equals(Role.SUPER_ADMIN.getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
 
             String password = RandomStringGenerator.generateRandomString(8);
@@ -158,9 +168,11 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
             }
-            if (!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
-                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
 
+            // check permission
+            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().userManagement);
+            if (!isPermission) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
 
             User user = userRepository.findByUserId(request.getId()).orElse(null);
@@ -212,9 +224,11 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(userAdmin)) {
                 throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
             }
-            if (!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
-                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
 
+            // check permission
+            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().userManagement);
+            if (!isPermission) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
 
             User user = userRepository.findByUserId(request.getId()).orElse(null);
@@ -226,6 +240,12 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(userPermission)) {
                 throw new BusinessException(ErrorMessage.USER_PERMISSION_INVALID);
             }
+
+            if (userPermission.getRole().equals(Role.SUPER_ADMIN.getRole())
+                && !userAdmin.getPermission().getRole().equals(Role.SUPER_ADMIN.getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+            }
+
             user.setPermission(userPermission);
             user.setModifiedBy(userAdmin.getName());
             user.setModifiedDate(new Date());

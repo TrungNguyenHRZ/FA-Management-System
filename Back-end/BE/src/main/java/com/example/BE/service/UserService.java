@@ -12,7 +12,9 @@ public interface UserService {
     UserPageResponse getAllUser(GetAllRequest request);
 
     UserResponse getUserInfo();
+
     UserResponse updateInfoUser(UpdateUserRequest request);
+
     UserResponse gantPermissionUser(GantPermissionUserRequest request);
 
 

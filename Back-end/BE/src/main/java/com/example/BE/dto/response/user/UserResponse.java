@@ -1,8 +1,6 @@
 package com.example.BE.dto.response.user;
 
 
-import com.example.BE.enums.Gender;
-import com.example.BE.enums.Role;
 import com.example.BE.model.entity.User;
 import lombok.Getter;
 import lombok.Setter;

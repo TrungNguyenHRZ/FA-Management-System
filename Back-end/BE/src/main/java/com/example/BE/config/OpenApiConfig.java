@@ -12,10 +12,11 @@ public class OpenApiConfig {
 
     public final static String SERCURITY_BEARER = "Bearer Auth";
     private String appVersion = "v1.1.1";
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info().title("API Documentation").version(appVersion)
-            .description("API documentation for my Spring Boot project"))
+                .description("API documentation for my Spring Boot project"))
             .components(new Components()
                 .addSecuritySchemes(SERCURITY_BEARER,
                     new SecurityScheme()

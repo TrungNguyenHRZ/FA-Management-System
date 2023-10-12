@@ -1,7 +1,6 @@
 package com.example.BE.model.dto;
 
 import com.example.BE.model.entity.TrainingProgram;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

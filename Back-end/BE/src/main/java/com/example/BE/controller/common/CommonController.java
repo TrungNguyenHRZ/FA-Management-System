@@ -24,7 +24,7 @@ public class CommonController {
 
     @Operation(summary = "Api create user Super Admin")
     @PostMapping("/user/admin")
-    ResponseEntity<UserResponse> createUserSA(@Valid @RequestBody CreateUserSARequest request){
+    ResponseEntity<UserResponse> createUserSA(@Valid @RequestBody CreateUserSARequest request) {
         UserResponse response = userService.createUserSA(request);
         return ResponseEntity.ok(response);
     }

@@ -18,8 +18,9 @@ public class ClassController {
     private ClassService classService;
     @Autowired
     private ClassMapper classMapper;
+
     @GetMapping(value = {"", "/all"})
-    public List<ClassDTO> getAllClass(){
+    public List<ClassDTO> getAllClass() {
         List<Class> classList = classService.findAllClass();
         return classMapper.toClassDTOList(classList);
     }
