@@ -32,6 +32,7 @@ public class SecurityConfig {
                     "/dev/**"
                 ).permitAll()
 //                .anyRequest().authenticated()
+                    .anyRequest().permitAll()
             )
             .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
         ;
