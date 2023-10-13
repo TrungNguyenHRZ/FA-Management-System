@@ -15,6 +15,7 @@ import Footer from "./Footer/footer";
 const Sidebar = () => {
   const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
   const [isSubMenuUser, setSubMenuUser] = useState(false);
+  const [isSubMenuClass, setSubMenuClass] = useState(false);
 
   const toggleSubMenuSyllabus = () => {
     setSubMenuSyllabus(!isSubMenuSyllabus);
@@ -22,6 +23,10 @@ const Sidebar = () => {
 
   const toggleSubMenuUser = () => {
     setSubMenuUser(!isSubMenuUser);
+  };
+
+  const toggleSubMenuClass = () => {
+    setSubMenuClass(!isSubMenuClass);
   };
 
   return (
@@ -38,6 +43,7 @@ const Sidebar = () => {
                 Home
               </Link>
             </li>
+
             <li onClick={toggleSubMenuSyllabus}>
               <FaBookOpen className="icon-sidebar" />
               <span className="home-link">Syllabus</span>
@@ -56,18 +62,31 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
+
             <li>
               <FaLightbulb className="icon-sidebar" />
               <Link to={"/training-program"} className="home-link">
                 Training program
               </Link>
             </li>
-            <li>
+
+            <li onClick={toggleSubMenuClass}>
               <FaGraduationCap className="icon-sidebar" />
-              <Link to={"/class"} className="home-link">
-                Class
-              </Link>
+              <span className="home-link">Class</span>
             </li>
+            <ul className={`sub-menu ${isSubMenuClass ? "show-sub-menu" : ""}`}>
+              <li>
+                <Link to={"/view-class"} className="home-link">
+                  View Class
+                </Link>
+              </li>
+              <li>
+                <Link to={"/create-class"} className="home-link">
+                  Create Class
+                </Link>
+              </li>
+            </ul>
+
             <li onClick={toggleSubMenuUser}>
               <FaUserGroup className="icon-sidebar" />
               <span className="home-link">User management</span>
