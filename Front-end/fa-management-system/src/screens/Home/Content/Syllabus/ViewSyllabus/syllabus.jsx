@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { getListSyllabus } from "../../../../../service/api-syllabus";
 import {
   FaSearch,
   FaRegCalendar,
@@ -7,7 +10,26 @@ import {
 } from "react-icons/fa";
 import "./syllabus.css";
 
+let serSearchResult = null;
+
+await axios.get("http://localhost:8080/syllabus/view").then((res) => {
+  serSearchResult = res.data;
+  console.log(serSearchResult);
+});
+
 const Syllabus = () => {
+  //   const [list, setList] = useState([]);
+
+  //   useEffect(() => {
+  //     let mounted = true;
+  //     getListSyllabus().then((items) => {
+  //       if (mounted) {
+  //         setList(items);
+  //       }
+  //     });
+  //     return () => (mounted = false);
+  //   }, []);
+
   return (
     <div className="view-syllbus-container">
       <h1>Syllabus</h1>
@@ -53,9 +75,18 @@ const Syllabus = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td></td>
-            </tr>
+            {serSearchResult.map((item, index) => (
+              <tr key={index}>
+                <td>{item.topic_name}</td>
+                <td>{item.topic_code}</td>
+                <td>{item.createdDate}</td>
+
+                <td>{item.create_by}</td>
+                <td>NULL</td>
+                <td>NULL</td>
+                <td>{item.publish_status}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
