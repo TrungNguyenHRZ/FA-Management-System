@@ -3,7 +3,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { getListClass } from "../../../../../service/api-class";
 
-// let serSearchResult = null;
+let serSearchResult = null;
 
 // await axios.get("http://localhost:8080/class/all").then((res) => {
 //   serSearchResult = res.data.payload;
@@ -11,17 +11,17 @@ import { getListClass } from "../../../../../service/api-class";
 // });
 
 const ViewClass = () => {
-  const [list, setList] = useState([]);
+  //   const [list, setList] = useState([]);
 
-  useEffect(() => {
-    let mounted = true;
-    getListClass().then((items) => {
-      if (mounted) {
-        setList(items);
-      }
-    });
-    return () => (mounted = false);
-  }, []);
+  //   useEffect(() => {
+  //     let mounted = true;
+  //     getListClass().then((items) => {
+  //       if (mounted) {
+  //         setList(items);
+  //       }
+  //     });
+  //     return () => (mounted = false);
+  //   }, []);
 
   return (
     <div className="view-syllbus-container">
@@ -42,7 +42,7 @@ const ViewClass = () => {
             </tr>
           </thead>
           <tbody>
-            {list.map((item, index) => (
+            {serSearchResult.map((item, index) => (
               <tr key={index}>
                 <td>{item.className}</td>
                 <td>{item.classCode}</td>

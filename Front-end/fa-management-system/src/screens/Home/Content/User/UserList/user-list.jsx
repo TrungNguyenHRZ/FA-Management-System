@@ -12,7 +12,7 @@ await axios.get("http://localhost:8080/user/all").then((res) => {
 const UserList = () => {
   return (
     <div className="view-syllbus-container">
-      <h1>Syllabus</h1>
+      <h1>View Users</h1>
 
       <div className="table-syllabus-container">
         <table className="table-syllabus">

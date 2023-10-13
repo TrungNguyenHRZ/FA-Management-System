@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { getListSyllabus } from "../../../../../service/api-syllabus";
+import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import {
   FaSearch,
   FaRegCalendar,
@@ -10,41 +10,72 @@ import {
 } from "react-icons/fa";
 import "./syllabus.css";
 
-let serSearchResult = null;
+// let serSearchResult = null;
 
-await axios.get("http://localhost:8080/syllabus/view").then((res) => {
-  serSearchResult = res.data;
-  console.log(serSearchResult);
-});
+// await axios.get("http://localhost:8080/syllabus/view").then((res) => {
+//   serSearchResult = res.data;
+//   console.log(serSearchResult);
+// });
 
 const Syllabus = () => {
-  //   const [list, setList] = useState([]);
+  // const tmp = async () => {
+  //   await getListSyllabus().then((items) => {
+  //     console.log(items);
+  //   });
+  // };
 
-  //   useEffect(() => {
-  //     let mounted = true;
-  //     getListSyllabus().then((items) => {
-  //       if (mounted) {
-  //         setList(items);
-  //       }
-  //     });
-  //     return () => (mounted = false);
-  //   }, []);
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    apiSyllabusInstance
+      .get("/view")
+      .then((response) => {
+        setList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  let id = "";
+  const change = (e) => {
+    id = e.target.value;
+    console.log(id);
+  };
+
+  const submit = (e) => {
+    apiSyllabusInstance
+      .get(`/view/${id}`)
+      .then((response) => {
+        setList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="view-syllbus-container">
       <h1>Syllabus</h1>
       <div className="head-syllabus-container">
         <div className="search-syllabus-container">
-          <form action="" className="form-container">
-            <div className="search-text">
+          <div className="form-container"></div>
+          <div className="search-text">
+            <FaSearch />
+            <input
+              type="text"
+              className="search-input-text"
+              onChange={change}
+            />
+            <button onClick={submit}>
               <FaSearch />
-              <input type="text" className="search-input-text" />
-            </div>
-            <div className="search-date">
+              Search
+            </button>
+          </div>
+          {/* <div className="search-date">
               <FaRegCalendar />
               <input type="date" className="search-input-date" />
-            </div>
-          </form>
+            </div> */}
         </div>
         <div className="action-syllabus-container">
           <div className="action-import">
@@ -75,7 +106,7 @@ const Syllabus = () => {
             </tr>
           </thead>
           <tbody>
-            {serSearchResult.map((item, index) => (
+            {list.map((item, index) => (
               <tr key={index}>
                 <td>{item.topic_name}</td>
                 <td>{item.topic_code}</td>
