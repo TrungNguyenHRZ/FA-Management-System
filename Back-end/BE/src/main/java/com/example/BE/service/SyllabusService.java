@@ -1,20 +1,19 @@
 package com.example.BE.service;
 
 
-import java.sql.Date;
-// import java.util.Date;
-import java.util.List;
-
+import com.example.BE.model.entity.Syllabus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.entity.Syllabus;
 
+
 @Service
 public interface SyllabusService {
-	public List<Syllabus> getAllSyllabus();
+    public List<Syllabus> getAllSyllabus();
 
-	public Syllabus createSyllabus(Syllabus syllabus);
+    public Syllabus createSyllabus(Syllabus syllabus);
 
 	public List<SyllabusResponse> getAllSyllabusByKey(String keyword);
 

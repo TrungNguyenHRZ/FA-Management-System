@@ -1,13 +1,9 @@
 package com.example.BE.service;
 
-import com.example.BE.dto.request.user.CreateUserRequest;
-import com.example.BE.dto.request.user.GantPermissionUserRequest;
-import com.example.BE.dto.request.user.GetAllRequest;
-import com.example.BE.dto.request.user.UpdateUserRequest;
+import com.example.BE.dto.request.user.*;
+import com.example.BE.dto.response.user.LoginResponse;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -15,7 +11,14 @@ public interface UserService {
 
     UserPageResponse getAllUser(GetAllRequest request);
 
-    UserResponse getUserById(int id);
+    UserResponse getUserInfo();
+
     UserResponse updateInfoUser(UpdateUserRequest request);
+
     UserResponse gantPermissionUser(GantPermissionUserRequest request);
+
+
+    LoginResponse login(LoginRequest request);
+
+    UserResponse createUserSA(CreateUserSARequest request);
 }

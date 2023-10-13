@@ -9,9 +9,9 @@ import lombok.Data;
 @Table(name = "Syllabus_Object")
 @Data
 public class SyllabusObject implements java.io.Serializable {
-	
-	@EmbeddedId
-	private CompositeSyllabusObjective syllabus_id;
 
-	
+    @EmbeddedId
+    private CompositeSyllabusObjective syllabus_id;
+
+
 }

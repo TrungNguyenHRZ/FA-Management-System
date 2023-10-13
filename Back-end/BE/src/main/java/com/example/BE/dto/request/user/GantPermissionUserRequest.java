@@ -11,9 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class GantPermissionUserRequest {
-    private int userAdminId = 1;
     @JsonIgnore
     private int id;
     private Role newPermission;
-
 }

@@ -1,7 +1,5 @@
 package com.example.BE.dto.request.user;
 
-
-import com.example.BE.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CreateUserRequest {
-    @NotNull
-    private Role userType;
+public class CreateUserSARequest {
     @NotBlank
     private String name;
     @Email
@@ -27,4 +23,6 @@ public class CreateUserRequest {
     @NotNull
     private boolean genderTrueMale; // true : male / false: female
     private boolean status;
+    @NotBlank
+    private String password;
 }

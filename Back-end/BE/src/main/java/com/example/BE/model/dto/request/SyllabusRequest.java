@@ -1,10 +1,10 @@
 package com.example.BE.model.dto.request;
 
-import java.util.Date;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter

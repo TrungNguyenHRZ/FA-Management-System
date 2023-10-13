@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ClassMapper {
     @Mapping(source = "class1.classID", target = "classID")
