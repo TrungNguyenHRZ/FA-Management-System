@@ -42,7 +42,7 @@ const ViewClass = () => {
             </tr>
           </thead>
           <tbody>
-            {serSearchResult.map((item, index) => (
+            {/* {serSearchResult.map((item, index) => (
               <tr key={index}>
                 <td>{item.className}</td>
                 <td>{item.classCode}</td>
@@ -53,7 +53,7 @@ const ViewClass = () => {
                 <td>{item.location}</td>
                 <td>{item.fsu}</td>
               </tr>
-            ))}
+            ))} */}
           </tbody>
         </table>
       </div>
