@@ -14,7 +14,7 @@ public interface UserService {
     UserResponse getUserInfo();
 
     UserResponse updateInfoUser(UpdateUserRequest request);
-
+    
     UserResponse gantPermissionUser(GantPermissionUserRequest request);
 
 

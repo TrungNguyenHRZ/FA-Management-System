@@ -37,5 +37,6 @@ public class SyllabusResponse {
 	private int userId;
 	private String userName;
 	// private User user;
+	private List<LearningObjectiveResponse> learningList;
 	List<TrainingUnitResponse> unitList;
 }
