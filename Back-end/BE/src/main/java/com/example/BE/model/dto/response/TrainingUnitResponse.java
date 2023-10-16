@@ -15,7 +15,7 @@ public class TrainingUnitResponse {
 	private int unit_code;
 	private String unit_name;
 	private int day_number;
-	// private int topic_code;
+	private int topic_code;
 	// private Syllabus syllabus;
 	private List<TrainingContentResponse> contentList;
 	

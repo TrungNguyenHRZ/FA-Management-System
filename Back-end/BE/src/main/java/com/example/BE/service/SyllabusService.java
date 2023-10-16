@@ -24,4 +24,6 @@ public interface SyllabusService {
 	public SyllabusResponse getSyllabusByTopicCode(int topic_code);
 
 	public List<SyllabusResponse> getAll();
+
+	public Syllabus getSyllabusByTopic_Code(int topic_code);
 }

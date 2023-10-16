@@ -1,5 +1,6 @@
 package com.example.BE.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.BE.model.dto.response.ClassResponse;
@@ -19,4 +20,6 @@ public interface ClassService {
     Class convert(ClassResponse c);
 
     Class updateClass(Class c);
+    List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate);
+
 }

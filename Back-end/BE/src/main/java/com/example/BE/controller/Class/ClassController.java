@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -103,5 +106,13 @@ public ResponseEntity<ApiResponse<List<Class>>> getAllClass() {
         }else{
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping(value = {"/searchByDate"})
+    public List<ClassResponse> findClassByTimeRange(@RequestParam(value = "startDay") String startDay,
+                                            @RequestParam(value = "endDay") String endDay) throws ParseException {
+        Date startDayDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDay);
+        Date endDayDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDay);
+
+        return classService.findClassesInDateRange(startDayDate, endDayDate);
     }
 }

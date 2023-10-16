@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import com.example.BE.model.dto.request.TrainingUnitRequest;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.TrainingUnit;
 
@@ -16,9 +17,16 @@ public interface TrainingUnitMapper {
 	@Mapping(source ="trainingUnit.unit_name",target="unit_name")
 	@Mapping(source ="trainingUnit.day_number",target="day_number")
 	// @Mapping(source ="unit_topic_code",target="syllabus")
-	// @Mapping(source ="unit_topic_code.topic_code",target="topic_code")
+	@Mapping(source ="unit_topic_code.topic_code",target="topic_code")
 	@Mapping(source = "training_content" ,target="contentList")
 	
 	TrainingUnitResponse toResponse(TrainingUnit trainingUnit);
 	List<TrainingUnitResponse> toTrainingUnitResponseList(List<TrainingUnit> unitList);
+
+	//Mapping request to entity
+	// @Mapping()
+	// @Mapping(source = "request.topicCode",target="unit_topic_code.topic_code")
+
+
+	// TrainingUnit toEntity(TrainingUnitRequest request);
 }
