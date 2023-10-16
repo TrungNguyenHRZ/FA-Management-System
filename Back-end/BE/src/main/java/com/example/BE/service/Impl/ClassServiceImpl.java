@@ -9,6 +9,7 @@ import com.example.BE.service.TrainingProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -66,5 +67,9 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Class updateClass(Class c) {
         return classRepository.saveAndFlush(c);
+    }
+
+    public List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate) {
+        return classRepository.findClassesInDateRange(startDate, endDate);
     }
 }
