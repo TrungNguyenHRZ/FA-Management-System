@@ -60,7 +60,7 @@ const AddUserForm = ({ showForm, closeForm }) => {
             <select name="" id="" className="user-type-select">
               <option value="#">Super admin</option>
               <option value="#">Admin</option>
-              <option value="#">Trainer</option>
+              <option value="#123">Trainer</option>
             </select>
           </div>
           <div className="btn-action-form">
