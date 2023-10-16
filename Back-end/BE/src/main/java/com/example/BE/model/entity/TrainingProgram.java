@@ -3,8 +3,10 @@ package com.example.BE.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -28,7 +30,7 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
-public class TrainingProgram {
+public class TrainingProgram implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +49,6 @@ public class TrainingProgram {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "Start_Time")
     private String start_time;
-
 
 	@Column(name = "Duration")
 	private int duration;
@@ -71,10 +72,10 @@ public class TrainingProgram {
     private User user_training;
 
     @OneToMany(mappedBy = "program")
-    Set<TrainingProgramSyllabus> syllabus = new HashSet<>();
+    List<TrainingProgramSyllabus> syllabus;
 
     @OneToMany(mappedBy = "program_class")
-    Set<Class> training_class = new HashSet<>();
+    List<Class> training_class;
 
 
 }
