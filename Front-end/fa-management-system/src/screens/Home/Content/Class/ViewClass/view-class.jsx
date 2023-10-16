@@ -48,7 +48,7 @@ const ViewClass = () => {
                 <td>{item.location}</td>
                 <td>{item.fsu}</td>
               </tr>
-            ))}
+            ))} */}
           </tbody>
         </table>
       </div>

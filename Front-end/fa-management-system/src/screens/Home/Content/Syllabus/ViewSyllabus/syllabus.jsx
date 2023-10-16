@@ -8,10 +8,12 @@ import {
   FaUpload,
   FaPlusCircle,
 } from "react-icons/fa";
+import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     apiSyllabusInstance
@@ -31,6 +33,7 @@ const Syllabus = () => {
   };
 
   const submit = (e) => {
+    setIsLoading(true);
     apiSyllabusInstance
       .get(`/view/${id}`)
       .then((response) => {
@@ -38,7 +41,8 @@ const Syllabus = () => {
       })
       .catch((error) => {
         console.error(error);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -48,13 +52,12 @@ const Syllabus = () => {
         <div className="search-syllabus-container">
           <div className="form-container"></div>
           <div className="search-text">
-            <FaSearch />
             <input
               type="text"
               className="search-input-text"
               onChange={change}
             />
-            <button onClick={submit}>
+            <button className="btn-search" onClick={submit}>
               <FaSearch />
               Search
             </button>
@@ -79,7 +82,14 @@ const Syllabus = () => {
           </div>
         </div>
       </div>
-      <div className="table-syllabus-container">
+      <div className="table-syllabus-container loading-container">
+        {isLoading && (
+          <div className="loading-overlay">
+            <div className="loading-container">
+              <SyncLoader color="#2a00b7" />
+            </div>
+          </div>
+        )}
         <table className="table-syllabus">
           <thead>
             <tr>
