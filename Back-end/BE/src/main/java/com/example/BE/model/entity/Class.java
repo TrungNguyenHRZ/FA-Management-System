@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -62,7 +63,7 @@ public class Class implements Serializable {
 
     // @OneToMany(mappedBy = "class_object")
     // private Set<ClassUser> userClasses = new HashSet<>();
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "program_id")
     private TrainingProgram program_class;
