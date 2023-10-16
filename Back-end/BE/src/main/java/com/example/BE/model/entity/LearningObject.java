@@ -16,12 +16,15 @@ public class LearningObject {
     @Column(name = "learning_name")
     private String learning_name;
 
-    @ManyToOne
-    @JoinColumn(name = "delivery_type")
-    private TrainingContent delivery_type;
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "learning_description")
     private String learning_description;
+
+    @ManyToOne
+    @JoinColumn(name = "content_id")
+    private TrainingContent content_id;
 
     // @OneToMany(mappedBy="learning_code")
     // Set<SyllabusObject> learning_objects = new HashSet<>();

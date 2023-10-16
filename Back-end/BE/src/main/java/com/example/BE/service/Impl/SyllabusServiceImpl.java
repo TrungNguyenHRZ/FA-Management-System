@@ -133,4 +133,11 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return result;
 	}
 
+	
+	@Override
+	public Syllabus getSyllabusByTopic_Code(int topic_code) {
+		// TODO Auto-generated method stub
+		return syllabusRepository.getSyllabusByTopicCode(topic_code);
+	}
+
 }

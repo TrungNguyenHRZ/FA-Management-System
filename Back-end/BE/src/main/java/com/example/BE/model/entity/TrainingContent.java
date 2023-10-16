@@ -11,16 +11,6 @@ import java.util.Set;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Data;
 // import java.util.UUID;
 
@@ -32,10 +22,9 @@ public class TrainingContent {
 
 
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "content_id")
-	private String contentId;
+	private int contentId;
 
 	@Column(name = "content")
 	private String content;
@@ -62,7 +51,7 @@ public class TrainingContent {
     @JoinColumn(name = "unit_code")
     private TrainingUnit unitCode;
 
-	@OneToMany(mappedBy = "delivery_type")
+	@OneToMany(mappedBy = "content_id")
 	List<LearningObject> learning_objects;
 
 }
