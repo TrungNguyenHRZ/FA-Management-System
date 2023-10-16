@@ -98,6 +98,11 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
+                <Link to={"/create-user"} className="home-link">
+                  Create User
+                </Link>
+              </li>
+              <li>
                 <Link to={"/user-permission"} className="home-link">
                   User permission
                 </Link>

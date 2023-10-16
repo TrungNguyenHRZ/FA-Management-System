@@ -7,6 +7,8 @@ import com.example.BE.service.TrainingProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TrainingProgramServiceImpl implements TrainingProgramService {
     @Autowired
@@ -15,5 +17,10 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     @Override
     public TrainingProgram findById(int id) {
         return trainingProgramRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<TrainingProgram> getAllTrainingProgram() {
+        return trainingProgramRepository.findAll();
     }
 }
