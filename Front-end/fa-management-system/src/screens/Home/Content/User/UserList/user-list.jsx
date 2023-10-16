@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-
-let serSearchResult = null;
-
-await axios.get("http://localhost:8080/user/all").then((res) => {
-  serSearchResult = res.data.userResponseList;
-  console.log(serSearchResult);
-});
+import apiUserInstance from "../../../../../service/api-user";
 
 const UserList = () => {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    apiUserInstance
+      .get("/all")
+      .then((response) => {
+        setList(response.data.userResponseList);
+        console.log(list);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="view-syllbus-container">
       <h1>View Users</h1>
@@ -27,7 +35,7 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {serSearchResult.map((item, index) => (
+            {list.map((item, index) => (
               <tr key={index}>
                 <td>{item.id}</td>
                 <td>{item.name}</td>

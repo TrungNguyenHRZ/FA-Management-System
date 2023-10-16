@@ -10,20 +10,7 @@ import {
 } from "react-icons/fa";
 import "./syllabus.css";
 
-// let serSearchResult = null;
-
-// await axios.get("http://localhost:8080/syllabus/view").then((res) => {
-//   serSearchResult = res.data;
-//   console.log(serSearchResult);
-// });
-
 const Syllabus = () => {
-  // const tmp = async () => {
-  //   await getListSyllabus().then((items) => {
-  //     console.log(items);
-  //   });
-  // };
-
   const [list, setList] = useState([]);
 
   useEffect(() => {
@@ -107,7 +94,7 @@ const Syllabus = () => {
           </thead>
           <tbody>
             {list.map((item, index) => (
-              <tr key={index}>
+              <tr key={item.topic_code}>
                 <td>{item.topic_name}</td>
                 <td>{item.topic_code}</td>
                 <td>{item.createdDate}</td>
