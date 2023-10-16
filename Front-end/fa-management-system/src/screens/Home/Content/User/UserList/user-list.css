@@ -1,0 +1,40 @@
+.add-user {
+  display: flex;
+  justify-content: end;
+}
+
+.btn-add-user {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #2a00b7;
+  color: #fff;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.btn-add-user:hover {
+  opacity: 0.8;
+}
+
+.user-form-popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Lớp trên cùng */
+}
+
+.user-form {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}

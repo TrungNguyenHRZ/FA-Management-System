@@ -1,28 +1,48 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
 import apiUserInstance from "../../../../../service/api-user";
+import "./user-list.css";
+import { BiPlusCircle } from "react-icons/bi";
+import AddUserForm from "./AddUser/add-user-form";
 
 const UserList = () => {
   const [list, setList] = useState([]);
+  const [showFormAddUser, setShowFormAddUser] = useState(false);
 
   useEffect(() => {
     apiUserInstance
       .get("/all")
       .then((response) => {
         setList(response.data.userResponseList);
-        console.log(list);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
+  const openForm = () => {
+    setShowFormAddUser(true);
+  };
+
+  const closeForm = () => {
+    setShowFormAddUser(false);
+  };
   return (
     <div className="view-syllbus-container">
       <h1>View Users</h1>
-
+      <div className="add-user">
+        <button className="btn-add-user" onClick={openForm}>
+          <BiPlusCircle />
+          Add user
+        </button>
+      </div>
       <div className="table-syllabus-container">
+        {showFormAddUser && (
+          <div className="user-form-popup-container">
+            <div className="user-form">
+              <AddUserForm openForm={openForm} closeForm={closeForm} />
+            </div>
+          </div>
+        )}
         <table className="table-syllabus">
           <thead>
             <tr>
