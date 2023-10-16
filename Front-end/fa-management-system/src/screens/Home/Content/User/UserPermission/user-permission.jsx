@@ -1,13 +1,14 @@
 import React from "react";
 import "./user-permission.css";
-import { FaRegStar, FaCirclePlus, FaEye } from "react-icons/fa6";
+import { FaCirclePlus, FaEye } from "react-icons/fa6";
+import { BsFillStarFill } from "react-icons/bs";
 
 const UserPermission = () => {
   const roles = [
     {
       roleName: "Super admin",
       rolePermission: "Full access",
-      icon: <FaRegStar />,
+      icon: <BsFillStarFill />,
     },
     { roleName: "Admin", rolePermission: "Create", icon: <FaCirclePlus /> },
     { roleName: "Trainer", rolePermission: "View", icon: <FaEye /> },
