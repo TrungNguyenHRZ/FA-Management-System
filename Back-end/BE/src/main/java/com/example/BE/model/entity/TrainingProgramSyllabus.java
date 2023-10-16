@@ -2,6 +2,8 @@ package com.example.BE.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Training_Program_Syllabus")
