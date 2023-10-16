@@ -1,10 +1,8 @@
 import axios from "axios";
+import React from "react";
 
-export function getListClass() {
-  let tmp;
-  axios.get("http://localhost:8080/class/all").then((res) => {
-    tmp = res.data.payload;
-  });
+const apiClassInstance = axios.create({
+  baseURL: "http://localhost:8080/class",
+});
 
-  return tmp;
-}
+export default apiClassInstance;

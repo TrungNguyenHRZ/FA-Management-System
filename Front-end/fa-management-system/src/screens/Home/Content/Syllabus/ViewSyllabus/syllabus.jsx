@@ -104,7 +104,7 @@ const Syllabus = () => {
           </thead>
           <tbody>
             {list.map((item, index) => (
-              <tr key={index}>
+              <tr key={item.topic_code}>
                 <td>{item.topic_name}</td>
                 <td>{item.topic_code}</td>
                 <td>{item.createdDate}</td>
