@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 public class TrainingContentResponse {
 	
-	private String contentId;
+	private int contentId;
 	private String content;
 	private String learningObjective;
 	private String deliveryType;

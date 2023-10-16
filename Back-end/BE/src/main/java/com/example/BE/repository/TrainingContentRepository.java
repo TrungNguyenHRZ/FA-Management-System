@@ -11,5 +11,7 @@ public interface TrainingContentRepository extends JpaRepository<TrainingContent
 	
 	@Query(value="Select * from training_content where unit_code = :code",
 	nativeQuery = true)
-	public List<TrainingContent> getTrainingContentByUnitCode(int code);
+	List<TrainingContent> getTrainingContentByUnitCode(int code);
+
+	// List<TrainingContent> saveAll();
 }

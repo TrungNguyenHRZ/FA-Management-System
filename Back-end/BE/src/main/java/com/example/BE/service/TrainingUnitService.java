@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.TrainingUnit;
 
 @Service
 public interface TrainingUnitService {
 	public List<TrainingUnit> getAllTrainingUnits();
 	public List<TrainingUnit> getTrainingUnitsByTopicCode(int code);
+	TrainingUnit getUnitByUnitCode(int topicCode);
+	TrainingUnit saveUnit(TrainingUnit unit);
+	TrainingUnit convert (TrainingUnitResponse unitResponse);
 }
