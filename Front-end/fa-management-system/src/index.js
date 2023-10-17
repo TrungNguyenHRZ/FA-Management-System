@@ -55,10 +55,6 @@ const router = createBrowserRouter([
         element: <UserList />,
       },
       {
-        path: "/create-user",
-        element: <CreateUser />,
-      },
-      {
         path: "/user-permission",
         element: <UserPermission />,
       },

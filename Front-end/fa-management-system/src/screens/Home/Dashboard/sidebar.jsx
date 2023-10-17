@@ -3,7 +3,7 @@ import "./sidebar.css";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
 import {
-  FaHouseChimney,
+  FaChartPie,
   FaBookOpen,
   FaLightbulb,
   FaUserGroup,
@@ -38,9 +38,9 @@ const Sidebar = () => {
         <div className="sidebar-container">
           <ul>
             <li>
-              <FaHouseChimney className="icon-sidebar" />
+              <FaChartPie className="icon-sidebar" />
               <Link to={"/home"} className="home-link">
-                Home
+                Overview
               </Link>
             </li>
 
@@ -95,11 +95,6 @@ const Sidebar = () => {
               <li>
                 <Link to={"/user-list"} className="home-link">
                   User list
-                </Link>
-              </li>
-              <li>
-                <Link to={"/create-user"} className="home-link">
-                  Create User
                 </Link>
               </li>
               <li>
