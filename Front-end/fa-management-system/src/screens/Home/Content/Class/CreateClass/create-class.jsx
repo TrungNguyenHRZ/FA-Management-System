@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
 import apiClassInstance from "../../../../../service/api-class";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 const CreateClass = () => {
@@ -154,7 +152,7 @@ const CreateClass = () => {
             <br />
             <text>Training Program_id</text>
             <select onChange={changeTrainingProgram_id}>
-              {listTrainingProgram.map((item, index) => {
+              {listTrainingProgram?.map((item, index) => {
                 return (
                   <option value={item.training_code} key={item.training_code}>
                     {item.training_name}

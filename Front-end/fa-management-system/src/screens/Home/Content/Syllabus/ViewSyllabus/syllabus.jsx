@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import {
   FaSearch,
@@ -50,7 +48,6 @@ const Syllabus = () => {
       <h1>Syllabus</h1>
       <div className="head-syllabus-container">
         <div className="search-syllabus-container">
-          <div className="form-container"></div>
           <div className="search-text">
             <input
               type="text"
@@ -62,10 +59,10 @@ const Syllabus = () => {
               Search
             </button>
           </div>
-          {/* <div className="search-date">
-              <FaRegCalendar />
-              <input type="date" className="search-input-date" />
-            </div> */}
+          <div className="search-date">
+            <FaRegCalendar />
+            <input type="date" className="search-input-date" />
+          </div>
         </div>
         <div className="action-syllabus-container">
           <div className="action-import">
