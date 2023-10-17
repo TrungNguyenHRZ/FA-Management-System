@@ -13,23 +13,23 @@ public class UserPermission {
 
     @Id
     @Column(name = "role")
-    public String role;
+    private String role;
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permission_id")
-    public int permissionId;
+    private int permissionId;
 
     @Column(name = "training_program")
-    public String trainingProgram;
+    private String trainingProgram;
 
     @Column(name = "syllabus")
-    public String syllabus;
+    private String syllabus;
 
     @Column(name = "learning_material")
-    public String material;
+    private String material;
 
     @Column(name = "user_anagement")
-    public String userManagement;
+    private String userManagement;
 
 
     @Column(name = "class_name")
