@@ -1,19 +1,29 @@
 package com.example.BE.service.Impl;
 
+import com.example.BE.dto.request.userPermission.UpdatePermissionRequest;
+import com.example.BE.dto.response.userPermission.UserPermissionResponse;
+import com.example.BE.enums.ErrorMessage;
 import com.example.BE.enums.Permission;
 import com.example.BE.enums.Role;
+import com.example.BE.handle.BusinessException;
+import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
 import com.example.BE.repository.UserPermissionRepository;
 import com.example.BE.repository.UserRepository;
+import com.example.BE.security.SecurityUtils;
 import com.example.BE.service.UserPermissionService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserPermissionServiceImpl implements UserPermissionService {
 
     private final UserPermissionRepository userPermissionRepository;
@@ -93,5 +103,53 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    public List<UserPermissionResponse> getAll() {
+        List<UserPermission> permissions = userPermissionRepository.findAll();
+        return permissions.stream().map(UserPermissionResponse::new).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public UserPermissionResponse updatePermission(UpdatePermissionRequest request) {
+        log.info("Receive request change permission : {}", request.toString());
+        String email = SecurityUtils.getUsernameAuth();
+        log.info("User request have email: {}", email);
+        User user = userRepository.findByEmail(email).orElse(null);
+        if(Objects.isNull(user)){
+            throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+        }
+        UserPermission userPermission = userPermissionRepository.findFirstByRole(request.getRoleUpdate().getRole()).orElse(null);
+        if(Objects.isNull(userPermission)){
+            throw new BusinessException(ErrorMessage.USER_PERMISSION_NOT_FOUND);
+        }
+        if(Role.SUPER_ADMIN.getRole().equals(userPermission.getRole())) {
+            if(!Role.SUPER_ADMIN.getRole().equals(user.getPermission().getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+            }
+        }
+
+        if(Objects.nonNull(request.getClassName())){
+            userPermission.setClassName(request.getClassName().getPermission());
+        }
+
+        if(Objects.nonNull(request.getSyllabus())){
+            userPermission.setSyllabus(request.getSyllabus().getPermission());
+        }
+
+        if(Objects.nonNull(request.getMaterial())){
+            userPermission.setMaterial(request.getMaterial().getPermission());
+        }
+
+        if(Objects.nonNull(request.getTrainingProgram())){
+            userPermission.setTrainingProgram(request.getTrainingProgram().getPermission());
+        }
+
+        userPermission = userPermissionRepository.save(userPermission);
+        return new UserPermissionResponse(userPermission);
+
     }
 }

@@ -17,6 +17,7 @@ public enum ErrorMessage {
     USER_LOGIN_FAIL("User login fail"),
     USER_PASSWORD_INCORRECT("User password incorrect"),
     USER_AUTHORIZATION_FAILED("User authorization fail"),
+    USER_PERMISSION_NOT_FOUND("User permission not found"),
 
 
     ;
