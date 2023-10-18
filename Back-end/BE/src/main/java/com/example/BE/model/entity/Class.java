@@ -68,7 +68,6 @@ public class Class implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "program_id")
     private TrainingProgram program_class;
 

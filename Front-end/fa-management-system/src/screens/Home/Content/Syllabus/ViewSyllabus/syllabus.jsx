@@ -89,10 +89,11 @@ const Syllabus = () => {
   let renderData = () => {
     return list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
       <tr key={item.topic_code}>
-        <td>{item.topic_name}</td>
+        <td><Link style={{ textDecoration: 'none', color: 'inherit' }} 
+                      to={`/syllabus-detail/${item.topic_code}`}>{item.topic_name}
+                    </Link></td>
         <td>{item.topic_code}</td>
         <td>{item.createdDate}</td>
-
         <td>{item.create_by}</td>
         <td>NULL</td>
         <td>NULL</td>
@@ -159,7 +160,7 @@ const Syllabus = () => {
           </thead>
 
           <tbody>
-            {list.map((item, index) => (
+            {/* {list.map((item, index) => (
               <tr key={item.topic_code}>                
                 <td><Link style={{ textDecoration: 'none', color: 'inherit' }} 
                       to={`/syllabus-detail/${item.topic_code}`}>{item.topic_name}
@@ -171,10 +172,8 @@ const Syllabus = () => {
                 <td>NULL</td>
                 <td>{item.publish_status}</td>                
               </tr>
-            ))}
-
-
-{renderData()}
+            ))} */}
+            {renderData()}
 </tbody>
         </table>
         <ReactPaginate
