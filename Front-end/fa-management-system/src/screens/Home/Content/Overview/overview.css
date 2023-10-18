@@ -1,14 +1,15 @@
 .overview-container {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 70px;
 }
 .specification-container {
   display: flex;
   gap: 60px;
+  justify-content: space-around;
 }
 .dc-chart {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }

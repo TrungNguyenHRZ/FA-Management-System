@@ -54,7 +54,7 @@
   background-color: #fff;
   border-radius: 10px;
   z-index: 1;
-  width: 150px;
+  width: 165px;
 }
 .sub-menu li {
   padding: 10px;
@@ -62,7 +62,7 @@
 
 .show-sub-menu {
   display: block;
-  margin-left: 30px;
+  margin-left: 45px;
 }
 .content-container {
   flex: 7;

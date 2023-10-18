@@ -86,9 +86,14 @@ const Syllabus = () => {
   let renderData = () => {
     return list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
       <tr key={item.topic_code}>
-        <td><Link style={{ textDecoration: 'none', color: 'inherit' }} 
-                      to={`/syllabus-detail/${item.topic_code}`}>{item.topic_name}
-                    </Link></td>
+        <td>
+          <Link
+            style={{ textDecoration: "none", color: "inherit" }}
+            to={`/syllabus-detail/${item.topic_code}`}
+          >
+            {item.topic_name}
+          </Link>
+        </td>
         <td>{item.topic_code}</td>
         <td>{item.createdDate}</td>
         <td>{item.create_by}</td>
@@ -156,10 +161,7 @@ const Syllabus = () => {
             </tr>
           </thead>
 
-          <tbody>
-            {renderData()}
-          </tbody>
-</tbody>
+          <tbody>{renderData()}</tbody>
         </table>
         <ReactPaginate
           breakLabel="..."

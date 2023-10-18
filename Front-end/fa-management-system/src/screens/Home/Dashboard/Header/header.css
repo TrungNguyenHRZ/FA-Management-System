@@ -4,6 +4,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 15px;
 }
 .header-title {
   margin: 10px;
@@ -61,7 +62,7 @@
   color: #2a00b7;
   top: 79%;
   left: -0.5%;
-  width: 102px;
+  width: 124px;
   border: 1px solid #2a00b7;
   border-top: none;
   border-radius: 0px 0px 5px 5px;
