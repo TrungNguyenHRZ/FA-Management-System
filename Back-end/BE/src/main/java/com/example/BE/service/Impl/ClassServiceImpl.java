@@ -46,7 +46,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Class convert(ClassResponse c) {
         Class tmp = new Class();
-        tmp.setClassID(c.getClassId());
+        tmp.setClassId(c.getClassId());
         tmp.setClassName(c.getClassName());
         tmp.setClassCode(c.getClassCode());
         tmp.setDuration(c.getDuration());

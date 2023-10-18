@@ -37,7 +37,7 @@ public class ClassResponse {
 
     protected int TrainingProgram_id;
     public ClassResponse(Class classEntity) {
-        this.classId = classEntity.getClassID();
+        this.classId = classEntity.getClassId();
         this.className = classEntity.getClassName();
         this.classCode = classEntity.getClassCode();
         this.duration = classEntity.getDuration();

@@ -9,7 +9,7 @@ import java.util.Date;
 @Setter
 @Getter
 public class ClassDTO {
-    protected int classID;
+    protected int classId;
 
     protected String className;
 

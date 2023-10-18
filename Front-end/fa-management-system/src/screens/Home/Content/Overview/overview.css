@@ -1,0 +1,14 @@
+.overview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.specification-container {
+  display: flex;
+  gap: 60px;
+}
+.dc-chart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
