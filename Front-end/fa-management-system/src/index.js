@@ -6,7 +6,6 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
-import Home from "./screens/Home/Content/Home/home";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
 import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
 import UserList from "./screens/Home/Content/User/UserList/user-list";
@@ -14,8 +13,7 @@ import UserPermission from "./screens/Home/Content/User/UserPermission/user-perm
 import ViewClass from "./screens/Home/Content/Class/ViewClass/view-class";
 import Syllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/syllabus";
 import CreateClass from "./screens/Home/Content/Class/CreateClass/create-class";
-import CreateUser from "./screens/Home/Content/User/UserList/create-user";
-
+import Overview from "./screens/Home/Content/Overview/overview";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -26,8 +24,8 @@ const router = createBrowserRouter([
     element: <Sidebar />,
     children: [
       {
-        path: "/home",
-        element: <Home />,
+        path: "/overview",
+        element: <Overview />,
       },
 
       {

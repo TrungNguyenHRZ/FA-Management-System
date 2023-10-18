@@ -39,7 +39,7 @@ const Sidebar = () => {
           <ul>
             <li>
               <FaChartPie className="icon-sidebar" />
-              <Link to={"/home"} className="home-link">
+              <Link to={"/overview"} className="home-link">
                 Overview
               </Link>
             </li>
