@@ -47,7 +47,7 @@ const LineChart = () => {
           },
           {
             label: ".NET",
-            data: [31, 49, 54, 30, 76, 56, 70],
+            data: [30, 49, 54, 30, 76, 56, 71],
             fill: false,
             borderColor: "rgb(255, 0, 222)",
             tension: 0.1,
