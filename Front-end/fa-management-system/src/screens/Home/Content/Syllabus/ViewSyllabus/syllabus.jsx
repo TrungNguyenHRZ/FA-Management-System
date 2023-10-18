@@ -8,15 +8,19 @@ import {
 } from "react-icons/fa";
 import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
+import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [syllabus, setSyllabus] = useState({});
+  const [code,setCode] = useState(0);
 
   useEffect(() => {
     apiSyllabusInstance
       .get("/view")
       .then((response) => {
+        console.log(response.data);
         setList(response.data);
       })
       .catch((error) => {
@@ -43,6 +47,26 @@ const Syllabus = () => {
       .finally(() => setIsLoading(false));
   };
 
+  //--------------Test view syllabus by code---------------
+  // let topic_code = "";
+  // const viewSyllabus = (topic_code) => {
+  // //   setIsLoading(true);
+  //   apiSyllabusInstance
+  //     .get(`/viewSyllabus/${topic_code}`)
+  //     .then((response) => {
+  //       setSyllabus(response.data);
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     })
+  // //     .finally(() => setIsLoading(false));
+  //   console.log("abc");
+  // }
+
+  // const getCode = (code) =>{
+  //   console.log(code);
+  // }
   return (
     <div className="view-syllbus-container">
       <h1>Syllabus</h1>
@@ -101,15 +125,16 @@ const Syllabus = () => {
           </thead>
           <tbody>
             {list.map((item, index) => (
-              <tr key={item.topic_code}>
-                <td>{item.topic_name}</td>
+              <tr key={item.topic_code}>                
+                <td><Link style={{ textDecoration: 'none', color: 'inherit' }} 
+                      to={`/syllabus-detail/${item.topic_code}`}>{item.topic_name}
+                    </Link></td>
                 <td>{item.topic_code}</td>
                 <td>{item.createdDate}</td>
-
                 <td>{item.create_by}</td>
                 <td>NULL</td>
                 <td>NULL</td>
-                <td>{item.publish_status}</td>
+                <td>{item.publish_status}</td>                
               </tr>
             ))}
           </tbody>

@@ -14,6 +14,7 @@ import UserPermission from "./screens/Home/Content/User/UserPermission/user-perm
 import ViewClass from "./screens/Home/Content/Class/ViewClass/view-class";
 import Syllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/syllabus";
 import CreateClass from "./screens/Home/Content/Class/CreateClass/create-class";
+import SyllabusDetail from "./screens/Home/Content/Syllabus/ViewSyllabus/syllabusDetail";
 import CreateUser from "./screens/Home/Content/User/UserList/create-user";
 
 const router = createBrowserRouter([
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
         path: "/user-permission",
         element: <UserPermission />,
       },
+      {
+        path: "/syllabus-detail/:id",
+        element: <SyllabusDetail/>
+      }
     ],
   },
 ]);

@@ -2,6 +2,8 @@ package com.example.BE.service;
 
 
 import com.example.BE.model.entity.Syllabus;
+
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,4 +28,8 @@ public interface SyllabusService {
 	public List<SyllabusResponse> getAll();
 
 	public Syllabus getSyllabusByTopic_Code(int topic_code);
+
+	Page<Syllabus> getAllPagesSyllabus(int page, int size);
+
+	Syllabus convertSyllabus(SyllabusResponse syResponse);
 }

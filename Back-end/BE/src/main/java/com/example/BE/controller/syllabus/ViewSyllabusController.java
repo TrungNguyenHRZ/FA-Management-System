@@ -3,6 +3,7 @@ package com.example.BE.controller.syllabus;
 import com.example.BE.mapper.SyllabusMapper;
 import com.example.BE.mapper.TrainingUnitMapper;
 import com.example.BE.model.dto.ApiResponse;
+import com.example.BE.model.dto.PageableDTO;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
@@ -17,7 +18,9 @@ import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingContentService;
 import com.example.BE.service.TrainingUnitService;
 
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +33,9 @@ public class ViewSyllabusController {
 
     @Autowired
     SyllabusService syllabusService;
+
+	@Autowired
+	SyllabusMapper syllabusMapper;
 
     @Autowired
     SyllabusRepository repo;
@@ -68,11 +74,26 @@ public class ViewSyllabusController {
 	}
 
 
-    @PostMapping("/saveSyllabus/{id}")
-    public Syllabus saveSyllabus(@RequestBody Syllabus syllabus, @PathVariable int id) {
-        User user = repoUser.getUserById(id);
-        syllabus.setUser_syllabus(user);
-        return repo.save(syllabus);
+    @PostMapping("/saveSyllabus")
+    public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse) {
+      	ApiResponse apiResponse = new ApiResponse();
+		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
+        Syllabus result = repo.save(syllabus);
+		for(TrainingUnit tu : result.getSyllabus_unit()){
+			tu.setUnit_topic_code(result);
+
+		}
+		List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
+		for(TrainingUnit tun : unitList){
+			for(TrainingContent tc : tun.getTraining_content()){
+				tc.setUnitCode(tun);
+			}
+			contentService.saveAllTrainingContents(tun.getTraining_content());
+		}
+		SyllabusResponse resultResponse = syllabusMapper.toResponse(result);
+		apiResponse.ok(resultResponse);
+		// result.setUser_syllabus(null);
+		return ResponseEntity.ok(apiResponse);
     }
 
 	@PostMapping("/processText")
@@ -104,5 +125,22 @@ public class ViewSyllabusController {
 		// trainingUnitService.saveUnit(request);
 		// String result = "Processed: " + request;
         // return result;
+	}
+
+	@GetMapping("/viewPagingSyllabus")
+	public ResponseEntity<ApiResponse> getSyllabusList(
+		@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size
+	){		
+		ApiResponse apiResponse = new ApiResponse();
+		Page<Syllabus> list = syllabusService.getAllPagesSyllabus(page, size);
+		PageableDTO<SyllabusResponse> data = new PageableDTO<>();
+		data.setContent(syllabusMapper.toSyllabusResponseList(list.getContent()));
+		data.setPageNumber(list.getNumber());
+		data.setPageSize(list.getSize());
+		data.setTotalElements(list.getTotalElements());
+		data.setTotalPages(list.getTotalPages());
+		apiResponse.ok(data);
+		return ResponseEntity.ok(apiResponse);
 	}
 }
