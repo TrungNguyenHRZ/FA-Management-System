@@ -26,6 +26,20 @@ const UserList = () => {
   const closeForm = () => {
     setShowFormAddUser(false);
   };
+
+  const handleCheckBoxChange = (userId, status) => {
+    apiUserInstance
+      .put(`/update/${userId}`, { status: !status })
+      .then((response) => {
+        const updatedList = list.map((user) =>
+          user.id === userId ? { ...user, status: !status } : user
+        );
+        setList(updatedList);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <div className="view-syllbus-container">
       <h1>View Users</h1>
@@ -52,17 +66,25 @@ const UserList = () => {
               <th>Date of birth</th>
               <th>Gender</th>
               <th>Type</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {list.map((item, index) => (
-              <tr key={index}>
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
                 <td>{item.dob}</td>
                 <td>{item.gender}</td>
                 <td>{item.userType}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={item.status}
+                    onChange={() => handleCheckBoxChange(item.id, item.status)}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
