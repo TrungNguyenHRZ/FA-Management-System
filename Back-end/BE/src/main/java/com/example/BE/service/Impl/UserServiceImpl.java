@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // check permission
-            boolean isPermission = userPermissionService.checkCreatePermission(userAdmin.getPermission().userManagement);
+            boolean isPermission = userPermissionService.checkCreatePermission(userAdmin.getPermission().getUserManagement());
             if (!isPermission) {
                 throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // check permission
-            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().userManagement);
+            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().getUserManagement());
             if (!isPermission) {
                 throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // check permission
-            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().userManagement);
+            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().getUserManagement());
             if (!isPermission) {
                 throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }

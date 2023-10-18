@@ -21,8 +21,12 @@ const Header = () => {
       </div>
       <div className="header-action">
         <div className="header-notification">
-          <FaMessage />
-          <FaBell />
+          <button className="btn-message">
+            <FaMessage />
+          </button>
+          <button className="btn-notification">
+            <FaBell />
+          </button>
         </div>
         <div className="user">
           <div

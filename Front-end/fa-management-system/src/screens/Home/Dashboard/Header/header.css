@@ -24,9 +24,22 @@
 
 .header-notification {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   align-items: center;
   font-size: 20px;
+}
+.btn-message,
+.btn-notification {
+  border: none;
+  background-color: transparent;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+.btn-message:hover,
+.btn-notification:hover {
+  background-color: #d97bc5;
 }
 .welcome-user {
   margin-right: 40px;

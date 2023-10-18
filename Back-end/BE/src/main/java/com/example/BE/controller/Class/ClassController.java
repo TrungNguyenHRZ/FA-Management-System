@@ -2,6 +2,7 @@ package com.example.BE.controller.Class;
 
 import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
+import com.example.BE.model.dto.ClassDTO;
 import com.example.BE.model.dto.response.ClassResponse;
 import com.example.BE.model.entity.Class;
 import com.example.BE.model.entity.TrainingProgram;
@@ -30,14 +31,14 @@ public class ClassController {
 //    @GetMapping(value = {"", "/all"})
 //    public List<ClassDTO> getAllClass(){
 //        List<Class> classList = classService.findAllClass();
-//        return classMapper.toClassDTO(classList);
+//        return classMapper.toClassDTOList(classList);
 //    }
-@GetMapping(value = {"", "/all"})
-public ResponseEntity<ApiResponse<List<Class>>> getAllClass() {
-    ApiResponse apiResponse = new ApiResponse();
-    apiResponse.ok(classService.findAllClass());
-    return ResponseEntity.ok(apiResponse);
-}
+    @GetMapping(value = {"", "/all"})
+    public ResponseEntity<ApiResponse<List<Class>>> getAllClass() {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(classService.findAllClass());
+        return ResponseEntity.ok(apiResponse);
+    }
     @GetMapping(value = {"/searchByName"})
     public ClassResponse findClassByName(@RequestParam(required = true) String className){
         Class c = classService.searchByName(className);

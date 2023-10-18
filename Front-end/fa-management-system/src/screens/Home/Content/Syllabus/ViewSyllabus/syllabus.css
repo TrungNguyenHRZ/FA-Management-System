@@ -3,10 +3,9 @@
   justify-content: space-between;
   align-items: center;
 }
-.form-container {
+.search-syllabus-container {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 20px;
 }
 .search-text,
 .search-date {
