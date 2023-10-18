@@ -15,7 +15,7 @@ const AddUserForm = ({ showForm, closeForm }) => {
   return (
     <div className="user-form-popup-container" onClick={handleOverlayClick}>
       <div className="user-form">
-        <div className="btn-close">
+        <div className="btn-close-form">
           <button onClick={handleCloseForm}>
             <MdClose />
           </button>

@@ -12,14 +12,9 @@ import "./syllabus.css";
 
 import { Link } from "react-router-dom";
 
-import { number } from "yup";
-
 const Syllabus = () => {
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [syllabus, setSyllabus] = useState({});
-  const [code, setCode] = useState(0);
 
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
