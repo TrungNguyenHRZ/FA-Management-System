@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
+import ReactPaginate from "react-paginate";
 import {
   FaSearch,
   FaRegCalendar,
@@ -8,16 +9,20 @@ import {
 } from "react-icons/fa";
 import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
+import { number } from "yup";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [TotalPage, setTotalPage] = useState(0);
+  const [thisPage, setThisPage] = useState(0);
 
   useEffect(() => {
     apiSyllabusInstance
       .get("/view")
       .then((response) => {
         setList(response.data);
+        setTotalPage(Math.ceil(response.data.length / 9));
       })
       .catch((error) => {
         console.error(error);
@@ -36,11 +41,32 @@ const Syllabus = () => {
       .get(`/view/${id}`)
       .then((response) => {
         setList(response.data);
+        setTotalPage(Math.ceil(response.data.length / 9));
       })
       .catch((error) => {
         console.error(error);
       })
       .finally(() => setIsLoading(false));
+  };
+
+  const handlePageClick = (data) => {
+    setThisPage(data.selected);
+    console.log(data.selected);
+  };
+
+  let renderData = () => {
+    return list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
+      <tr key={item.topic_code}>
+        <td>{item.topic_name}</td>
+        <td>{item.topic_code}</td>
+        <td>{item.createdDate}</td>
+
+        <td>{item.create_by}</td>
+        <td>NULL</td>
+        <td>NULL</td>
+        <td>{item.publish_status}</td>
+      </tr>
+    ));
   };
 
   return (
@@ -99,21 +125,27 @@ const Syllabus = () => {
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {list.map((item, index) => (
-              <tr key={item.topic_code}>
-                <td>{item.topic_name}</td>
-                <td>{item.topic_code}</td>
-                <td>{item.createdDate}</td>
-
-                <td>{item.create_by}</td>
-                <td>NULL</td>
-                <td>NULL</td>
-                <td>{item.publish_status}</td>
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{renderData()}</tbody>
         </table>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={2}
+          //marginPagesDisplayed={3}
+          pageCount={TotalPage}
+          previousLabel="< previous"
+          containerClassName={"pagination"}
+          pageClassName={"page-item"}
+          pageLinkClassName={"page-link"}
+          previousClassName="page-item"
+          previousLinkClassName="page-link"
+          nextClassName="page-item"
+          nextLinkClassName="page-link"
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          activeClassName="active"
+        />
       </div>
     </div>
   );
