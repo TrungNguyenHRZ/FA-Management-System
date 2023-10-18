@@ -10,7 +10,7 @@ const CountSyllabus = () => {
         <div className="count">
           <CountUp end={1000} />
         </div>
-        <div className="title">Syllbus</div>
+        <div className="title">Syllabus</div>
       </div>
       <div className="icon icon-syllabus">
         <FaBookOpen />

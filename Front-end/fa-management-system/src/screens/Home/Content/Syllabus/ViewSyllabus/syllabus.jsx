@@ -14,17 +14,15 @@ import { Link } from "react-router-dom";
 
 import { number } from "yup";
 
-
 const Syllabus = () => {
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [syllabus, setSyllabus] = useState({});
-  const [code,setCode] = useState(0);
+  const [code, setCode] = useState(0);
 
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
-
 
   useEffect(() => {
     apiSyllabusInstance
@@ -58,7 +56,6 @@ const Syllabus = () => {
       })
       .finally(() => setIsLoading(false));
   };
-
 
   //--------------Test view syllabus by code---------------
   // let topic_code = "";
@@ -160,20 +157,8 @@ const Syllabus = () => {
           </thead>
 
           <tbody>
-            {/* {list.map((item, index) => (
-              <tr key={item.topic_code}>                
-                <td><Link style={{ textDecoration: 'none', color: 'inherit' }} 
-                      to={`/syllabus-detail/${item.topic_code}`}>{item.topic_name}
-                    </Link></td>
-                <td>{item.topic_code}</td>
-                <td>{item.createdDate}</td>
-                <td>{item.create_by}</td>
-                <td>NULL</td>
-                <td>NULL</td>
-                <td>{item.publish_status}</td>                
-              </tr>
-            ))} */}
             {renderData()}
+          </tbody>
 </tbody>
         </table>
         <ReactPaginate

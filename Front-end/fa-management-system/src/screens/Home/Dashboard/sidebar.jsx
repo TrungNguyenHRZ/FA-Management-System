@@ -34,7 +34,7 @@ const Sidebar = () => {
       <div className="dashboard-header">
         <Header />
       </div>
-      <div className="home-container">
+      <div className="home-sidebar-container">
         <div className="sidebar-container">
           <ul>
             <li>
