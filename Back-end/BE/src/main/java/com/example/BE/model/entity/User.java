@@ -1,10 +1,12 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -57,14 +59,16 @@ public class User {
     @JoinColumn(name = "role")
     private UserPermission permission;
 
-    // @OneToMany(mappedBy = "user")
-    // private Set<ClassUser> userList = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    private List<ClassUser> classUserList;
 
     @OneToMany(mappedBy = "user_syllabus")
     Set<Syllabus> syllabusList = new HashSet<>();
 
     @OneToMany(mappedBy = "user_training")
     Set<TrainingProgram> trainingPrograms = new HashSet<>();
+
     @Column(name = "user_id_search")
     private String userIdSearch;
 }

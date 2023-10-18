@@ -2,11 +2,14 @@ package com.example.BE.controller.Class;
 
 import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
-import com.example.BE.model.dto.ClassDTO;
+import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
 import com.example.BE.model.entity.Class;
+import com.example.BE.model.entity.ClassUser;
 import com.example.BE.model.entity.TrainingProgram;
+import com.example.BE.repository.ClassUserRepository;
 import com.example.BE.service.ClassService;
+import com.example.BE.service.ClassUserService;
 import com.example.BE.service.TrainingProgramService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +32,10 @@ public class ClassController {
     private ClassMapper classMapper;
     @Autowired
     private TrainingProgramService trainingProgramService;
+    @Autowired
+    private ClassUserService classUserService;
+    @Autowired
+    private ClassUserRepository classUserRepository;
 //    @GetMapping(value = {"", "/all"})
 //    public List<ClassDTO> getAllClass(){
 //        List<Class> classList = classService.findAllClass();
@@ -116,4 +124,30 @@ public class ClassController {
 
         return classService.findClassesInDateRange(startDayDate, endDayDate);
     }
-}
+//    @GetMapping(value = {"/test"})
+//    public ResponseEntity<ApiResponse<List<ClassUser>>> getAllClassUser() {
+//        ApiResponse apiResponse = new ApiResponse();
+//        apiResponse.ok(classUserService.getAll());
+//        return ResponseEntity.ok(apiResponse);
+//    }
+
+//        public List<ClassUserDTO> findClassUsers() {
+//            List<ClassUser> cu =  classUserService.getAllClassUserList();
+//            List<ClassUserDTO> cuDTO = new ArrayList<>();
+//            for (ClassUser c: cu) {
+//                cuDTO.add(new ClassUserDTO(c));
+//            }
+//            return cuDTO;
+//        }
+    @GetMapping(value = {"/getAllClassUser"})
+    public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getAllClassUser() {
+        List<ClassUser> cu =  classUserService.getAllClassUserList();
+        List<ClassUserDTO> cuDTO = new ArrayList<>();
+        for (ClassUser c: cu) {
+            cuDTO.add(new ClassUserDTO(c));
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(cuDTO);
+        return ResponseEntity.ok(apiResponse);
+    }
+    }

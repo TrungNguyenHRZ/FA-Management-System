@@ -8,7 +8,7 @@ const CreateClass = () => {
     apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setListTrainingProgram(response.data.payload);
+        setListTrainingProgram(response.data);
       })
       .catch((error) => {
         console.error(error);

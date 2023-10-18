@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
@@ -18,8 +19,8 @@ public class Class implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ClassID")
-    private int classID;
+    @Column(name = "classId")
+    private int classId;
 
     @Column(name = "ClassName")
     private String className;
@@ -61,8 +62,10 @@ public class Class implements Serializable {
     @Column(name = "Modified_By")
     private String modified_by;
 
-    // @OneToMany(mappedBy = "class_object")
-    // private Set<ClassUser> userClasses = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "class_object")
+    private List<ClassUser> classUserList;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "program_id")
