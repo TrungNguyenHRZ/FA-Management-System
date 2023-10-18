@@ -14,4 +14,5 @@ public interface TrainingUnitService {
 	TrainingUnit getUnitByUnitCode(int topicCode);
 	TrainingUnit saveUnit(TrainingUnit unit);
 	TrainingUnit convert (TrainingUnitResponse unitResponse);
+	List<TrainingUnit> saveAllUnits(List<TrainingUnit> units);
 }

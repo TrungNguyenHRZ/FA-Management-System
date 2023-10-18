@@ -1,0 +1,44 @@
+.detail-header{
+
+}
+
+.detail-title{
+	height: 15px;
+	margin-top: 16px;
+}
+.detail-head-title{
+	display:flex;
+	align-items: center;
+	height:70px;
+}
+
+.detail-head-title .topic-name{
+	font-size: 3.2em;
+	margin-right:5%;
+}
+
+.detail-title-foot{
+	display:flex;
+	align-items: center;
+	font-size:0.8em;
+}
+
+.detail-status{
+	width: 50px;
+    border-radius: 16px;
+    padding: 7px;
+    color: white;
+    background: #454545;
+    border: 1px solid;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.detail-code{
+	margin-right:2%;
+}
+
+/*detail body*/
+.detail-body{
+	font-size:0.7em;
+}

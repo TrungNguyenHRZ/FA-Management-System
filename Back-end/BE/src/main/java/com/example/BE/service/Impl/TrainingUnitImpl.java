@@ -88,5 +88,11 @@ public class TrainingUnitImpl implements TrainingUnitService{
 		return repo.getTrainingUnitByUnitCode(unitCode);
 	}
 
+	@Override
+	public List<TrainingUnit> saveAllUnits(List<TrainingUnit> units) {
+		// TODO Auto-generated method stub
+		return repo.saveAll(units);
+	}
+
 	
 }
