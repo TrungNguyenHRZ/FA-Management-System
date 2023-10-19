@@ -159,7 +159,6 @@ const Syllabus = () => {
           <tbody>
             {renderData()}
           </tbody>
-</tbody>
         </table>
         <ReactPaginate
           breakLabel="..."
