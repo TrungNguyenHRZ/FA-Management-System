@@ -273,9 +273,10 @@ public class UserServiceImpl implements UserService {
             if (Objects.isNull(user)) {
                 throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
-            String passHash = RandomStringGenerator.sha256(request.getPassword());
-            if (!passHash.equals(user.getPassword())) {
-                throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
+            String passHash = AESUtils.decrypt(user.getPassword(), keyAES);
+            log.info("PAss :{}", passHash);
+            if (!passHash.equals(request.getPassword())) {
+                throw new UnauthorizeException(ErrorMessage.USER_PASSWORD_INCORRECT);
             }
 
             UserDetailsImpl userDetails = UserDetailsImpl.build(user);
@@ -374,8 +375,8 @@ public class UserServiceImpl implements UserService {
             if (!user.getEmail().equals(request.getEmail())) {
                 throw new BusinessException(ErrorMessage.USER_EMAIL_NOT_MATCH);
             }
-
-            user.setPassword(AESUtils.encrypt(request.getNewPass(), keyAES));
+            String pass = AESUtils.encrypt(request.getNewPass(), keyAES);
+            user.setPassword(pass);
             user = userRepository.save(user);
             return new UserResponse(user, AESUtils.decrypt(user.getPassword(),keyAES));
         } catch (BusinessException e) {
