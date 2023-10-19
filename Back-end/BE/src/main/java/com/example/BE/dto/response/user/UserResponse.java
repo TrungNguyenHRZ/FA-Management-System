@@ -24,6 +24,7 @@ public class UserResponse {
     private Date createdAt;
     private String createdBy;
     private String phone;
+    private String pass;
 
 
     public UserResponse(User user) {
@@ -39,5 +40,21 @@ public class UserResponse {
         this.createdAt = user.getCreatedDate();
         this.createdBy = user.getCreateBy();
         this.phone = user.getPhone();
+    }
+
+    public UserResponse(User user, String pass) {
+        this.id = user.getUserId();
+        this.userType = user.getPermission().getRole();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.address = user.getCreateBy();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        this.dob = simpleDateFormat.format(user.getDob());
+        this.gender = user.getGender();
+        this.status = user.isStatus();
+        this.createdAt = user.getCreatedDate();
+        this.createdBy = user.getCreateBy();
+        this.phone = user.getPhone();
+        this.pass = pass;
     }
 }

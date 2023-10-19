@@ -21,4 +21,8 @@ public interface UserService {
     LoginResponse login(LoginRequest request);
 
     UserResponse createUserSA(CreateUserSARequest request);
+
+    UserResponse getUserById(int id);
+
+    UserResponse changePass(ChangePasswordRequest request);
 }

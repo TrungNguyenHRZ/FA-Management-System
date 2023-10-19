@@ -70,11 +70,27 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+
+    @GetMapping(value = "/info/{id}")
+    @SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
+    public ResponseEntity<UserResponse> getUser2ById(@PathVariable(name = "id") int id) {
+        UserResponse userResponse = userService.getUserById(id);
+        return ResponseEntity.ok(userResponse);
+    }
+
     @PutMapping(value = "/gant-permission/{id}")
     @SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
     public ResponseEntity<UserResponse> changePermission(@PathVariable(name = "id") int id, @RequestBody GantPermissionUserRequest request) {
         request.setId(id);
         UserResponse userResponse = userService.gantPermissionUser(request);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @PutMapping(value = "/changePass/{id}")
+    @SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
+    public ResponseEntity<UserResponse> changePass(@PathVariable(name = "id") int id, @RequestBody ChangePasswordRequest request) {
+        request.setId(id);
+        UserResponse userResponse = userService.changePass(request);
         return ResponseEntity.ok(userResponse);
     }
 
