@@ -8,6 +8,7 @@ import com.example.BE.enums.ErrorMessage;
 import com.example.BE.enums.Gender;
 import com.example.BE.enums.Role;
 import com.example.BE.handle.BusinessException;
+import com.example.BE.handle.UnauthorizeException;
 import com.example.BE.model.Mail;
 import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -264,22 +266,22 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByEmail(request.getEmail()).orElse(null);
             if (Objects.isNull(user)) {
-                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+                throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
             String passHash = RandomStringGenerator.sha256(request.getPassword());
             if (!passHash.equals(user.getPassword())) {
-                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+                throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
 
             UserDetailsImpl userDetails = UserDetailsImpl.build(user);
             String accessToken = JWTUtils.generateAccessToken(userDetails);
             return new LoginResponse(user, accessToken);
 
-        } catch (BusinessException e) {
+        } catch (UnauthorizeException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException(ErrorMessage.USER_LOGIN_FAIL);
+            throw new UnauthorizeException(ErrorMessage.USER_LOGIN_FAIL);
         }
     }
 
