@@ -22,4 +22,6 @@ public interface ClassService {
     Class updateClass(Class c);
     List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate);
 
+    List<ClassResponse> findClassByKeyWord(String keyword);
+
 }
