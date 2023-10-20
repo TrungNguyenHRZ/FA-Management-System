@@ -133,7 +133,7 @@ public class ClassController {
             }
             TrainingProgram tmp1 = trainingProgramService.findById(c.getTrainingProgram_id());
             if(tmp1!=null){
-                tmp.setProgram_class(tmp1);}
+            tmp.setProgram_class(tmp1);}
             Class tmp2 = classService.updateClass(tmp);
             ClassResponse result = new ClassResponse(tmp2);
             return ResponseEntity.ok(result);
@@ -150,21 +150,6 @@ public class ClassController {
 
         return classService.findClassesInDateRange(startDayDate, endDayDate);
     }
-//    @GetMapping(value = {"/test"})
-//    public ResponseEntity<ApiResponse<List<ClassUser>>> getAllClassUser() {
-//        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.ok(classUserService.getAll());
-//        return ResponseEntity.ok(apiResponse);
-//    }
-
-//        public List<ClassUserDTO> findClassUsers() {
-//            List<ClassUser> cu =  classUserService.getAllClassUserList();
-//            List<ClassUserDTO> cuDTO = new ArrayList<>();
-//            for (ClassUser c: cu) {
-//                cuDTO.add(new ClassUserDTO(c));
-//            }
-//            return cuDTO;
-//        }
     @GetMapping(value = {"/getAllClassUser"})
     public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getAllClassUser() {
         List<ClassUser> cu =  classUserService.getAllClassUserList();
@@ -176,4 +161,10 @@ public class ClassController {
         apiResponse.ok(cuDTO);
         return ResponseEntity.ok(apiResponse);
     }
+    @GetMapping(value = {"/searchClassByKeyword"})
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getClassbyKey(@RequestParam(required = true) String key) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(classService.findClassByKeyWord(key));
+        return ResponseEntity.ok(apiResponse);
     }
+}
