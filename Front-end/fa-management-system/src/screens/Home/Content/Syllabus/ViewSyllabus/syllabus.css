@@ -7,7 +7,7 @@
   display: flex;
   gap: 20px;
 }
-.search-text,
+.search-text-syllabus,
 .search-date {
   display: flex;
   align-items: center;
@@ -16,7 +16,7 @@
   padding: 3px 5px 3px 5px;
   border-radius: 5px;
 }
-.search-input-text {
+.search-input-text-syllabus {
   border: none;
 }
 .search-input-text:focus {
@@ -83,4 +83,3 @@
   position: relative;
   z-index: 1;
 }
-

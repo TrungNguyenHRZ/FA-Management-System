@@ -141,6 +141,7 @@ public class ClassController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping(value = {"/searchByDate"})
     public List<ClassResponse> findClassByTimeRange(@RequestParam(value = "startDay") String startDay,
                                             @RequestParam(value = "endDay") String endDay) throws ParseException {

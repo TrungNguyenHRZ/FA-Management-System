@@ -14,10 +14,11 @@ import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
+  const itemPerPage = 9;
 
   useEffect(() => {
     apiSyllabusInstance
@@ -25,7 +26,7 @@ const Syllabus = () => {
       .then((response) => {
         console.log(response.data);
         setList(response.data);
-        setTotalPage(Math.ceil(response.data.length / 9));
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
       })
       .catch((error) => {
         console.error(error);
@@ -44,7 +45,7 @@ const Syllabus = () => {
       .get(`/view/${id}`)
       .then((response) => {
         setList(response.data);
-        setTotalPage(Math.ceil(response.data.length / 9));
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
       })
       .catch((error) => {
         console.error(error);
@@ -79,24 +80,26 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
-      <tr key={item.topic_code}>
-        <td>
-          <Link
-            style={{ textDecoration: "none", color: "inherit" }}
-            to={`/syllabus-detail/${item.topic_code}`}
-          >
-            {item.topic_name}
-          </Link>
-        </td>
-        <td>{item.topic_code}</td>
-        <td>{item.createdDate}</td>
-        <td>{item.create_by}</td>
-        <td>NULL</td>
-        <td>NULL</td>
-        <td>{item.publish_status}</td>
-      </tr>
-    ));
+    return list
+      .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
+      .map((item) => (
+        <tr key={item.topic_code}>
+          <td>
+            <Link
+              style={{ textDecoration: "none", color: "inherit" }}
+              to={`/syllabus-detail/${item.topic_code}`}
+            >
+              {item.topic_name}
+            </Link>
+          </td>
+          <td>{item.topic_code}</td>
+          <td>{item.createdDate}</td>
+          <td>{item.create_by}</td>
+          <td>NULL</td>
+          <td>NULL</td>
+          <td>{item.publish_status}</td>
+        </tr>
+      ));
   };
 
   return (
@@ -104,10 +107,10 @@ const Syllabus = () => {
       <h1>Syllabus</h1>
       <div className="head-syllabus-container">
         <div className="search-syllabus-container">
-          <div className="search-text">
+          <div className="search-text-syllabus">
             <input
               type="text"
-              className="search-input-text"
+              className="search-input-text-syllabus"
               onChange={change}
             />
             <button className="btn-search" onClick={submit}>

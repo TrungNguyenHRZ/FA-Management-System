@@ -1,0 +1,9 @@
+.search-text {
+  display: flex;
+}
+.search-input-text {
+  border: 1px solid black;
+}
+.btn-search-class {
+  margin-left: 10px;
+}
