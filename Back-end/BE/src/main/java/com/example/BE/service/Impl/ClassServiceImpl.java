@@ -72,4 +72,9 @@ public class ClassServiceImpl implements ClassService {
     public List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate) {
         return classRepository.findClassesInDateRange(startDate, endDate);
     }
+
+    @Override
+    public List<ClassResponse> findClassByKeyWord(String keyword) {
+        return classRepository.findClassesByKeyword(keyword, keyword);
+    }
 }

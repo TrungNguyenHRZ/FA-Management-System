@@ -95,20 +95,45 @@ public class ClassController {
     public ResponseEntity<ClassResponse> updateClass(@PathVariable int id, @RequestBody ClassResponse c){
         Class tmp = classService.findById(id);
         if(tmp!=null){
-            tmp.setClassName(c.getClassName());
-            tmp.setClassCode(c.getClassCode());
-            tmp.setDuration(c.getDuration());
-            tmp.setStatus(c.getStatus());
-            tmp.setLocation(c.getLocation());
-            tmp.setFsu(c.getFsu());
-            tmp.setStart_date(c.getStart_date());
-            tmp.setEnd_date(c.getEnd_date());
-            tmp.setCreate_by(c.getCreate_by());
-            tmp.setCreatedDate(c.getCreatedDate());
-            tmp.setModified_date(c.getModified_date());
-            tmp.setModified_by(c.getModified_by());
+            if(c.getClassName() !=null) {
+                tmp.setClassName(c.getClassName());
+            }
+            if(c.getClassCode()!=null){
+                tmp.setClassCode(c.getClassCode());
+            }
+            if(c.getDuration()!=0){
+                tmp.setDuration(c.getDuration());
+            }
+            if(c.getStatus()!=null) {
+                tmp.setStatus(c.getStatus());
+            }
+            if(c.getLocation()!=null) {
+                tmp.setLocation(c.getLocation());
+            }
+            if(c.getFsu()!=null) {
+                tmp.setFsu(c.getFsu());
+            }
+            if(c.getStart_date()!=null) {
+                tmp.setStart_date(c.getStart_date());
+            }
+            if(c.getEnd_date()!=null) {
+                tmp.setEnd_date(c.getEnd_date());
+            }
+            if(c.getCreate_by()!=null) {
+                tmp.setCreate_by(c.getCreate_by());
+            }
+            if(c.getCreatedDate()!=null) {
+                tmp.setCreatedDate(c.getCreatedDate());
+            }
+            if(c.getModified_date()!=null) {
+                tmp.setModified_date(c.getModified_date());
+            }
+            if(c.getModified_by()!=null) {
+                tmp.setModified_by(c.getModified_by());
+            }
             TrainingProgram tmp1 = trainingProgramService.findById(c.getTrainingProgram_id());
-            tmp.setProgram_class(tmp1);
+            if(tmp1!=null){
+            tmp.setProgram_class(tmp1);}
             Class tmp2 = classService.updateClass(tmp);
             ClassResponse result = new ClassResponse(tmp2);
             return ResponseEntity.ok(result);
@@ -124,21 +149,6 @@ public class ClassController {
 
         return classService.findClassesInDateRange(startDayDate, endDayDate);
     }
-//    @GetMapping(value = {"/test"})
-//    public ResponseEntity<ApiResponse<List<ClassUser>>> getAllClassUser() {
-//        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.ok(classUserService.getAll());
-//        return ResponseEntity.ok(apiResponse);
-//    }
-
-//        public List<ClassUserDTO> findClassUsers() {
-//            List<ClassUser> cu =  classUserService.getAllClassUserList();
-//            List<ClassUserDTO> cuDTO = new ArrayList<>();
-//            for (ClassUser c: cu) {
-//                cuDTO.add(new ClassUserDTO(c));
-//            }
-//            return cuDTO;
-//        }
     @GetMapping(value = {"/getAllClassUser"})
     public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getAllClassUser() {
         List<ClassUser> cu =  classUserService.getAllClassUserList();
@@ -150,4 +160,10 @@ public class ClassController {
         apiResponse.ok(cuDTO);
         return ResponseEntity.ok(apiResponse);
     }
+    @GetMapping(value = {"/searchClassByKeyword"})
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getClassbyKey(@RequestParam(required = true) String key) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(classService.findClassByKeyWord(key));
+        return ResponseEntity.ok(apiResponse);
     }
+}
