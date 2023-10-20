@@ -8,6 +8,7 @@ import com.example.BE.enums.ErrorMessage;
 import com.example.BE.enums.Gender;
 import com.example.BE.enums.Role;
 import com.example.BE.handle.BusinessException;
+import com.example.BE.handle.UnauthorizeException;
 import com.example.BE.model.Mail;
 import com.example.BE.model.entity.User;
 import com.example.BE.model.entity.UserPermission;
@@ -18,13 +19,16 @@ import com.example.BE.security.UserDetailsImpl;
 import com.example.BE.security.jwt.JWTUtils;
 import com.example.BE.service.UserPermissionService;
 import com.example.BE.service.UserService;
+import com.example.BE.util.AESUtils;
 import com.example.BE.util.RandomStringGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
     @Value("${spring.mail.username}")
     private String mailFrom;
+
+    @Value("${aes.key}")
+    private String keyAES;
 
 
     @Override
@@ -99,7 +106,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
             user.setStatus(request.isStatus());
             user.setPermission(userPermission);
-            user.setPassword(RandomStringGenerator.sha256(password));
+            user.setPassword(AESUtils.encrypt(password, keyAES));
             user.setCreateBy(userAdmin.getName());
 
             user = userRepository.save(user);
@@ -217,7 +224,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse gantPermissionUser(GantPermissionUserRequest request) {
         try {
-            log.info("Create user with request :{}", request.toString());
+            log.info("Change permission user with request :{}", request.toString());
             String email = SecurityUtils.getUsernameAuth();
             User userAdmin = userRepository.findByEmail(email).orElse(null);
             log.info("User Admin : {}", userAdmin);
@@ -264,22 +271,23 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByEmail(request.getEmail()).orElse(null);
             if (Objects.isNull(user)) {
-                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+                throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
-            String passHash = RandomStringGenerator.sha256(request.getPassword());
-            if (!passHash.equals(user.getPassword())) {
-                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            String passHash = AESUtils.decrypt(user.getPassword(), keyAES);
+            log.info("PAss :{}", passHash);
+            if (!passHash.equals(request.getPassword())) {
+                throw new UnauthorizeException(ErrorMessage.USER_PASSWORD_INCORRECT);
             }
 
             UserDetailsImpl userDetails = UserDetailsImpl.build(user);
             String accessToken = JWTUtils.generateAccessToken(userDetails);
             return new LoginResponse(user, accessToken);
 
-        } catch (BusinessException e) {
+        } catch (UnauthorizeException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException(ErrorMessage.USER_LOGIN_FAIL);
+            throw new UnauthorizeException(ErrorMessage.USER_LOGIN_FAIL);
         }
     }
 
@@ -312,6 +320,69 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(ErrorMessage.USER_CREATE_FAIL);
+        }
+    }
+
+
+    @Override
+    @SneakyThrows
+    public UserResponse getUserById(int id) {
+        try {
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
+            if (Objects.isNull(userAdmin)) {
+                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
+            }
+            User user = userRepository.findByUserId(id).orElse(null);
+            if(Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+            String pass = "";
+            if(Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())){
+                pass = AESUtils.decrypt(user.getPassword(), keyAES);
+            }
+            return new UserResponse(user, pass);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorMessage.USER_GET_FAIL);
+        }
+    }
+
+
+    @Override
+    public UserResponse changePass(ChangePasswordRequest request) {
+        try {
+            log.info("Change pass user with request :{}", request.toString());
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
+            log.info("User Admin : {}", userAdmin);
+            if (Objects.isNull(userAdmin)) {
+                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
+            }
+
+            // check permission
+            if(!Role.SUPER_ADMIN.getRole().equals(userAdmin.getPermission().getRole())) {
+                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+            }
+
+            User user = userRepository.findByUserId(request.getId()).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
+
+            if (!user.getEmail().equals(request.getEmail())) {
+                throw new BusinessException(ErrorMessage.USER_EMAIL_NOT_MATCH);
+            }
+            String pass = AESUtils.encrypt(request.getNewPass(), keyAES);
+            user.setPassword(pass);
+            user = userRepository.save(user);
+            return new UserResponse(user, AESUtils.decrypt(user.getPassword(),keyAES));
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
         }
     }
 }
