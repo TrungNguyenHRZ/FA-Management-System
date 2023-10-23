@@ -385,4 +385,9 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
         }
     }
+
+    @Override
+    public User getUserById2(int id) {
+        return userRepository.getUserById(id);
+    }
 }
