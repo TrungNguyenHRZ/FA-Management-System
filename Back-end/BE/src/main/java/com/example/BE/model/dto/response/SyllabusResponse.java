@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.BE.model.dto.request.TrainingUnitRequest;
+import com.example.BE.model.entity.SyllabusObject;
 import com.example.BE.model.entity.User;
 
 import lombok.Getter;

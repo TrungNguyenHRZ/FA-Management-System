@@ -18,6 +18,7 @@ const Syllabus = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
   const itemPerPage = 9;
 
   useEffect(() => {
@@ -33,19 +34,20 @@ const Syllabus = () => {
       });
   }, []);
 
-  let id = "";
   const change = (e) => {
-    id = e.target.value;
-    console.log(id);
+    setKeyword(e.target.value);
+    console.log(keyword);
   };
 
   const submit = (e) => {
     setIsLoading(true);
     apiSyllabusInstance
-      .get(`/view/${id}`)
+      .get(`search?keyword=${keyword}`)
       .then((response) => {
         setList(response.data);
+        console.log(list);
         setTotalPage(Math.ceil(response.data.length / itemPerPage));
+
       })
       .catch((error) => {
         console.error(error);
@@ -80,26 +82,25 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list
-      .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-      .map((item) => (
-        <tr key={item.topic_code}>
-          <td>
-            <Link
-              style={{ textDecoration: "none", color: "inherit" }}
-              to={`/syllabus-detail/${item.topic_code}`}
-            >
-              {item.topic_name}
-            </Link>
-          </td>
-          <td>{item.topic_code}</td>
-          <td>{item.createdDate}</td>
-          <td>{item.create_by}</td>
-          <td>NULL</td>
-          <td>NULL</td>
-          <td>{item.publish_status}</td>
-        </tr>
-      ));
+    return list.length !== 0 ? list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
+      <tr key={item.topic_code} className="table-syllabus-hover">
+        <td>
+          <Link
+            style={{ textDecoration: "none", color: "inherit" }}
+            to={`/syllabus-detail/${item.topic_code}`}
+          >
+            {item.topic_name}
+          </Link>
+        </td>
+        <td>{item.topic_code}</td>
+        <td>{item.createdDate}</td>
+        <td>{item.create_by}</td>
+        <td>NULL</td>
+        <td>NULL</td>
+        <td>{item.publish_status}</td>
+      </tr>
+    )) : <h1>No result found</h1>
+   
   };
 
   return (

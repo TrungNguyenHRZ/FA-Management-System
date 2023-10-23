@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class SyllabusObjectResponse {
 	
-	private List<SyllabusResponse> syllabusList;
-	private List<LearningObject> learningObjectList;
+	// private List<SyllabusResponse> syllabusList;
+	private LearningObjectiveResponse learningObjectList;
 
 }
