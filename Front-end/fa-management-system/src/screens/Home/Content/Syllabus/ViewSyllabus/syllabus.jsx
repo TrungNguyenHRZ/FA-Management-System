@@ -14,11 +14,12 @@ import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
   const [keyword, setKeyword] = useState("");
+  const itemPerPage = 9;
 
   useEffect(() => {
     apiSyllabusInstance
@@ -26,7 +27,7 @@ const Syllabus = () => {
       .then((response) => {
         console.log(response.data);
         setList(response.data);
-        setTotalPage(Math.ceil(response.data.length / 9));
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
       })
       .catch((error) => {
         console.error(error);
@@ -45,7 +46,8 @@ const Syllabus = () => {
       .then((response) => {
         setList(response.data);
         console.log(list);
-        setTotalPage(Math.ceil(response.data.length / 9));
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
+
       })
       .catch((error) => {
         console.error(error);
@@ -98,6 +100,7 @@ const Syllabus = () => {
         <td>{item.publish_status}</td>
       </tr>
     )) : <h1>No result found</h1>
+   
   };
 
   return (
@@ -105,10 +108,10 @@ const Syllabus = () => {
       <h1>Syllabus</h1>
       <div className="head-syllabus-container">
         <div className="search-syllabus-container">
-          <div className="search-text">
+          <div className="search-text-syllabus">
             <input
               type="text"
-              className="search-input-text"
+              className="search-input-text-syllabus"
               onChange={change}
             />
             <button className="btn-search" onClick={submit}>
