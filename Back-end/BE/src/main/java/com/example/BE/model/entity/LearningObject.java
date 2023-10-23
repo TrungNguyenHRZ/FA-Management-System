@@ -1,5 +1,8 @@
 package com.example.BE.model.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,6 +29,6 @@ public class LearningObject {
     @JoinColumn(name = "content_id")
     private TrainingContent content_id;
 
-    // @OneToMany(mappedBy="learning_code")
-    // Set<SyllabusObject> learning_objects = new HashSet<>();
+    @OneToMany(mappedBy="learning_code")
+    Set<SyllabusObject> learning_objects = new HashSet<>();
 }

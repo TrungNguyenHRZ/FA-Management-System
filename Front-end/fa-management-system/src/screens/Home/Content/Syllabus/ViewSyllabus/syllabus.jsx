@@ -18,6 +18,7 @@ const Syllabus = () => {
 
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     apiSyllabusInstance
@@ -32,18 +33,18 @@ const Syllabus = () => {
       });
   }, []);
 
-  let id = "";
   const change = (e) => {
-    id = e.target.value;
-    console.log(id);
+    setKeyword(e.target.value);
+    console.log(keyword);
   };
 
   const submit = (e) => {
     setIsLoading(true);
     apiSyllabusInstance
-      .get(`/view/${id}`)
+      .get(`search?keyword=${keyword}`)
       .then((response) => {
         setList(response.data);
+        console.log(list);
         setTotalPage(Math.ceil(response.data.length / 9));
       })
       .catch((error) => {
@@ -79,8 +80,8 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
-      <tr key={item.topic_code}>
+    return list.length !== 0 ? list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
+      <tr key={item.topic_code} className="table-syllabus-hover">
         <td>
           <Link
             style={{ textDecoration: "none", color: "inherit" }}
@@ -96,7 +97,7 @@ const Syllabus = () => {
         <td>NULL</td>
         <td>{item.publish_status}</td>
       </tr>
-    ));
+    )) : <h1>No result found</h1>
   };
 
   return (
