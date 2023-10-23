@@ -4,6 +4,7 @@ import com.example.BE.dto.request.user.*;
 import com.example.BE.dto.response.user.LoginResponse;
 import com.example.BE.dto.response.user.UserPageResponse;
 import com.example.BE.dto.response.user.UserResponse;
+import com.example.BE.model.entity.User;
 
 public interface UserService {
 
@@ -25,4 +26,5 @@ public interface UserService {
     UserResponse getUserById(int id);
 
     UserResponse changePass(ChangePasswordRequest request);
+    User getUserById2(int id);
 }
