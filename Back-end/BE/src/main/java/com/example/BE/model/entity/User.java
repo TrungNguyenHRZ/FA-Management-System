@@ -43,7 +43,7 @@ public class User {
     private String gender;
 
     @Column(name = "status")
-    private boolean status;
+    private String status;
 
     @Column(name = "create_by")
     private String createBy;

@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             user.setDob(dateOfBirth);
             user.setGender(gender);
             user.setEmail(request.getEmail());
-            user.setStatus(request.isStatus());
+            user.setStatus(request.getStatus().getStatus());
             user.setPermission(userPermission);
             user.setPassword(AESUtils.encrypt(password, keyAES));
             user.setCreateBy(userAdmin.getName());
@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService {
             }
             if (Objects.nonNull(request.getStatus())) {
 
-                user.setStatus(request.getStatus());
+                user.setStatus(request.getStatus().getStatus());
             }
 
             user.setModifiedBy(userAdmin.getName());
@@ -308,7 +308,7 @@ public class UserServiceImpl implements UserService {
             user.setDob(dateOfBirth);
             user.setGender(gender);
             user.setEmail(request.getEmail());
-            user.setStatus(request.isStatus());
+            user.setStatus(request.getStatus().getStatus());
             user.setPermission(userPermission);
             user.setPassword(RandomStringGenerator.sha256(request.getPassword()));
             user = userRepository.save(user);
