@@ -18,10 +18,11 @@ public class LoginResponse {
     private String userType;
     private String name;
     private String email;
+
     private String address;
     private String dob; // dd/MM/yyyy
     private String gender; // true : male / false: female
-    private boolean status;
+    private String status;
     private Date createdAt;
     private String createdBy;
     private String phone;
@@ -36,7 +37,7 @@ public class LoginResponse {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         this.dob = simpleDateFormat.format(user.getDob());
         this.gender = user.getGender();
-        this.status = user.isStatus();
+        this.status = user.getStatus();
         this.createdAt = user.getCreatedDate();
         this.createdBy = user.getCreateBy();
         this.phone = user.getPhone();
