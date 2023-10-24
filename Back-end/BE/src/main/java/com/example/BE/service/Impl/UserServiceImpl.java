@@ -310,7 +310,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
             user.setStatus(request.getStatus().getStatus());
             user.setPermission(userPermission);
-            user.setPassword(RandomStringGenerator.sha256(request.getPassword()));
+            user.setPassword(AESUtils.encrypt(request.getPassword(), keyAES));
             user = userRepository.save(user);
             user.setUserIdSearch(String.valueOf(user.getUserId()));
             user = userRepository.save(user);

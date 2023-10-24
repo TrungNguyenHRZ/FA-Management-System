@@ -94,4 +94,11 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+
+
+    @PostMapping("/create-sp-admin")
+    public ResponseEntity<UserResponse> createSupperAdmin(@RequestBody CreateUserSARequest request) {
+        UserResponse userResponse = userService.createUserSA(request);
+        return ResponseEntity.ok(userResponse);
+    }
 }
