@@ -37,9 +37,11 @@
 .sidebar-container ul li:hover {
   border-radius: 10px;
   color: #d97bc5;
+  transition: 0.2s;
 }
 .sidebar-container ul li:hover .home-link {
   color: #d97bc5;
+  transition: 0.2s;
 }
 
 .home-link {

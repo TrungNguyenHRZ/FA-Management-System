@@ -1,9 +1,31 @@
-.search-text {
+.search-text-input {
   display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid black;
+  padding: 3px 5px 3px 5px;
+  border-radius: 5px;
+  width: auto;
 }
 .search-input-text {
   border: 1px solid black;
+  border-radius: 5px;
 }
 .btn-search-class {
   margin-left: 10px;
+  border: none;
+  background-color: #2a00b7;
+  color: #fff;
+  border-radius: 5px;
+  padding: 2px 10px;
+}
+
+.btn-search-class:hover {
+  opacity: 0.8;
+}
+
+.view-class-pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }

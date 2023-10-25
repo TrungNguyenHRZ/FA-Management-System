@@ -47,7 +47,6 @@ const Syllabus = () => {
         setList(response.data);
         console.log(list);
         setTotalPage(Math.ceil(response.data.length / itemPerPage));
-
       })
       .catch((error) => {
         console.error(error);
@@ -82,25 +81,28 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list.length !== 0 ? list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
-      <tr key={item.topic_code} className="table-syllabus-hover">
-        <td>
-          <Link
-            style={{ textDecoration: "none", color: "inherit" }}
-            to={`/syllabus-detail/${item.topic_code}`}
-          >
-            {item.topic_name}
-          </Link>
-        </td>
-        <td>{item.topic_code}</td>
-        <td>{item.createdDate}</td>
-        <td>{item.create_by}</td>
-        <td>NULL</td>
-        <td>NULL</td>
-        <td>{item.publish_status}</td>
-      </tr>
-    )) : <h1>No result found</h1>
-   
+    return list.length !== 0 ? (
+      list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
+        <tr key={item.topic_code}>
+          <td>
+            <Link
+              style={{ textDecoration: "none", color: "#d97bc5" }}
+              to={`/syllabus-detail/${item.topic_code}`}
+            >
+              {item.topic_name}
+            </Link>
+          </td>
+          <td>{item.topic_code}</td>
+          <td>{item.createdDate}</td>
+          <td>{item.create_by}</td>
+          <td>NULL</td>
+          <td>NULL</td>
+          <td>{item.publish_status}</td>
+        </tr>
+      ))
+    ) : (
+      <h1>No result found</h1>
+    );
   };
 
   return (
@@ -114,9 +116,8 @@ const Syllabus = () => {
               className="search-input-text-syllabus"
               onChange={change}
             />
-            <button className="btn-search" onClick={submit}>
+            <button className="btn-search-syllabus" onClick={submit}>
               <FaSearch />
-              Search
             </button>
           </div>
           <div className="search-date">
@@ -162,25 +163,27 @@ const Syllabus = () => {
 
           <tbody>{renderData()}</tbody>
         </table>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={2}
-          //marginPagesDisplayed={3}
-          pageCount={TotalPage}
-          previousLabel="< previous"
-          containerClassName={"pagination"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          activeClassName="active"
-        />
+        <div className="syllabus-pagination">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            //marginPagesDisplayed={3}
+            pageCount={TotalPage}
+            previousLabel="<"
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+          />
+        </div>
       </div>
     </div>
   );
