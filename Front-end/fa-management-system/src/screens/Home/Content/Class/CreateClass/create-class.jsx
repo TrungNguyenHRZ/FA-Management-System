@@ -112,7 +112,7 @@ const CreateClass = () => {
       });
   };
   return (
-    <div className="view-class-container">
+    <div className="create-class-container">
       <div className={"toast-container"}></div>
       <div className="title-class">
         <h1>Add new class</h1>
@@ -147,11 +147,11 @@ const CreateClass = () => {
         </div>
         <div className="table-class-right">
           <div className="input-class-date input-start-end">
-            <div className="input-class input-start-date">
+            <div className=" input-start-date">
               <label>Start date</label>
               <input type="date" onChange={changeStart_date} />
             </div>
-            <div className="input-class input-end-date">
+            <div className=" input-end-date">
               <label>End date</label>
               <input type="date" onChange={changeEnd_date} />
             </div>
@@ -161,11 +161,11 @@ const CreateClass = () => {
             <input type="text" onChange={changeCreate_by} />
           </div>
           <div className="input-class-date input-create">
-            <div className="input-class input-create-date">
+            <div className=" input-create-date">
               <label>Created date</label>
               <input type="date" onChange={changeCreatedDate} />
             </div>
-            <div className="input-class input-modify-date">
+            <div className="input-modify-date">
               <label>Modified date</label>
               <input type="date" onChange={changeModified_date} />
             </div>
@@ -187,12 +187,12 @@ const CreateClass = () => {
               })}
             </select>
           </div>
+          <button className="btn-class-create" onClick={add}>
+            Add new
+          </button>
         </div>
       </div>
       <div>
-        <button className="btn-class-search" onClick={add}>
-          Add new
-        </button>
         <ToastContainer
           position="top-center"
           autoClose={5000}
