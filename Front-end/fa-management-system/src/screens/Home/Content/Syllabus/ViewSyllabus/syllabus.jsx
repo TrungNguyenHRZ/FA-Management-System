@@ -87,7 +87,7 @@ const Syllabus = () => {
           <td>
             <Link
               style={{ textDecoration: "none", color: "#d97bc5" }}
-              to={`/syllabus-detail/${item.topic_code}`}
+              to={`/view-syllabus/${item.topic_code}`}
             >
               {item.topic_name}
             </Link>
