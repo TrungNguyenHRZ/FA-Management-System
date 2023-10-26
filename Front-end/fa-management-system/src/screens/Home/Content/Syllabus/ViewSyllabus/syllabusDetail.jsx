@@ -27,7 +27,7 @@ const SyllabusDetail = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [paramName.id]);
   //   if (syllabus.learningList) {
   // 	console.log(syllabus.learningList);
   //   }
