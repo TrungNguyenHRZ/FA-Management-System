@@ -66,7 +66,6 @@ public class Class implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "class_object")
     private List<ClassUser> classUserList;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "program_id")
     private TrainingProgram program_class;

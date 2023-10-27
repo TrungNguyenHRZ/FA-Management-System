@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
-
+  const [id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
@@ -33,9 +33,8 @@ const Syllabus = () => {
       });
   }, []);
 
-  let id = "";
   const change = (e) => {
-    id = e.target.value;
+    setId(e.target.value);
     console.log(id);
   };
 

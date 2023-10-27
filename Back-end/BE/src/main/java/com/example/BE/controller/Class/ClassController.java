@@ -42,9 +42,14 @@ public class ClassController {
 //        return classMapper.toClassDTOList(classList);
 //    }
     @GetMapping(value = {"", "/all"})
-    public ResponseEntity<ApiResponse<List<Class>>> getAllClass() {
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClass() {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.ok(classService.findAllClass());
+        List<Class> clazz = classService.findAllClass();
+        List<ClassResponse> clazzResponse = new ArrayList<>();
+        for (Class c: clazz) {
+            clazzResponse.add(new ClassResponse(c));
+        }
+        apiResponse.ok(clazzResponse);
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping(value = {"/searchByName"})

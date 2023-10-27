@@ -19,7 +19,7 @@ public class GetAllRequest {
 
 
     public Pageable getPageable() {
-        Sort.Direction direction = dir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = dir.equals("asc") ? Sort.Direction.DESC: Sort.Direction.ASC ;
         return PageRequest.of(page, size, Sort.by(direction, order));
     }
 }
