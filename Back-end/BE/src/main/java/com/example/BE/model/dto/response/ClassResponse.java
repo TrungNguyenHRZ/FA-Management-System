@@ -50,7 +50,9 @@ public class ClassResponse {
         this.createdDate = classEntity.getCreatedDate();
         this.modified_date = classEntity.getModified_date();
         this.modified_by = classEntity.getModified_by();
-        this.TrainingProgram_id = classEntity.getProgram_class().getTraining_code();
+        if(classEntity.getProgram_class() !=null) {
+            this.TrainingProgram_id = classEntity.getProgram_class().getTraining_code();
+        }
     }
 
     public ClassResponse(int classId, String className, String classCode, int duration, String status, String location, String fsu, Date start_date, Date end_date, String create_by, Date createdDate, Date modified_date, String modified_by, int trainingProgram_id) {
