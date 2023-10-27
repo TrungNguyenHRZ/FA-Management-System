@@ -5,8 +5,10 @@ import com.example.BE.model.entity.TrainingProgramSyllabus;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -21,8 +23,9 @@ public class TrainingProgramResponse {
     protected Date createdDate;
     protected Date modified_date;
     protected String modified_by;
-    TrainingProgramSyllabus syllabusProgram;
-
+    protected List<Integer> syllabusIds;
+//    protected List<Integer> newSyllabusIds;
+//    protected Map<Integer, String> sequence;
 //    protected int user_training;
 
     public TrainingProgramResponse(TrainingProgram trainingProgram){
@@ -36,9 +39,11 @@ public class TrainingProgramResponse {
         this.createdDate = trainingProgram.getCreatedDate();
         this.modified_date = trainingProgram.getModified_date();
         this.modified_by = trainingProgram.getModified_by();
-        TrainingProgramSyllabus syllabusProgram;
+        if(!trainingProgram.getSyllabus().isEmpty()) {
+            this.syllabusIds = Collections.singletonList(trainingProgram.getSyllabus().iterator().next().getProgram_topic().getTopic_code());
+        }
+//        TrainingProgramSyllabus syllabusProgram;
 //        this.user_training = trainingProgram.getUser_training().getUserId();
-
     }
 
     public TrainingProgramResponse() {

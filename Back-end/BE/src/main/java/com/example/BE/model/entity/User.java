@@ -64,7 +64,7 @@ public class User {
     private UserPermission permission;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     private List<ClassUser> classUserList;
 
     @OneToMany(mappedBy = "user_syllabus")
