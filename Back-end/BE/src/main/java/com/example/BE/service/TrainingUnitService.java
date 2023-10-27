@@ -15,4 +15,6 @@ public interface TrainingUnitService {
 	TrainingUnit saveUnit(TrainingUnit unit);
 	TrainingUnit convert (TrainingUnitResponse unitResponse);
 	List<TrainingUnit> saveAllUnits(List<TrainingUnit> units);
+	List<TrainingUnit> updateUnit(List<TrainingUnit> unit);
+	void deleteUnit(int unitId);
 }

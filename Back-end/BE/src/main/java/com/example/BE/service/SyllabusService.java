@@ -2,12 +2,14 @@ package com.example.BE.service;
 
 
 import com.example.BE.model.entity.Syllabus;
+import com.example.BE.model.entity.TrainingUnit;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import com.example.BE.model.dto.response.SyllabusResponse;
+import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.Syllabus;
 
 
@@ -32,4 +34,12 @@ public interface SyllabusService {
 	Page<Syllabus> getAllPagesSyllabus(int page, int size);
 
 	Syllabus convertSyllabus(SyllabusResponse syResponse);
+
+	Syllabus updateSyllabus(Syllabus syllabus);
+
+	TrainingUnit convert(TrainingUnitResponse unitResponse);
+
+	void duplicateSyllabus(int code);
+
+	int generateNextId();
 }
