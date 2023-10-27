@@ -58,7 +58,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 	@Override
 	public List<Syllabus> getAllSyllabus() {
 		// TODO Auto-generated method stub
-		return syllabusRepository.findAll();
+		return syllabusRepository.getSyllabusDescDate();
 	}
 
 
@@ -131,7 +131,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 	@Override
 	public List<SyllabusResponse> getAll() {
 		// TODO Auto-generated method stub
-		List<Syllabus> syList = syllabusRepository.findAll();
+		List<Syllabus> syList = syllabusRepository.getSyllabusDescDate();
 		List<SyllabusResponse> result;
 		result = mapper.toSyllabusResponseList(syList);
 		int b = 0;

@@ -1,6 +1,7 @@
 package com.example.BE.dto.request.user;
 
 
+import com.example.BE.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,5 @@ public class UpdateUserRequest {
     private String phone;
     private String dob; // dd/MM/yyyy
     private Boolean genderTrueMale; // true : male / false: female
-    private Boolean status;
+    private Status status;
 }

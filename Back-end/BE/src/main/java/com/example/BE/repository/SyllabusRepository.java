@@ -34,5 +34,7 @@ public interface SyllabusRepository extends JpaRepository<Syllabus, Integer> {
 	@Query("Select sy from Syllabus sy JOIN FETCH sy.syllabus_unit where sy.topic_code = :topic_code")
 	Optional<Syllabus> getSyllabusWithTrainingUnit(@Param("topic_code") Integer topic_code);
 
-
+	@Query(value = "select * from syllabus order by create_date desc",
+	nativeQuery = true)
+	List<Syllabus> getSyllabusDescDate();
 }

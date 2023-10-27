@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import apiClassInstance from "../../../../../service/api-class";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
+import "./create-class.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const CreateClass = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
 
@@ -14,7 +17,6 @@ const CreateClass = () => {
         console.error(error);
       });
   }, []);
-  console.log(listTrainingProgram);
 
   let className = null;
   const changeName = (e) => {
@@ -101,56 +103,80 @@ const CreateClass = () => {
       })
       .then(function (response) {
         console.log(response);
+
+        toast.success("Add class successfully !!!");
       })
       .catch(function (error) {
         console.log(error);
+        toast.error("Add class failed !!!");
       });
   };
-
   return (
-    <div className="view-syllbus-container">
-      <h1>Add new class</h1>
-
-      <div className="table-syllabus-container">
-        <table className="table-syllabus">
-          <tbody>
-            <text>Class Name</text>
+    <div className="create-class-container">
+      <div className={"toast-container"}></div>
+      <div className="title-class">
+        <h1>Add new class</h1>
+      </div>
+      <div className="table-class-container">
+        <div className="table-class-left">
+          {" "}
+          <div className="input-class input-name">
+            <label>Class name</label>
             <input type="text" onChange={changeName} />
-            <br />
-            <text>Class Code</text>
+          </div>
+          <div className="input-class input-code">
+            <label>Class code</label>
             <input type="text" onChange={changeCode} />
-            <br />
-            <text>Duration</text>
+          </div>
+          <div className="input-class input-duration">
+            <label>Duration</label>
             <input type="text" onChange={changeDuration} />
-            <br />
-            <text>Status</text>
+          </div>
+          <div className="input-class input-status">
+            <label>Status</label>
             <input type="text" onChange={changeStatus} />
-            <br />
-            <text>Location</text>
+          </div>
+          <div className="input-class input-location">
+            <label>Location</label>
             <input type="text" onChange={changeLocation} />
-            <br />
-            <text>Fsu</text>
+          </div>
+          <div className="input-class input-fsu">
+            <label>FSU</label>
             <input type="text" onChange={changeFsu} />
-            <br />
-            <text>Start_date</text>
-            <input type="date" onChange={changeStart_date} />
-            <br />
-            <text>End_date</text>
-            <input type="date" onChange={changeEnd_date} />
-            <br />
-            <text>Create_by</text>
+          </div>
+        </div>
+        <div className="table-class-right">
+          <div className="input-class-date input-start-end">
+            <div className=" input-start-date">
+              <label>Start date</label>
+              <input type="date" onChange={changeStart_date} />
+            </div>
+            <div className=" input-end-date">
+              <label>End date</label>
+              <input type="date" onChange={changeEnd_date} />
+            </div>
+          </div>
+          <div className="input-class input-create-by">
+            <label>Create by</label>
             <input type="text" onChange={changeCreate_by} />
-            <br />
-            <text>CreatedDate</text>
-            <input type="date" onChange={changeCreatedDate} />
-            <br />
-            <text>Modified_date</text>
-            <input type="date" onChange={changeModified_date} />
-            <br />
-            <text>Modified_by</text>
+          </div>
+          <div className="input-class-date input-create">
+            <div className=" input-create-date">
+              <label>Created date</label>
+              <input type="date" onChange={changeCreatedDate} />
+            </div>
+            <div className="input-modify-date">
+              <label>Modified date</label>
+              <input type="date" onChange={changeModified_date} />
+            </div>
+          </div>
+
+          <div className="input-class input-modify-by">
+            <label>Modified by</label>
             <input type="text" onChange={changeModified_by} />
-            <br />
-            <text>Training Program_id</text>
+          </div>
+          <div className="input-class input-training-program">
+            <label>Training Program </label>
             <select onChange={changeTrainingProgram_id}>
               {listTrainingProgram?.map((item, index) => {
                 return (
@@ -160,12 +186,25 @@ const CreateClass = () => {
                 );
               })}
             </select>
-            <br />
-            <button className="btn-search" onClick={add}>
-              Add new
-            </button>
-          </tbody>
-        </table>
+          </div>
+          <button className="btn-class-create" onClick={add}>
+            Add new
+          </button>
+        </div>
+      </div>
+      <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </div>
   );

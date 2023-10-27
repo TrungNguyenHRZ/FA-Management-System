@@ -18,6 +18,7 @@ const Syllabus = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
   const itemPerPage = 9;
 
   useEffect(() => {
@@ -34,16 +35,18 @@ const Syllabus = () => {
   }, []);
 
   const change = (e) => {
-    setId(e.target.value);
-    console.log(id);
+
+    setKeyword(e.target.value);
+    console.log(keyword);
   };
 
   const submit = (e) => {
     setIsLoading(true);
     apiSyllabusInstance
-      .get(`/view/${id}`)
+      .get(`search?keyword=${keyword}`)
       .then((response) => {
         setList(response.data);
+        console.log(list);
         setTotalPage(Math.ceil(response.data.length / itemPerPage));
       })
       .catch((error) => {
@@ -79,14 +82,13 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list
-      .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-      .map((item) => (
+    return list.length !== 0 ? (
+      list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
         <tr key={item.topic_code}>
           <td>
             <Link
-              style={{ textDecoration: "none", color: "inherit" }}
-              to={`/syllabus-detail/${item.topic_code}`}
+              style={{ textDecoration: "none", color: "#d97bc5" }}
+              to={`/view-syllabus/${item.topic_code}`}
             >
               {item.topic_name}
             </Link>
@@ -98,7 +100,10 @@ const Syllabus = () => {
           <td>NULL</td>
           <td>{item.publish_status}</td>
         </tr>
-      ));
+      ))
+    ) : (
+      <h1>No result found</h1>
+    );
   };
 
   return (
@@ -112,9 +117,8 @@ const Syllabus = () => {
               className="search-input-text-syllabus"
               onChange={change}
             />
-            <button className="btn-search" onClick={submit}>
+            <button className="btn-search-syllabus" onClick={submit}>
               <FaSearch />
-              Search
             </button>
           </div>
           <div className="search-date">
@@ -160,25 +164,27 @@ const Syllabus = () => {
 
           <tbody>{renderData()}</tbody>
         </table>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={2}
-          //marginPagesDisplayed={3}
-          pageCount={TotalPage}
-          previousLabel="< previous"
-          containerClassName={"pagination"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          activeClassName="active"
-        />
+        <div className="syllabus-pagination">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            //marginPagesDisplayed={3}
+            pageCount={TotalPage}
+            previousLabel="<"
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+          />
+        </div>
       </div>
     </div>
   );

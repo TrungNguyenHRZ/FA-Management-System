@@ -3,6 +3,8 @@ package com.example.BE.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.Set;
 @Entity
 @Table(name = "Users")
 @Data
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -39,7 +43,7 @@ public class User {
     private String gender;
 
     @Column(name = "status")
-    private boolean status;
+    private String status;
 
     @Column(name = "create_by")
     private String createBy;

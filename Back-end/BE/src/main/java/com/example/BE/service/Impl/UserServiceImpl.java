@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             user.setDob(dateOfBirth);
             user.setGender(gender);
             user.setEmail(request.getEmail());
-            user.setStatus(request.isStatus());
+            user.setStatus(request.getStatus().getStatus());
             user.setPermission(userPermission);
             user.setPassword(AESUtils.encrypt(password, keyAES));
             user.setCreateBy(userAdmin.getName());
@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService {
             }
             if (Objects.nonNull(request.getStatus())) {
 
-                user.setStatus(request.getStatus());
+                user.setStatus(request.getStatus().getStatus());
             }
 
             user.setModifiedBy(userAdmin.getName());
@@ -308,9 +308,9 @@ public class UserServiceImpl implements UserService {
             user.setDob(dateOfBirth);
             user.setGender(gender);
             user.setEmail(request.getEmail());
-            user.setStatus(request.isStatus());
+            user.setStatus(request.getStatus().getStatus());
             user.setPermission(userPermission);
-            user.setPassword(RandomStringGenerator.sha256(request.getPassword()));
+            user.setPassword(AESUtils.encrypt(request.getPassword(), keyAES));
             user = userRepository.save(user);
             user.setUserIdSearch(String.valueOf(user.getUserId()));
             user = userRepository.save(user);
@@ -384,5 +384,10 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
         }
+    }
+
+    @Override
+    public User getUserById2(int id) {
+        return userRepository.getUserById(id);
     }
 }

@@ -65,8 +65,8 @@ public class Syllabus {
     @OneToMany(mappedBy = "program_topic")
     Set<TrainingProgramSyllabus> training_program = new HashSet<>();
 
-    // @OneToMany(mappedBy="syllabus_object_code")
-    // Set<SyllabusObject> syllabus_object = new HashSet<>();
+    @OneToMany(mappedBy="syllabus_object_code")
+    Set<SyllabusObject> syllabus_object = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "userid")

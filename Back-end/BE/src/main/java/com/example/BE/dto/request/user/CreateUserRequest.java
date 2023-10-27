@@ -2,6 +2,7 @@ package com.example.BE.dto.request.user;
 
 
 import com.example.BE.enums.Role;
+import com.example.BE.enums.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,5 +27,5 @@ public class CreateUserRequest {
     private String dob; // dd/MM/yyyy
     @NotNull
     private boolean genderTrueMale; // true : male / false: female
-    private boolean status;
+    private Status status;
 }

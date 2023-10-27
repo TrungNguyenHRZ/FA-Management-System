@@ -1,17 +1,21 @@
 package com.example.BE.controller.syllabus;
 
 import com.example.BE.mapper.SyllabusMapper;
+import com.example.BE.mapper.SyllabusObjectMapper;
 import com.example.BE.mapper.TrainingUnitMapper;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.PageableDTO;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ApiResponse;
+import com.example.BE.model.dto.response.SyllabusObjectResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.Syllabus;
+import com.example.BE.model.entity.SyllabusObject;
 import com.example.BE.model.entity.TrainingContent;
 import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
+import com.example.BE.repository.SyllabusObjectRepository;
 import com.example.BE.repository.SyllabusRepository;
 import com.example.BE.repository.UserRepository;
 import com.example.BE.service.SyllabusService;
@@ -52,15 +56,36 @@ public class ViewSyllabusController {
 	@Autowired
 	TrainingContentService contentService;
 
+	@Autowired
+	SyllabusObjectRepository syObjectRepo;
+
+	@Autowired
+	SyllabusObjectMapper syObjectMapper;
+
 
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus(){
-		return syllabusService.getAll();
+		List<SyllabusResponse> syList = syllabusService.getAll();
+		for(SyllabusResponse syr : syList) {
+			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
+			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+			syr.setLearningList(syObjsResult);
+		}
+		return syList;
 	}
 
-	@GetMapping("/view/{keyword}")
-	public List<SyllabusResponse> getAllSyllabusByKeyword(@PathVariable String keyword){
-		return syllabusService.getAllSyllabusByKey(keyword);
+	@GetMapping("/search")
+	public List<SyllabusResponse> getAllSyllabusByKeyword(@RequestParam("keyword") String keyword){
+		if(keyword == null || keyword.isEmpty() || keyword == " "){
+			return syllabusService.getAll();
+		}else{
+			List<SyllabusResponse> syList = syllabusService.getAllSyllabusByKey(keyword);
+			if(syList != null){
+				return syList;
+			}else{
+				return null;
+			}
+		}
 	}
 
 	@GetMapping("/search/{date}")
@@ -70,7 +95,11 @@ public class ViewSyllabusController {
 	
 	@GetMapping("viewSyllabus/{code}")
 	public SyllabusResponse getSyllabusByTopicCode(@PathVariable int code){
-		return syllabusService.getSyllabusByTopicCode(code);
+		SyllabusResponse syllabus = syllabusService.getSyllabusByTopicCode(code);
+		List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
+		List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+		syllabus.setLearningList(syObjsResult);
+		return syllabus;
 	}
 
 
@@ -142,5 +171,24 @@ public class ViewSyllabusController {
 		data.setTotalPages(list.getTotalPages());
 		apiResponse.ok(data);
 		return ResponseEntity.ok(apiResponse);
+	}
+
+	@GetMapping("/testLearning")
+	public List<SyllabusResponse> getLearningList() {
+		List<SyllabusResponse> syList = syllabusService.getAll();
+		for(SyllabusResponse syr : syList) {
+			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
+			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+			syr.setLearningList(syObjsResult);
+		}
+		return syList;
+	}
+
+	@GetMapping("/test1")
+	public List<SyllabusObjectResponse> testLearningList() {
+		List<SyllabusObjectResponse> syList;
+		List<SyllabusObject> syObj = syObjectRepo.findAll();
+		List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+		return syObjsResult;
 	}
 }

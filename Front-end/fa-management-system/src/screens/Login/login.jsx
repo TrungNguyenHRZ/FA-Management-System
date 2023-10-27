@@ -1,23 +1,69 @@
 import React, { useState } from "react";
 import "./login.css";
 import { FaUserLarge, FaLock } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        navigate("/");
+      } else {
+        setError("Invalid email or password.");
+      }
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  // const handleLogin = async () => {
+  //   try {
+  //     const response = await axios.post("http://localhost:8080/user/login", {
+  //       email,
+  //       password,
+  //     });
+
+  //     if (response.status === 200) {
+  //       const data = response.data;
+  //       console.log(data);
+  //       navigate("/");
+  //     } else {
+  //       setError("Invalid email or password.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error", error);
+  //   }
+  // };
 
   const handleInputChange = (e, inputType) => {
     const value = e.target.value;
-    if (inputType === "username") {
-      setUserName(value);
+    if (inputType === "email") {
+      setEmail(value);
     } else if (inputType === "password") {
       setPassword(value);
     }
   };
 
-  const handleSubmit = () => {
-    console.log("User name: ", userName);
-    console.log("Password: ", password);
-  };
+  // const handleSubmit = () => {
+  //   console.log("User name: ", email);
+  //   console.log("Password: ", password);
+  // };
 
   return (
     <div className="login-container">
@@ -30,9 +76,9 @@ const Login = () => {
           <FaUserLarge className="input-icon" />
           <input
             type="text"
-            placeholder="Usename"
-            value={userName}
-            onChange={(e) => handleInputChange(e, "username")}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => handleInputChange(e, "email")}
           />
         </div>
         <div className="input">
@@ -45,12 +91,14 @@ const Login = () => {
           />
         </div>
       </div>
+      <div className="error-message">{error && <>{error}</>}</div>
+
       <div className="forgot-password">
         If you forget your password. Please contact your administrator for
         support.
       </div>
       <div className="submit-container">
-        <div className="submit" onClick={handleSubmit}>
+        <div className="submit" onClick={handleLogin}>
           Login
         </div>
       </div>

@@ -1,0 +1,74 @@
+.create-class-container {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+.table-class-container {
+  background-color: #dfdfdf;
+  padding: 50px;
+  display: flex;
+  gap: 100px;
+  border-radius: 10px;
+}
+.table-class-left,
+.table-class-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.table-class-left > .input-class,
+.table-class-right > .input-class {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.title-class {
+  display: flex;
+  height: 70px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.input-class > input {
+  padding: 5px 10px;
+  width: 400px;
+  border-radius: 5px;
+  border: 1px solid grey;
+}
+.input-class-date {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #2a00b7;
+  color: #fff;
+}
+.input-class-date > input {
+  width: 300px;
+}
+
+.input-start-date,
+.input-end-date,
+.input-create-date,
+.input-modify-date {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  border-radius: 5px;
+}
+.btn-class-create {
+  border: none;
+  border-radius: 5px;
+  background-color: #2a00b7;
+  color: #fff;
+  padding: 5px 10px;
+  margin-top: 20px;
+}
+
+.btn-class-create:hover {
+  opacity: 0.8;
+}

@@ -4,15 +4,16 @@ import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
+import com.example.BE.model.entity.*;
 import com.example.BE.model.entity.Class;
-import com.example.BE.model.entity.ClassUser;
-import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.repository.ClassUserRepository;
 import com.example.BE.service.ClassService;
 import com.example.BE.service.ClassUserService;
 import com.example.BE.service.TrainingProgramService;
+import com.example.BE.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ClassController {
     @Autowired
     private ClassService classService;
     @Autowired
-    private ClassMapper classMapper;
+    private UserService userService;
     @Autowired
     private TrainingProgramService trainingProgramService;
     @Autowired
@@ -171,5 +172,20 @@ public class ClassController {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.ok(classService.findClassByKeyWord(key));
         return ResponseEntity.ok(apiResponse);
+    }
+    @PostMapping(value = {"/CreateClassUser"})
+    public ResponseEntity<ClassUser> createClassUser(@RequestBody ClassUserDTO classUserDTO) {
+        ClassUser classUser = new ClassUser();
+        classUser.setId(new ClassUserId(classUserDTO.getUserId(), classUserDTO.getClassId()));
+        classUser.setUserType(classUserDTO.getUserType());
+
+        Class classObject = classService.findById(classUserDTO.getClassId());
+        classUser.setClass_object(classObject);
+
+        User user = userService.getUserById2(classUserDTO.getUserId());
+        classUser.setUser(user);
+
+        ClassUser createdClassUser = classUserService.saveClassUser(classUser);
+        return new ResponseEntity<>(createdClassUser, HttpStatus.CREATED);
     }
 }
