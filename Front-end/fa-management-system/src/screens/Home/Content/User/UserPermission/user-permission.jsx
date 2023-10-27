@@ -41,7 +41,7 @@ const UserPermission = () => {
     <div className="user-permission-container">
       <h1>User permission</h1>
       <div className="table-container">
-        <table>
+        <table className="table-user-permission">
           <thead>
             <tr>
               <th>Role name</th>

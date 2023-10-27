@@ -16,7 +16,32 @@ const Sidebar = () => {
   const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
   const [isSubMenuUser, setSubMenuUser] = useState(false);
   const [isSubMenuClass, setSubMenuClass] = useState(false);
+  const [isPage, setPage] = useState(0);
 
+  const changeOverview = () => {
+    setPage(1);
+  };
+  const changeViewSyllabus = () => {
+    setPage(2);
+  };
+  const changeCreateSyllabus = () => {
+    setPage(3);
+  };
+  const changerTrainingProgram = () => {
+    setPage(4);
+  };
+  const changeViewClass = () => {
+    setPage(5);
+  };
+  const changeCreateClass = () => {
+    setPage(6);
+  };
+  const changeUserList = () => {
+    setPage(7);
+  };
+  const changeUserPermission = () => {
+    setPage(8);
+  };
   const toggleSubMenuSyllabus = () => {
     setSubMenuSyllabus(!isSubMenuSyllabus);
   };
@@ -37,7 +62,10 @@ const Sidebar = () => {
       <div className="home-sidebar-container">
         <div className="sidebar-container">
           <ul>
-            <li>
+            <li
+              className={isPage === 1 ? "sidebar-page" : ""}
+              onClick={changeOverview}
+            >
               <FaChartPie className="icon-sidebar" />
               <Link to={"/overview"} className="home-link">
                 Overview
@@ -51,19 +79,28 @@ const Sidebar = () => {
             <ul
               className={`sub-menu ${isSubMenuSyllabus ? "show-sub-menu" : ""}`}
             >
-              <li>
+              <li
+                className={isPage === 2 ? "sidebar-page" : ""}
+                onClick={changeViewSyllabus}
+              >
                 <Link to={"/view-syllabus"} className="home-link">
                   View Syllabus
                 </Link>
               </li>
-              <li>
+              <li
+                className={isPage === 3 ? "sidebar-page" : ""}
+                onClick={changeCreateSyllabus}
+              >
                 <Link to={"/create-syllabus"} className="home-link">
                   Create Syllabus
                 </Link>
               </li>
             </ul>
 
-            <li>
+            <li
+              className={isPage === 4 ? "sidebar-page" : ""}
+              onClick={changerTrainingProgram}
+            >
               <FaLightbulb className="icon-sidebar" />
               <Link to={"/training-program"} className="home-link">
                 Training program
@@ -75,12 +112,18 @@ const Sidebar = () => {
               <span className="home-link">Class</span>
             </li>
             <ul className={`sub-menu ${isSubMenuClass ? "show-sub-menu" : ""}`}>
-              <li>
+              <li
+                className={isPage === 5 ? "sidebar-page" : ""}
+                onClick={changeViewClass}
+              >
                 <Link to={"/view-class"} className="home-link">
                   View Class
                 </Link>
               </li>
-              <li>
+              <li
+                className={isPage === 6 ? "sidebar-page" : ""}
+                onClick={changeCreateClass}
+              >
                 <Link to={"/create-class"} className="home-link">
                   Create Class
                 </Link>
@@ -92,12 +135,18 @@ const Sidebar = () => {
               <span className="home-link">User management</span>
             </li>
             <ul className={`sub-menu ${isSubMenuUser ? "show-sub-menu" : ""}`}>
-              <li>
+              <li
+                className={isPage === 7 ? "sidebar-page" : ""}
+                onClick={changeUserList}
+              >
                 <Link to={"/user-list"} className="home-link">
                   User list
                 </Link>
               </li>
-              <li>
+              <li
+                className={isPage === 8 ? "sidebar-page" : ""}
+                onClick={changeUserPermission}
+              >
                 <Link to={"/user-permission"} className="home-link">
                   User permission
                 </Link>

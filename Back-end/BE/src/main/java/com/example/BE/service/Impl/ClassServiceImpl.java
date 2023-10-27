@@ -44,6 +44,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public List<Class> searchByStatus(String status) {
+        return classRepository.findClassesByStatus(status);
+    }
+
+    @Override
     public Class convert(ClassResponse c) {
         Class tmp = new Class();
         tmp.setClassId(c.getClassId());

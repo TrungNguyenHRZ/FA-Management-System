@@ -34,14 +34,17 @@
   cursor: pointer;
 }
 
-.sidebar-container ul li:hover {
+.sidebar-container ul li:hover .home-link {
   border-radius: 10px;
   color: #d97bc5;
 }
-.sidebar-container ul li:hover .home-link {
+.sidebar-container ul li:hover {
   color: #d97bc5;
 }
-
+.sidebar-page,
+.sidebar-page > a {
+  color: #d97bc5;
+}
 .home-link {
   text-decoration: none;
   color: #2a00b7;

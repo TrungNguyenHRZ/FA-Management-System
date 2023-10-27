@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import "./syllabusDetail.css";
-import { useParams } from 'react-router-dom';
-import { AiOutlineStar,AiOutlineUsergroupAdd,AiOutlineSetting } from "react-icons/ai";
+import { useParams } from "react-router-dom";
+import {
+  AiOutlineStar,
+  AiOutlineUsergroupAdd,
+  AiOutlineSetting,
+} from "react-icons/ai";
 import { BsShieldCheck } from "react-icons/bs";
 import { TbSquareDot } from "react-icons/tb";
 import { MdOutlineExpandCircleDown } from "react-icons/md";
@@ -182,53 +186,61 @@ const SyllabusDetail = () => {
 		)
 	}
 
-	let changeGeneral = () =>{
-		setPage(1);
-		console.log(page)
+  let changeGeneral = () => {
+    setPage(1);
+    console.log(page);
+  };
 
-	}
+  let changeOutline = () => {
+    setPage(2);
+    console.log(page);
+  };
 
-	let changeOutline = () => {
-		setPage(2);
-		console.log(page)
-	}
-
-	let changeOthers = () =>{
-		setPage(3);
-		console.log(page)
-	}
-
+  let changeOthers = () => {
+    setPage(3);
+    console.log(page);
+  };
 
 
   return (
-	<div className="container">
-		<div className="detail-header">
-			<h2 className="detail-title">Syllabus</h2>
-			<div className="detail-head-title">
-				<h1 className="topic-name">{syllabus.topic_name}</h1>
-				<div className="detail-status">{syllabus.publish_status}</div>
-			</div>
-			<div className="detail-title-foot">
-				<div className="detail-code">Code: {syllabus.topic_code}</div>
-				<div className="detail-version">Version: {syllabus.version}.0</div>
-			</div>
-		</div>
-		<hr></hr>
-		<div className="step-bar">
-			<div style={{color: page === 1 ? 'white' : 'black'}} className="step-bar-item" onClick={changeGeneral}>General</div>
-			<div style={{color: page === 2 ? 'white' : 'black'}} className="step-bar-item" onClick={changeOutline}>Outline</div>
-			<div style={{color: page === 3 ? 'white' : 'black'}} className="step-bar-item" onClick={changeOthers}>Others</div>
-		</div>
+    <div className="detail-container">
+      <div className="detail-header">
+        <h2 className="detail-title">{syllabus.topic_name}</h2>
+        <div className="detail-head-title">
+          <h1 className="topic-name">{syllabus.topic_name}</h1>
+          <div className="detail-status">{syllabus.publish_status}</div>
+        </div>
+        <div className="detail-title-foot">
+          <div className="detail-code">Code: {syllabus.topic_code}</div>
+          <div className="detail-version">Version: {syllabus.version}.0</div>
+        </div>
+      </div>
+      <hr></hr>
+      <div className="step-bar">
+        <div
+          className={page === 1 ? "step-bar-item-choose" : "step-bar-item"}
+          onClick={changeGeneral}
+        >
+          General
+        </div>
+        <div
+          className={page === 2 ? "step-bar-item-choose" : "step-bar-item"}
+          onClick={changeOutline}
+        >
+          Outline
+        </div>
+        <div
+          className={page === 3 ? "step-bar-item-choose" : "step-bar-item"}
+          onClick={changeOthers}
+        >
+          Others
+        </div>
+      </div>
 
-		{page === 1 ? renderGeneral() : page === 2 ? renderOutline() : null}
+      {page === 1 ? renderGeneral() : page === 2 ? renderOutline() : null}
+    </div>
+  );
+};
 
-	</div>
 
-
-	// <div>
-	// {testRender()}
-	// </div>
-  )
-}
-
-export default SyllabusDetail
+export default SyllabusDetail;

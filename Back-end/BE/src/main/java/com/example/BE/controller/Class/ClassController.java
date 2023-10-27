@@ -11,6 +11,8 @@ import com.example.BE.service.ClassService;
 import com.example.BE.service.ClassUserService;
 import com.example.BE.service.TrainingProgramService;
 import com.example.BE.service.UserService;
+import com.example.BE.util.ValidatorUtil;
+import com.example.BE.validator.ClassValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,15 +40,24 @@ public class ClassController {
     private ClassUserService classUserService;
     @Autowired
     private ClassUserRepository classUserRepository;
+    @Autowired
+    private ValidatorUtil validatorUtil;
+    @Autowired
+    private ClassValidator classValidator;
 //    @GetMapping(value = {"", "/all"})
 //    public List<ClassDTO> getAllClass(){
 //        List<Class> classList = classService.findAllClass();
 //        return classMapper.toClassDTOList(classList);
 //    }
     @GetMapping(value = {"", "/all"})
-    public ResponseEntity<ApiResponse<List<Class>>> getAllClass() {
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClass() {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.ok(classService.findAllClass());
+        List<Class> clazz = classService.findAllClass();
+        List<ClassResponse> clazzResponse = new ArrayList<>();
+        for (Class c: clazz) {
+            clazzResponse.add(new ClassResponse(c));
+        }
+        apiResponse.ok(clazzResponse);
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping(value = {"/searchByName"})
@@ -77,15 +89,19 @@ public class ClassController {
     @PostMapping(value = {"/CreateClass"})
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody ClassResponse c, BindingResult bindingResult) {
         ApiResponse apiResponse = new ApiResponse();
-
-    //    userValidator.validate(user, bindingResult);
-    //
-    //    // validator
-    //    if (bindingResult.hasErrors()) {
-    //        apiResponse.error(validatorUtil.toErrors(bindingResult.getFieldErrors()));
-    //        return ResponseEntity.ok(apiResponse);
-    //    }
-
+        classValidator.validate(c, bindingResult);
+        if (bindingResult.hasErrors()) {
+            apiResponse.error(validatorUtil.toErrors(bindingResult.getFieldErrors()));
+            return ResponseEntity.ok(apiResponse);
+        }
+        List<Class> list = classService.findAllClass();
+        int n = list.size()-1;
+        int incrementalNumber = list.get(n).getClassId()+1;
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        String twoDigitYear = Integer.toString(currentYear).substring(2);
+        c.setClassCode(c.getLocation()+"_"+ twoDigitYear+"_"+incrementalNumber);
+        c.setCreatedDate(new Date());
         Class tmp = classService.saveClass(classService.convert(c));
         ClassResponse tmp2 = new ClassResponse(tmp);
         apiResponse.ok(tmp2);
@@ -126,9 +142,7 @@ public class ClassController {
             if(c.getCreatedDate()!=null) {
                 tmp.setCreatedDate(c.getCreatedDate());
             }
-            if(c.getModified_date()!=null) {
-                tmp.setModified_date(c.getModified_date());
-            }
+                tmp.setModified_date(new Date());
             if(c.getModified_by()!=null) {
                 tmp.setModified_by(c.getModified_by());
             }
@@ -182,5 +196,16 @@ public class ClassController {
 
         ClassUser createdClassUser = classUserService.saveClassUser(classUser);
         return new ResponseEntity<>(createdClassUser, HttpStatus.CREATED);
+    }
+    @GetMapping(value = {"/getClassesByStatus"})
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClassesByStatus(@RequestParam(required = true) String status) {
+        List<Class> cList = classService.searchByStatus(status);
+        List<ClassResponse> cr = new ArrayList<>();
+        for (Class c: cList) {
+            cr.add(new ClassResponse(c));
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(cr);
+        return ResponseEntity.ok(apiResponse);
     }
 }
