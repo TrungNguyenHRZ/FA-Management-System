@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -62,6 +63,7 @@ public class Syllabus {
     @Column(name = "Modified_By")
     private String modified_by;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "program_topic")
     Set<TrainingProgramSyllabus> training_program = new HashSet<>();
 

@@ -1,13 +1,11 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 import jakarta.persistence.Column;
@@ -71,9 +69,11 @@ public class TrainingProgram implements Serializable {
     @JoinColumn(name = "userid")
     private User user_training;
 
-    @OneToMany(mappedBy = "program")
-    List<TrainingProgramSyllabus> syllabus;
+    @JsonIgnore
+    @OneToMany(mappedBy = "program", orphanRemoval = true)
+    List<TrainingProgramSyllabus> syllabus = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "program_class")
     List<Class> training_class;
 

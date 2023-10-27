@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface TrainingProgramService {
 
-    List<TrainingProgram> findAllTrainingProgram();
+    List<TrainingProgramResponse> findAllTrainingProgram();
 
     TrainingProgram findById(int id);
 
-    List<TrainingProgram> findByTrainingName(String name);
+    List<TrainingProgramResponse> findByTrainingName(String name);
 
     TrainingProgram saveTrainingProgram(TrainingProgram trainingProgram);
 
@@ -22,4 +22,8 @@ public interface TrainingProgramService {
     TrainingProgram convert(TrainingProgramResponse t);
 
     TrainingProgram updateTrainingProgram(TrainingProgram tp);
+
+    TrainingProgram duplicate(TrainingProgram tp);
+
+    List<TrainingProgramResponse> findTPByKeyword(String keyword);
 }
