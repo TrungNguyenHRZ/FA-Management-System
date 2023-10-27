@@ -21,4 +21,6 @@ public interface ClassRepository extends JpaRepository<Class, Integer> {
     List<ClassResponse> findClassesInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
     @Query("SELECT c FROM Class c WHERE c.className LIKE %?1% OR c.classCode LIKE %?2%")
     List<ClassResponse> findClassesByKeyword(@Param("keyword1") String keyword1, @Param("keyword2") String keyword2);
+    @Query("SELECT c FROM Class c WHERE c.status = %?1%")
+    List<Class> findClassesByStatus(@Param("keyword1") String keyword1);
 }
