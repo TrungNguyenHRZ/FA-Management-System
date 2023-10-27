@@ -196,6 +196,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return syllabus;
 	}
 
+	@Override
 	public TrainingUnit convert(TrainingUnitResponse unitResponse) {
 		// TODO Auto-generated method stub
 		TrainingUnit u = new TrainingUnit();
@@ -228,6 +229,47 @@ public class SyllabusServiceImpl implements SyllabusService {
 			contentList.add(content);
 		}
 		return contentList;
+	}
+
+
+	@Override
+	public Syllabus updateSyllabus(Syllabus syllabus) {
+		// TODO Auto-generated method stub
+		return syllabusRepository.saveAndFlush(syllabus);
+	}
+
+
+	@Override
+	public void duplicateSyllabus(int code) {
+		// TODO Auto-generated method stub
+		Syllabus duplicatedSyllabus = new Syllabus();
+		Syllabus chosenSyllabus = getSyllabusByTopic_Code(code);
+		int nextId = generateNextId();
+
+		if(chosenSyllabus != null){
+			duplicatedSyllabus.setTopic_code(nextId);
+			duplicatedSyllabus.setTopic_name(chosenSyllabus.getTopic_name());
+			duplicatedSyllabus.setTechnical_group(chosenSyllabus.getTechnical_group());
+			duplicatedSyllabus.setVersion(chosenSyllabus.getVersion());
+			duplicatedSyllabus.setTraining_audience(chosenSyllabus.getTraining_audience());
+			duplicatedSyllabus.setTopic_outline(chosenSyllabus.getTopic_outline());
+			duplicatedSyllabus.setTraining_materials(chosenSyllabus.getTraining_materials());
+			duplicatedSyllabus.setTraining_principles(chosenSyllabus.getTraining_principles());
+			duplicatedSyllabus.setPriority(chosenSyllabus.getPriority());
+			duplicatedSyllabus.setLevel(chosenSyllabus.getLevel());
+			duplicatedSyllabus.setPublish_status(chosenSyllabus.getPublish_status());
+			duplicatedSyllabus.setCreate_by(chosenSyllabus.getCreate_by());
+			duplicatedSyllabus.setCreatedDate(chosenSyllabus.getCreatedDate());
+			duplicatedSyllabus.setModified_by(chosenSyllabus.getModified_by());
+			duplicatedSyllabus.setModified_date(chosenSyllabus.getModified_date());
+		}
+		syllabusRepository.saveAndFlush(duplicatedSyllabus);
+	}
+
+	@Override
+	public int generateNextId() {
+		// TODO Auto-generated method stub
+		return syllabusRepository.getLastSyllabus().getTopic_code() + 1;
 	}
 
 }

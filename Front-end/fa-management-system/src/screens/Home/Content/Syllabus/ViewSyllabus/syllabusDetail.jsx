@@ -5,19 +5,21 @@ import { useParams } from 'react-router-dom';
 import { AiOutlineStar,AiOutlineUsergroupAdd,AiOutlineSetting } from "react-icons/ai";
 import { BsShieldCheck } from "react-icons/bs";
 import { TbSquareDot } from "react-icons/tb";
+import { MdOutlineExpandCircleDown } from "react-icons/md";
 const SyllabusDetail = () => {
 	const  paramName   = useParams();
 	// console.log(paramName.id);
 	const [syllabus,setSyllabus] = useState([]);
 	const[page,setPage] = useState(1);
+	const [openItems, setOpenItems] = useState([]);
 	// setParams(paramName.id);
 	
 	useEffect(() => {
 		apiSyllabusInstance
 		  .get(`/viewSyllabus/${paramName.id}`)
 		  .then((response) => {
-			console.log(response.data);
-			setSyllabus(response.data);
+			console.log(response.data.payload);
+			setSyllabus(response.data.payload);
 			// setUnit(syllabus.unitList);
 		  })
 		  .catch((error) => {
@@ -104,23 +106,76 @@ const SyllabusDetail = () => {
 		</div>
 		)
 	}
+	
+	const toggleItem = (item) => {
+		if (openItems.includes(item)) {
+		  setOpenItems(openItems.filter((openItem) => openItem !== item));
+		} else {
+		  setOpenItems([...openItems, item]);
+		}
+	};
 
-	let renderOutline = () =>{
+	const capitalizeFirstLetter = (text) => {
+		return text.charAt(0).toUpperCase() + text.slice(1);
+	};
+
+	let groupedUnits = []
+	if(syllabus.unitList){
+		 groupedUnits = syllabus.unitList.reduce((acc, unit) => {
+			const { day_number, ...rest } = unit;
+    		if (!acc[day_number]) {
+      		acc[day_number] = { day_number, units: [] };
+    		}
+    		acc[day_number].units.push(rest);
+    		return acc;
+		},[])
+		
+	}
+	console.log(groupedUnits);
+
+	const [toggledItems, setToggledItems] = useState({});
+
+	const handleToggle = (itemId) => {
+		// Thực hiện toggle trạng thái của itemId
+		setToggledItems((prevToggledItems) => ({
+		  ...prevToggledItems,
+		  [itemId]: !prevToggledItems[itemId],
+		}));
+	  };
+		
+
+	let renderOutline = () => {
 		return (
 			<div>
-				<div>
-					{syllabus.unitList ? syllabus.unitList.map((item) => (
-						<div>
-							<div>{item.day_number}</div>
-							<div>
-								{item.contentList ? item.contentList.map((content) => (
-									<div>
-										<div>Unit {content.contentId}</div>
-									</div>
-								)):null}
+				<div className='outline'>
+					{syllabus.unitList ? groupedUnits.map((item) => (
+						<div className="syllabus-outline">
+							<div className="syllabus-day-number">
+								<div>Day {item.day_number}</div>
+								<div><MdOutlineExpandCircleDown className="syllabus-expand-icon" 
+								onClick={() => {handleToggle(item.day_number)}} /></div>
 							</div>
+							{toggledItems[item.day_number] && item.units.map((unit) => (
+								<div className ="syllabus-content-container">
+								<div className="unit-content">Unit {unit.unit_code}</div>	
+								 {/* <div>{a} hrs</div>  */}
+								<div className="content-container-right">
+									<div className="content-name">{unit.unit_name}</div>
+									{ <div className="unit-content-container">
+										{unit.contentList ? unit.contentList.map((content) => (
+										<div className ="syllabus-content-box">	
+											<div className="syllabus-content-name">{capitalizeFirstLetter(content.content)}</div>	
+											<div className="syllabus-content-box-right">
+												<div className="syllabus-content-format">{content.trainingFormat}</div>
+												<div className="syllabus-content-box-duration">{content.duration}mins</div>
+											</div>
+										</div>									
+										)):null}
+									</div>}									
+								</div>
+								</div> 
+							))} 
 						</div>
-						
 					)) : null}
 				</div>
 			</div>
@@ -144,8 +199,9 @@ const SyllabusDetail = () => {
 	}
 
 
+
   return (
-	<div>
+	<div className="container">
 		<div className="detail-header">
 			<h2 className="detail-title">Syllabus</h2>
 			<div className="detail-head-title">
@@ -167,6 +223,11 @@ const SyllabusDetail = () => {
 		{page === 1 ? renderGeneral() : page === 2 ? renderOutline() : null}
 
 	</div>
+
+
+	// <div>
+	// {testRender()}
+	// </div>
   )
 }
 
