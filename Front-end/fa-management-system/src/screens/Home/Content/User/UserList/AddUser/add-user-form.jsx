@@ -1,6 +1,8 @@
 import React from "react";
 import "./add-user-form.css";
 import { MdClose } from "react-icons/md";
+import apiUserInstance from "../../../../../../service/api-user";
+
 const AddUserForm = ({ showForm, closeForm }) => {
   const handleCloseForm = (e) => {
     e.preventDefault();
@@ -10,6 +12,73 @@ const AddUserForm = ({ showForm, closeForm }) => {
     if (e.target.classList.contains("user-form-popup-container")) {
       closeForm();
     }
+  };
+
+  let FullName = "";
+  const changeFullName = (e) => {
+    FullName = e.target.value;
+  };
+
+  let Email = "";
+  const changeEmail = (e) => {
+    Email = e.target.value;
+  };
+
+  let Phone = "";
+  const changePhone = (e) => {
+    Phone = e.target.value;
+  };
+
+  let Date = null;
+  const changeDate = (e) => {
+    Date = e.target.value;
+  };
+
+  let Gender = "true";
+  const changeGender = (e) => {
+    Gender = e.target.value;
+    console.log(Gender);
+  };
+
+  let Status = "true";
+  const changeStatus = (e) => {
+    Status = e.target.value;
+    console.log(Status);
+  };
+
+  let Role = "Super admin";
+  const changeRole = (e) => {
+    Role = e.target.value;
+    console.log(Role);
+    console.log({
+      userType: Role,
+      name: FullName,
+      email: Email,
+      phone: Phone,
+      dob: Date,
+      genderTrueMale: Gender,
+      status: Status,
+    });
+  };
+
+  const add = (e) => {
+    // e.preventDefault();
+    apiUserInstance
+      .post("/create", {
+        userType: Role,
+        name: FullName,
+        email: Email,
+        phone: Phone,
+        dob: Date,
+        genderTrueMale: Gender,
+        status: Status,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -26,13 +95,13 @@ const AddUserForm = ({ showForm, closeForm }) => {
             <div className="user-name">
               <label htmlFor="full-name">Full name</label>
               <div className="input-form input-name">
-                <input type="text" />
+                <input type="text" onChange={changeFullName} />
               </div>
             </div>
             <div className="user-email">
               <label htmlFor="email">Email</label>
               <div className="input-form input-email">
-                <input type="email" />
+                <input type="email" onChange={changeEmail} />
               </div>
             </div>
           </div>
@@ -40,45 +109,57 @@ const AddUserForm = ({ showForm, closeForm }) => {
             <div className="user-phone">
               <label htmlFor="phone">Phone</label>
               <div className="input-form input-phone">
-                <input type="number" />
+                <input type="number" onChange={changePhone} />
               </div>
             </div>
             <div className="user-dob">
               {" "}
               <label htmlFor="">Birthday</label>
               <div className="input-form input-dob">
-                <input type="date" />
+                <input type="date" onChange={changeDate} />
               </div>
             </div>
           </div>
 
           <div className="user-gender">
             <label>Gender:</label>
-            <div className="user-gender-choice">
+            <div className="user-gender-choice" onChange={changeGender}>
               <div className="gender-male">
                 <label htmlFor="male">Male</label>
-                <input type="radio" name="gender" value="Male" />
+                <input type="radio" name="gender" value="true" />
               </div>
               <div className="gender-female">
                 <label htmlFor="female">Female</label>
-                <input type="radio" name="gender" value="Female" id="female" />
+                <input type="radio" name="gender" value="false" id="female" />
               </div>
             </div>
           </div>
 
           <div className="user-isActive">
             <label htmlFor="">Active</label>
-            <input type="checkbox" value={"Active"} />
+            <input
+              type="checkbox"
+              value={"true"}
+              checked
+              onChange={changeStatus}
+            />
           </div>
           <div className="user-type">
-            <select name="" id="" className="user-type-select">
-              <option value="Super admin">Super admin</option>
-              <option value="Admin">Admin</option>
-              <option value="Trainer">Trainer</option>
+            <select
+              name=""
+              id=""
+              className="user-type-select"
+              onChange={changeRole}
+            >
+              <option value="SUPER_ADMIN">Super admin</option>
+              <option value="ADMIN">Admin</option>
+              <option value="TRAINER">Trainer</option>
             </select>
           </div>
           <div className="btn-action-form">
-            <button className="btn-action-save">Save</button>
+            <button className="btn-action-save" onClick={add}>
+              Save
+            </button>
           </div>
         </form>
       </div>
