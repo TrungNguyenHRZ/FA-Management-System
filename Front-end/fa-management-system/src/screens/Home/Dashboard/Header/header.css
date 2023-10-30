@@ -49,6 +49,8 @@
   padding: 10px;
   border-radius: 7px;
   cursor: pointer;
+  width: 122px;
+  text-align: center;
 }
 
 .user {

@@ -33,19 +33,6 @@ const ViewClass = () => {
       });
   }, []);
 
-  // if (showFormAddUser == false) {
-  //   apiClassInstance
-  //     .get("/all")
-  //     .then((response) => {
-  //       setList(response.data.payload);
-  //       setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
-  //       console.log(list);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
-
   const openForm = (e) => {
     setItem(e.target.value);
     setShowFormAddUser(true);
@@ -188,35 +175,7 @@ const ViewClass = () => {
               <th>...</th>
             </tr>
           </thead>
-          <tbody>
-            {/* {
-            list
-              .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-              .map((item) => (
-                <tr key={item.classId}>
-                  <td>{item.className}</td>
-                  <td>{item.classCode}</td>
-                  <td>{item.createdDate}</td>
-                  <td>{item.create_by}</td>
-                  <td>{item.duration}</td>
-                  <td>{item.status}</td>
-                  <td>{item.location}</td>
-                  <td>{item.fsu}</td>
-                  <td>
-                    <div className="add-user">
-                      <button
-                        value={item.classId}
-                        className="btn-add-user"
-                        onClick={openForm}
-                      >
-                        Update Class
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))} */}
-            {renderData()}
-          </tbody>
+          <tbody>{renderData()}</tbody>
         </table>
         <div className="view-class-pagination">
           <ReactPaginate

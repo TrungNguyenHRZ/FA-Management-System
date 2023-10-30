@@ -2,54 +2,48 @@ import React, { useState } from "react";
 import "./login.css";
 import { FaUserLarge, FaLock } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import apiUserInstance from "../../service/api-user";
+import ClipLoader from "react-spinners/ClipLoader";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleLogin = async () => {
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
     try {
-      const response = await fetch("http://localhost:8080/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+      const response = await apiUserInstance.post("/login", {
+        email,
+        password,
       });
 
       if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
-        navigate("/");
+        const data = response.data;
+        localStorage.setItem("token", data.accessToken);
+        apiUserInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${data.accessToken}`;
+        console.log(data.accessToken);
+
+        navigate("/overview");
       } else {
-        setError("Invalid email or password.");
+        setError("Invalid email or password. Try again !!!");
       }
     } catch (error) {
       console.error("Error", error);
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post("http://localhost:8080/user/login", {
-  //       email,
-  //       password,
-  //     });
-
-  //     if (response.status === 200) {
-  //       const data = response.data;
-  //       console.log(data);
-  //       navigate("/");
-  //     } else {
-  //       setError("Invalid email or password.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error", error);
-  //   }
-  // };
 
   const handleInputChange = (e, inputType) => {
     const value = e.target.value;
@@ -59,11 +53,6 @@ const Login = () => {
       setPassword(value);
     }
   };
-
-  // const handleSubmit = () => {
-  //   console.log("User name: ", email);
-  //   console.log("Password: ", password);
-  // };
 
   return (
     <div className="login-container">
@@ -88,6 +77,12 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => handleInputChange(e, "password")}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleLogin();
+              }
+            }}
           />
         </div>
       </div>
@@ -98,8 +93,11 @@ const Login = () => {
         support.
       </div>
       <div className="submit-container">
-        <div className="submit" onClick={handleLogin}>
-          Login
+        <div
+          className={`submit ${isLoading ? "loading" : ""}`}
+          onClick={handleLogin}
+        >
+          {isLoading ? <ClipLoader color="#fff" size={18} /> : "Login"}
         </div>
       </div>
     </div>
