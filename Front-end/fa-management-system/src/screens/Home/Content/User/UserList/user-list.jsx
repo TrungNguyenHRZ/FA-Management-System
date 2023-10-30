@@ -3,6 +3,7 @@ import apiUserInstance from "../../../../../service/api-user";
 import "./user-list.css";
 import { BiPlusCircle } from "react-icons/bi";
 import AddUserForm from "./AddUser/add-user-form";
+import { IoPerson } from "react-icons/io5";
 
 const UserList = () => {
   const [list, setList] = useState([]);
@@ -76,8 +77,30 @@ const UserList = () => {
                 <td>{item.name}</td>
                 <td>{item.email}</td>
                 <td>{item.dob}</td>
-                <td>{item.gender}</td>
-                <td>{item.userType}</td>
+
+                <td
+                  className={
+                    item.gender === "Male"
+                      ? "td-gender-male"
+                      : "td-gender-female"
+                  }
+                >
+                  <IoPerson />
+                </td>
+                <td>
+                  <div
+                    className={
+                      item.userType === "Admin"
+                        ? "td-status-admin"
+                        : item.userType === "Trainer"
+                        ? "td-status-trainer"
+                        : "td-status-superAdmin"
+                    }
+                  >
+                    {item.userType}
+                  </div>
+                </td>
+
                 <td>
                   <input
                     type="checkbox"

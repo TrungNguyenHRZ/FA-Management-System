@@ -38,3 +38,34 @@
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+
+.td-gender-male {
+  color: #2a00b7;
+}
+
+.td-gender-female {
+  color: #ff00dd;
+}
+.td-status-superAdmin,
+.td-status-trainer,
+.td-status-admin {
+  color: white;
+  border-radius: 30px;
+  width: 150px;
+  text-align: center;
+  height: 80%;
+}
+
+.td-status-admin {
+  background-color: rgb(22, 186, 22);
+}
+.td-status-trainer {
+  background-color: rgb(35, 35, 241);
+}
+.td-status-superAdmin {
+  background-color: rgb(235, 160, 20);
+}
+
+.td-user-status {
+  text-align: center;
+}

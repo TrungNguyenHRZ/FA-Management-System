@@ -40,38 +40,50 @@ const AddUserForm = ({ showForm, closeForm }) => {
     console.log(Gender);
   };
 
-  let Status = "true";
+  let Status = "IN_ACTIVE";
   const changeStatus = (e) => {
-    Status = e.target.value;
-    console.log(Status);
-  };
+    if (Status === "ACTIVE") {
+      Status = "IN_ACTIVE";
+    } else {
+      Status = "ACTIVE";
+    }
 
-  let Role = "Super admin";
-  const changeRole = (e) => {
-    Role = e.target.value;
-    console.log(Role);
+    console.log(Status);
     console.log({
-      userType: Role,
       name: FullName,
       email: Email,
       phone: Phone,
       dob: Date,
       genderTrueMale: Gender,
       status: Status,
+      password: Password,
     });
   };
+
+  let Password = "";
+  const changePassword = (e) => {
+    Password = e.target.value;
+    console.log(Status);
+  };
+
+  // let Role = "Super admin";
+  // const changeRole = (e) => {
+  //   Role = e.target.value;
+  //   console.log(Role);
+
+  // };
 
   const add = (e) => {
     // e.preventDefault();
     apiUserInstance
-      .post("/create", {
-        userType: Role,
+      .post("/create-sp-admin", {
         name: FullName,
         email: Email,
         phone: Phone,
         dob: Date,
         genderTrueMale: Gender,
         status: Status,
+        password: Password,
       })
       .then(function (response) {
         console.log(response);
@@ -89,7 +101,8 @@ const AddUserForm = ({ showForm, closeForm }) => {
             <MdClose />
           </button>
         </div>
-        <form action="" className="user-form-container">
+        {/* <form action="" className="user-form-container"> */}
+        <div className="user-form-container">
           <div className="ip ip-name-email">
             {" "}
             <div className="user-name">
@@ -120,6 +133,12 @@ const AddUserForm = ({ showForm, closeForm }) => {
               </div>
             </div>
           </div>
+          <div className="user-email">
+            <label htmlFor="email">Password</label>
+            <div className="input-form input-email">
+              <input type="email" onChange={changePassword} />
+            </div>
+          </div>
 
           <div className="user-gender">
             <label>Gender:</label>
@@ -137,14 +156,9 @@ const AddUserForm = ({ showForm, closeForm }) => {
 
           <div className="user-isActive">
             <label htmlFor="">Active</label>
-            <input
-              type="checkbox"
-              value={"true"}
-              checked
-              onChange={changeStatus}
-            />
+            <input type="checkbox" value={"ACTIVE"} onChange={changeStatus} />
           </div>
-          <div className="user-type">
+          {/* <div className="user-type">
             <select
               name=""
               id=""
@@ -155,13 +169,14 @@ const AddUserForm = ({ showForm, closeForm }) => {
               <option value="ADMIN">Admin</option>
               <option value="TRAINER">Trainer</option>
             </select>
-          </div>
+          </div> */}
           <div className="btn-action-form">
             <button className="btn-action-save" onClick={add}>
               Save
             </button>
           </div>
-        </form>
+        </div>
+        {/* </form> */}
       </div>
     </div>
   );

@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import apiClassInstance from "../../../../../service/api-class";
+import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import ReactPaginate from "react-paginate";
-import UpdateClass from "../UpdateClass/update-class";
+import "./view-trainingprogram.css";
 import {
   FaSearch,
   // FaRegCalendar,
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
-import "./view-class.css";
-
-const ViewClass = () => {
+const ViewTrainingProgram = () => {
   const [id, setId] = useState("");
   const [list, setList] = useState([]);
   const [TotalPage, setTotalPage] = useState(0);
@@ -21,35 +19,67 @@ const ViewClass = () => {
   const itemPerPage = 9;
 
   useEffect(() => {
-    apiClassInstance
+    apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setList(response.data.payload);
-        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
-        console.log(response.data.payload);
+        setList(response.data);
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  const openForm = (e) => {
-    setItem(e.target.value);
-    setShowFormAddUser(true);
+  let renderData = () => {
+    if (list && list.length > 0) {
+      return list
+        .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
+        .map((item) => (
+          <tr key={item.training_code}>
+            <td>{item.training_code}</td>
+            <td>{item.training_name}</td>
+            <td>{item.createdDate}</td>
+            <td>{item.create_by}</td>
+            <td>{item.duration} days</td>
+            <td>
+              <div
+                className={
+                  item.status === "Active"
+                    ? "td-status-active"
+                    : item.status === "Inactive"
+                    ? "td-status-inactive"
+                    : item.status === "Drafting"
+                    ? "td-status-drafting"
+                    : ""
+                }
+              >
+                {item.status}
+              </div>
+            </td>
+            <td>...</td>
+          </tr>
+        ));
+    } else {
+      return (
+        <tr>
+          <td colSpan="8">No data available</td>
+        </tr>
+      );
+    }
+  };
+  const handlePageClick = (data) => {
+    setThisPage(data.selected);
+    console.log(data.selected);
   };
 
-  const closeForm = () => {
-    setShowFormAddUser(false);
-  };
-
-  const updateForm = () => {
-    setShowFormAddUser(false);
-    apiClassInstance
-      .get("/all")
+  const submit = (e) => {
+    apiTrainingProgramInstance
+      .get(`/${id}`)
       .then((response) => {
-        setList(response.data.payload);
-        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
-        console.log(response.data.payload);
+        setList(response.data);
+        console.log(list);
+        setTotalPage(Math.ceil(response.data.length / itemPerPage));
       })
       .catch((error) => {
         console.error(error);
@@ -61,78 +91,10 @@ const ViewClass = () => {
     console.log(id);
   };
 
-  const submit = (e) => {
-    apiClassInstance
-      .get(`/searchClassByKeyword?key=${id}`)
-      .then((response) => {
-        setList(response.data.payload);
-        console.log(list);
-        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const handlePageClick = (data) => {
-    setThisPage(data.selected);
-    console.log(data.selected);
-  };
-
-  let renderData = () => {
-    if (list && list.length > 0) {
-      return list
-        .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-        .map((item) => (
-          <tr key={item.topic_code}>
-            <td>{item.className}</td>
-            <td>{item.classCode}</td>
-            <td>{item.createdDate}</td>
-            <td>{item.create_by}</td>
-            <td>{item.duration} days</td>
-            <td>
-              <div
-                className={
-                  item.status === "Planning"
-                    ? "td-status-planning"
-                    : item.status === "Opening"
-                    ? "td-status-opening"
-                    : item.status === "Scheduled"
-                    ? "td-status-scheduled"
-                    : "td-status-completed"
-                }
-              >
-                {item.status}
-              </div>
-            </td>
-            <td>{item.location}</td>
-            <td>{item.fsu}</td>
-            <td>
-              <div className="add-user">
-                <button
-                  value={item.classId}
-                  className="btn-add-user"
-                  onClick={openForm}
-                >
-                  Update Class
-                </button>
-              </div>
-            </td>
-          </tr>
-        ));
-    } else {
-      return (
-        <tr>
-          <td colSpan="8">No data available</td>
-        </tr>
-      );
-    }
-  };
-
   return (
     <div className="view-syllbus-container">
-      <h1>View Class</h1>
-      {showFormAddUser && (
+      <h1>View Training Program</h1>
+      {/* {showFormAddUser && (
         <div className="user-form-popup-container">
           <div className="user-form">
             <UpdateClass
@@ -143,7 +105,7 @@ const ViewClass = () => {
             />
           </div>
         </div>
-      )}
+      )} */}
       <div className="search-text">
         <input
           type="text"
@@ -164,18 +126,44 @@ const ViewClass = () => {
         <table className="table-syllabus">
           <thead>
             <tr>
-              <th>Class</th>
-              <th>Class code</th>
+              <th>ID</th>
+              <th>Program name</th>
               <th>Created on</th>
               <th>Created by</th>
               <th>Duration</th>
               <th>Status</th>
-              <th>Location</th>
-              <th>FSU</th>
-              <th>...</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody>{renderData()}</tbody>
+          <tbody>
+            {/* {
+            list
+              .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
+              .map((item) => (
+                <tr key={item.classId}>
+                  <td>{item.className}</td>
+                  <td>{item.classCode}</td>
+                  <td>{item.createdDate}</td>
+                  <td>{item.create_by}</td>
+                  <td>{item.duration}</td>
+                  <td>{item.status}</td>
+                  <td>{item.location}</td>
+                  <td>{item.fsu}</td>
+                  <td>
+                    <div className="add-user">
+                      <button
+                        value={item.classId}
+                        className="btn-add-user"
+                        onClick={openForm}
+                      >
+                        Update Class
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))} */}
+            {renderData()}
+          </tbody>
         </table>
         <div className="view-class-pagination">
           <ReactPaginate
@@ -203,4 +191,4 @@ const ViewClass = () => {
   );
 };
 
-export default ViewClass;
+export default ViewTrainingProgram;

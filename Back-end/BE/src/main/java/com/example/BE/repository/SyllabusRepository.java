@@ -37,4 +37,8 @@ public interface SyllabusRepository extends JpaRepository<Syllabus, Integer> {
 	@Query(value = "select * from syllabus order by create_date desc",
 	nativeQuery = true)
 	List<Syllabus> getSyllabusDescDate();
+
+	@Query(value="select top 1 * from syllabus order by topic_code desc",
+	nativeQuery = true)
+	Syllabus getLastSyllabus();
 }

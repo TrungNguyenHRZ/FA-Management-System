@@ -124,6 +124,7 @@
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<version>3.3.0</version>
 		</dependency>
+
 		<!--hibernate-->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
@@ -140,6 +141,22 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>6.2.9.Final</version>
 		</dependency>
+
+
+		<!-- For Excel -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+
+		<!-- For CSV -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.4</version>
+		</dependency>
+
 
 
 	</dependencies>

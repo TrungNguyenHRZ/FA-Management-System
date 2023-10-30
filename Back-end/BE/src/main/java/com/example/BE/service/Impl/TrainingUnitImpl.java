@@ -94,5 +94,21 @@ public class TrainingUnitImpl implements TrainingUnitService{
 		return repo.saveAll(units);
 	}
 
+	@Override
+	public List<TrainingUnit> updateUnit(List<TrainingUnit> units) {
+		// TODO Auto-generated method stub
+		return repo.saveAll(units);
+	}
+
+	@Override
+	public void deleteUnit(int unitId) {
+		// TODO Auto-generated method stub
+		repo.deleteById(unitId);
+	}
+
+
+
+
+
 	
 }

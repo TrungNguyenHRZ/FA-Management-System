@@ -26,6 +26,11 @@ public class TrainingContentImpl implements TrainingContentService{
 		// }
 		repo.saveAll(trainingContentList);
 	}
+	@Override
+	public void deleteAllContentsByUnit(List<TrainingContent> trainingContentList) {
+		// TODO Auto-generated method stub
+		repo.deleteAll(trainingContentList);
+	}
 
 	// @Autowired
 	// TrainingUnitService unitService;

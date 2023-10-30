@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService {
                 throw new BusinessException(ErrorMessage.USER_EMAIL_EXISTED);
             }
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date dateOfBirth = dateFormat.parse(request.getDob());
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//            Date dateOfBirth = dateFormat.parse(request.getDob());
             String gender = request.isGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
             UserPermission userPermission = userPermissionRepository.findFirstByRole(request.getUserType().getRole()).orElse(null);
             if (Objects.isNull(userPermission)) {
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
             user.setName(request.getName());
             user.setCreatedDate(new Date());
             user.setPhone(request.getPhone());
-            user.setDob(dateOfBirth);
+            user.setDob(request.getDob());
             user.setGender(gender);
             user.setEmail(request.getEmail());
             user.setStatus(request.getStatus().getStatus());
@@ -274,13 +274,13 @@ public class UserServiceImpl implements UserService {
                 throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
             String passHash = AESUtils.decrypt(user.getPassword(), keyAES);
-            log.info("PAss :{}", passHash);
+            log.info("Pass :{}", passHash);
             if (!passHash.equals(request.getPassword())) {
                 throw new UnauthorizeException(ErrorMessage.USER_PASSWORD_INCORRECT);
             }
 
             UserDetailsImpl userDetails = UserDetailsImpl.build(user);
-            String accessToken = JWTUtils.generateAccessToken(userDetails);
+            String accessToken = JWTUtils.generateAccessToken(userDetails, user);
             return new LoginResponse(user, accessToken);
 
         } catch (UnauthorizeException e) {
@@ -296,8 +296,8 @@ public class UserServiceImpl implements UserService {
     public UserResponse createUserSA(CreateUserSARequest request) {
         try {
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date dateOfBirth = dateFormat.parse(request.getDob());
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//            Date dateOfBirth = dateFormat.parse(request.getDob());
             String gender = request.isGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
             UserPermission userPermission = userPermissionRepository.findFirstByRole(Role.SUPER_ADMIN.getRole()).orElse(null);
 
@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
             user.setName(request.getName());
             user.setCreatedDate(new Date());
             user.setPhone(request.getPhone());
-            user.setDob(dateOfBirth);
+            user.setDob(request.getDob());
             user.setGender(gender);
             user.setEmail(request.getEmail());
             user.setStatus(request.getStatus().getStatus());

@@ -23,14 +23,21 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(
-                    "/api-docs",
-                    "/swagger-ui/**",
-                    "/swagger-ui",
-                    "/user/login",
-                    "/dev/**"
-                ).permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(
+                        "/api-docs",
+                        "/swagger-ui/**",
+                        "/swagger-ui",
+                        "/user/login",
+                        "/dev/**",
+                        "/user/create-sp-admin",
+                        "user/view/**"
+                    ).permitAll()
+                    .requestMatchers(
+                        "/user/**",
+                        "/user-permission/**"
+                    )
+                    .authenticated()
 //                .anyRequest().authenticated()
                     .anyRequest().permitAll()
             )
