@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
@@ -20,7 +22,7 @@ public class CreateUserSARequest {
     @NotBlank
     private String phone;
     @NotBlank
-    private String dob; // dd/MM/yyyy
+    private Date dob; // dd/MM/yyyy
     @NotNull
     private boolean genderTrueMale; // true : male / false: female
     private Status status;
