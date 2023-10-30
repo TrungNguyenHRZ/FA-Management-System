@@ -92,7 +92,6 @@ const ViewClass = () => {
     console.log(data.selected);
   };
 
-
   let renderData = () => {
     if (list && list.length > 0) {
       return list
@@ -137,7 +136,6 @@ const ViewClass = () => {
         <input type="text" className="search-input-text" onChange={change} />
 
         <button className="btn-search-class" onClick={submit}>
-
           <FaSearch />
         </button>
       </div>
@@ -156,33 +154,7 @@ const ViewClass = () => {
               <th>...</th>
             </tr>
           </thead>
-          <tbody>
-            {list
-              .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-              .map((item) => (
-                <tr key={item.classId}>
-                  <td>{item.className}</td>
-                  <td>{item.classCode}</td>
-                  <td>{item.createdDate}</td>
-                  <td>{item.create_by}</td>
-                  <td>{item.duration}</td>
-                  <td>{item.status}</td>
-                  <td>{item.location}</td>
-                  <td>{item.fsu}</td>
-                  <td>
-                    <div className="add-user">
-                      <button
-                        value={item.classId}
-                        className="btn-add-user"
-                        onClick={openForm}
-                      >
-                        Update Class
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
+          <tbody>{renderData()}</tbody>
         </table>
         <div className="view-class-pagination">
           <ReactPaginate
