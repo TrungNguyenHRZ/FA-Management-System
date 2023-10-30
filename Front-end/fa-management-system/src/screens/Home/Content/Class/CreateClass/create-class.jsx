@@ -103,8 +103,13 @@ const CreateClass = () => {
       })
       .then(function (response) {
         console.log(response);
-
-        toast.success("Add class successfully !!!");
+        if (response.data.message === null) {
+          toast.success("Add class successfully !!!");
+        } else {
+          toast.error(
+            "Add class failed !!! " + response.data.message.className
+          );
+        }
       })
       .catch(function (error) {
         console.log(error);

@@ -49,7 +49,9 @@ const ViewTrainingProgram = () => {
                     ? "td-status-active"
                     : item.status === "Inactive"
                     ? "td-status-inactive"
-                    : "td-status-drafting"
+                    : item.status === "Drafting"
+                    ? "td-status-drafting"
+                    : ""
                 }
               >
                 {item.status}
