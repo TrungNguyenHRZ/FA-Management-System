@@ -15,7 +15,7 @@ public interface ClassService {
 
     Class findById(int ClassID);
     List<Class> searchByStatus(String status);
-
+    List<ClassResponse> sortByModifiedDate(List<ClassResponse> classes);
     Class convert(ClassResponse c);
 
     Class updateClass(Class c);
