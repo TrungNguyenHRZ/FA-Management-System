@@ -35,7 +35,6 @@ const Syllabus = () => {
   }, []);
 
   const change = (e) => {
-
     setKeyword(e.target.value);
     console.log(keyword);
   };
@@ -98,7 +97,19 @@ const Syllabus = () => {
           <td>{item.create_by}</td>
           <td>NULL</td>
           <td>NULL</td>
-          <td>{item.publish_status}</td>
+          <td>
+            <div
+              className={
+                item.publish_status === "active"
+                  ? "td-status-active"
+                  : item.publish_status === "inactive"
+                  ? "td-status-inactive"
+                  : "td-status-drafting"
+              }
+            >
+              {item.publish_status}
+            </div>
+          </td>
         </tr>
       ))
     ) : (
@@ -116,6 +127,11 @@ const Syllabus = () => {
               type="text"
               className="search-input-text-syllabus"
               onChange={change}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  submit();
+                }
+              }}
             />
             <button className="btn-search-syllabus" onClick={submit}>
               <FaSearch />
@@ -123,7 +139,11 @@ const Syllabus = () => {
           </div>
           <div className="search-date">
             <FaRegCalendar />
-            <input type="date" className="search-input-date" />
+            <input
+              type="date"
+              className="search-input-date"
+              onChange={change}
+            />
           </div>
         </div>
         <div className="action-syllabus-container">

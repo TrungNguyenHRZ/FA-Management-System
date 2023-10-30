@@ -16,6 +16,7 @@ const Sidebar = () => {
   const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
   const [isSubMenuUser, setSubMenuUser] = useState(false);
   const [isSubMenuClass, setSubMenuClass] = useState(false);
+  const [isSubMenuTrainingProgram, setSubMenuTrainingProgram] = useState(false);
   const [isPage, setPage] = useState(0);
 
   const changeOverview = () => {
@@ -42,6 +43,12 @@ const Sidebar = () => {
   const changeUserPermission = () => {
     setPage(8);
   };
+  const changeViewTrainingProgram = () => {
+    setPage(9);
+  };
+  const changeCreateTrainingProgram = () => {
+    setPage(10);
+  };
   const toggleSubMenuSyllabus = () => {
     setSubMenuSyllabus(!isSubMenuSyllabus);
   };
@@ -52,6 +59,10 @@ const Sidebar = () => {
 
   const toggleSubMenuClass = () => {
     setSubMenuClass(!isSubMenuClass);
+  };
+
+  const toggleSubMenuTrainingProgram = () => {
+    setSubMenuTrainingProgram(!isSubMenuTrainingProgram);
   };
 
   return (
@@ -97,15 +108,32 @@ const Sidebar = () => {
               </li>
             </ul>
 
-            <li
-              className={isPage === 4 ? "sidebar-page" : ""}
-              onClick={changerTrainingProgram}
-            >
+            <li onClick={toggleSubMenuTrainingProgram}>
               <FaLightbulb className="icon-sidebar" />
-              <Link to={"/training-program"} className="home-link">
-                Training program
-              </Link>
+              <span className="home-link">Training program</span>
             </li>
+            <ul
+              className={`sub-menu ${
+                isSubMenuTrainingProgram ? "show-sub-menu" : ""
+              }`}
+            >
+              <li
+                className={isPage === 9 ? "sidebar-page" : ""}
+                onClick={changeViewTrainingProgram}
+              >
+                <Link to={"/view-trainingprogram"} className="home-link">
+                  View Training Program
+                </Link>
+              </li>
+              <li
+                className={isPage === 10 ? "sidebar-page" : ""}
+                onClick={changeCreateTrainingProgram}
+              >
+                <Link to={"/create-trainingprogram"} className="home-link">
+                  Create Training Program
+                </Link>
+              </li>
+            </ul>
 
             <li onClick={toggleSubMenuClass}>
               <FaGraduationCap className="icon-sidebar" />
