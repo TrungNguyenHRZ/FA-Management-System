@@ -104,7 +104,9 @@ const Syllabus = () => {
                   ? "td-status-active"
                   : item.publish_status === "inactive"
                   ? "td-status-inactive"
-                  : "td-status-drafting"
+                  : item.publish_status === "draft"
+                  ? "td-status-drafting"
+                  : ""
               }
             >
               {item.publish_status}
