@@ -4,8 +4,10 @@ import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trai
 import "./create-class.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwtDecode from "jwt-decode";
 const CreateClass = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     apiTrainingProgramInstance
@@ -16,6 +18,12 @@ const CreateClass = () => {
       .catch((error) => {
         console.error(error);
       });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+    }
   }, []);
 
   let className = null;
@@ -163,7 +171,12 @@ const CreateClass = () => {
           </div>
           <div className="input-class input-create-by">
             <label>Create by</label>
-            <input type="text" onChange={changeCreate_by} />
+            <input
+              type="text"
+              onChange={changeCreate_by}
+              value={userInfo && userInfo.name}
+              readOnly
+            />
           </div>
           <div className="input-class-date input-create">
             <div className=" input-create-date">
@@ -178,7 +191,12 @@ const CreateClass = () => {
 
           <div className="input-class input-modify-by">
             <label>Modified by</label>
-            <input type="text" onChange={changeModified_by} />
+            <input
+              type="text"
+              onChange={changeModified_by}
+              value={userInfo && userInfo.name}
+              readOnly
+            />
           </div>
           <div className="input-class input-training-program">
             <label>Training Program </label>

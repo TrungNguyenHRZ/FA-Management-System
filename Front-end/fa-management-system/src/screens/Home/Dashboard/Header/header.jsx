@@ -3,27 +3,20 @@ import "./header.css";
 import { FaBell } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import jwtDecode from "jwt-decode";
-import apiUserInstance from "../../../../service/api-user";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isSubMenuUser, setIsSubMenuUser] = useState(false);
-  const [userById, setUserById] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       console.log(decodedToken);
-      const id = decodedToken.id;
-
-      apiUserInstance
-        .get(`/info/${id}`)
-        .then((response) => {
-          setUserById(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      setUserInfo(decodedToken);
     }
   }, []);
 
@@ -37,8 +30,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -61,7 +53,7 @@ const Header = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            {userById && userById.name}
+            {userInfo ? userInfo.name : "null"}
           </div>
 
           <div

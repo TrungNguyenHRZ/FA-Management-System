@@ -58,7 +58,6 @@ const router = createBrowserRouter([
         path: "/create-trainingprogram",
         element: <CreateTrainingProgram />,
       },
-
       {
         path: "/view-class",
         element: <ViewClass />,
@@ -79,9 +78,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-
-
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <RouterProvider router={router} />
 );
@@ -90,4 +86,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-

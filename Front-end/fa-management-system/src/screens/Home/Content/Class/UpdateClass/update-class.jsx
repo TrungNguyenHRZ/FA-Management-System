@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import apiClassInstance from "../../../../../service/api-class";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
-
+import jwtDecode from "jwt-decode";
 const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [thisClass, setThisClass] = useState({});
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
-  //let thisClass = {};
+  const [userInfo, setUserInfo] = useState(null);
   let tmp1 = 0;
   tmp1 = classId;
 
@@ -19,6 +19,12 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       .catch((error) => {
         console.error(error);
       });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+    }
   }, []);
 
   useEffect(() => {
@@ -238,8 +244,9 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
               <div className="input-form input-phone">
                 <input
                   type="text"
-                  defaultValue={thisClass.modified_by}
+                  defaultValue={userInfo && userInfo.name}
                   onChange={changeModified_by}
+                  readOnly
                 />
               </div>
             </div>
