@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
-  const [id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
@@ -115,7 +114,11 @@ const Syllabus = () => {
         </tr>
       ))
     ) : (
-      <h1>No result found</h1>
+      <tr>
+        <td style={{ textAlign: "center" }} colSpan={7}>
+          No result found
+        </td>
+      </tr>
     );
   };
 

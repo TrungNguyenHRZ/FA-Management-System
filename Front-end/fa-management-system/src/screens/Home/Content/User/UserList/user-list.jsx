@@ -71,45 +71,53 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {list.map((item, index) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.email}</td>
-                <td>{item.dob}</td>
-
-                <td
-                  className={
-                    item.gender === "Male"
-                      ? "td-gender-male"
-                      : "td-gender-female"
-                  }
-                >
-                  <IoPerson />
-                </td>
-                <td>
-                  <div
+            {list.length !== 0 ? (
+              list.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.dob}</td>
+                  <td
                     className={
-                      item.userType === "Admin"
-                        ? "td-status-admin"
-                        : item.userType === "Trainer"
-                        ? "td-status-trainer"
-                        : "td-status-superAdmin"
+                      item.gender === "Male"
+                        ? "td-gender-male"
+                        : "td-gender-female"
                     }
                   >
-                    {item.userType}
-                  </div>
-                </td>
-
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={item.status}
-                    onChange={() => handleCheckBoxChange(item.id, item.status)}
-                  />
+                    <IoPerson />
+                  </td>
+                  <td>
+                    <div
+                      className={
+                        item.userType === "Admin"
+                          ? "td-status-admin"
+                          : item.userType === "Trainer"
+                          ? "td-status-trainer"
+                          : "td-status-superAdmin"
+                      }
+                    >
+                      {item.userType}
+                    </div>
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={item.status}
+                      onChange={() =>
+                        handleCheckBoxChange(item.id, item.status)
+                      }
+                    />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td style={{ textAlign: "center" }} colSpan={7}>
+                  No result found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
