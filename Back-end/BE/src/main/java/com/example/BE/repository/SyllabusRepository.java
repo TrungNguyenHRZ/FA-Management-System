@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface SyllabusRepository extends JpaRepository<Syllabus, Integer> {
     //Search theo topic code, topic name,
-    @Query(value = "Select * from syllabus where topic_code like %:keyword% or topic_name like %:keyword%  or training_principles like %:keyword%"
+    @Query(value = "Select * from syllabus where topic_code like %:keyword% or topic_name like %:keyword%  or training_principles like %:keyword% "
         , nativeQuery = true)
     List<Syllabus> getSyllabusListByKeyword(String keyword);
 
@@ -34,7 +34,7 @@ public interface SyllabusRepository extends JpaRepository<Syllabus, Integer> {
 	@Query("Select sy from Syllabus sy JOIN FETCH sy.syllabus_unit where sy.topic_code = :topic_code")
 	Optional<Syllabus> getSyllabusWithTrainingUnit(@Param("topic_code") Integer topic_code);
 
-	@Query(value = "select * from syllabus order by create_date desc",
+	@Query(value = "select * from syllabus order by create_date desc,topic_code desc",
 	nativeQuery = true)
 	List<Syllabus> getSyllabusDescDate();
 

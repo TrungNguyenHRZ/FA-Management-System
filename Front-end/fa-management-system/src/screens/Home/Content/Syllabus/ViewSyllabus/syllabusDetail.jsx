@@ -1,22 +1,46 @@
 import React, { useEffect, useState } from "react";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
+import { SyncLoader } from "react-spinners";
 import "./syllabusDetail.css";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import {
   AiOutlineStar,
   AiOutlineUsergroupAdd,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { BsShieldCheck } from "react-icons/bs";
+import { 
+	BsShieldCheck, 
+	BsThreeDots, 
+	BsPencil 
+} from "react-icons/bs";
 import { TbSquareDot } from "react-icons/tb";
-import { MdOutlineExpandCircleDown } from "react-icons/md";
+import { MdOutlineExpandCircleDown, MdOutlineSnippetFolder } from "react-icons/md";
+import {
+	HiOutlineDuplicate
+} from "react-icons/hi";
+import { 
+	FiEyeOff
+} from "react-icons/fi";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
 const SyllabusDetail = () => {
 	const  paramName   = useParams();
 	// console.log(paramName.id);
 	const [syllabus,setSyllabus] = useState([]);
+	const [duplicatedSyllabus,setDuplicatedSyllabus] = useState([]);
 	const[page,setPage] = useState(1);
 	const [openItems, setOpenItems] = useState([]);
 	// setParams(paramName.id);
+	const[option,setOption] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [open, setOpen] = React.useState(false);
+	const handleOpened = () => setOpen(true);
+	const handleClose = () => setOpen(false);
+	const navigate = useNavigate();
 	
 	useEffect(() => {
 		apiSyllabusInstance
@@ -146,6 +170,16 @@ const SyllabusDetail = () => {
 		  [itemId]: !prevToggledItems[itemId],
 		}));
 	  };
+
+	let duration = (unit) => {
+		let a = 0;
+		unit.contentList.map(content => a += content.duration);
+		console.log(a);
+		return a;
+	}
+
+	
+
 		
 
 	let renderOutline = () => {
@@ -161,22 +195,31 @@ const SyllabusDetail = () => {
 							</div>
 							{toggledItems[item.day_number] && item.units.map((unit) => (
 								<div className ="syllabus-content-container">
-								<div className="unit-content">Unit {unit.unit_code}</div>	
+								<div className="unit-content">
+									Unit {unit.unit_code}
+								</div>	
+								
 								 {/* <div>{a} hrs</div>  */}
 								<div className="content-container-right">
 									<div className="content-name">{unit.unit_name}</div>
+									<div>{duration(unit)} hrs</div>
 									{ <div className="unit-content-container">
 										{unit.contentList ? unit.contentList.map((content) => (
 										<div className ="syllabus-content-box">	
 											<div className="syllabus-content-name">{capitalizeFirstLetter(content.content)}</div>	
 											<div className="syllabus-content-box-right">
-												<div className="syllabus-content-format">{content.trainingFormat}</div>
-												<div className="syllabus-content-box-duration">{content.duration}mins</div>
+											<div className="syllabus-content-format">{content.deliveryType}</div>
+												<div className="syllabus-content-box-duration">{content.duration} hrs</div>
+												<div className={content.trainingFormat === "offline" ? "syllabus-content-format" : "syllabus-content-format-online"}>
+													{content.trainingFormat}</div>
+													<MdOutlineSnippetFolder className="material-upload"/>
+													
 											</div>
-										</div>									
+										</div>						
 										)):null}
 									</div>}									
 								</div>
+								
 								</div> 
 							))} 
 						</div>
@@ -201,10 +244,52 @@ const SyllabusDetail = () => {
     console.log(page);
   };
 
+  let handleOpen= () => setOption(!option);
+
+  let duplicateSyllabus = () => {
+	setIsLoading(true);
+	apiSyllabusInstance
+	.get(`/duplicateSyllabus/${paramName.id}`)
+	.then((response) => {
+	  console.log(response.data.payload);
+	  setDuplicatedSyllabus(syllabus);
+	})
+	.catch((error) => {
+	  console.error(error);
+	})
+	.finally(()  => {
+		handleClose();
+		setIsLoading(false);
+		if(duplicateSyllabus){
+		navigate("/view-syllabus");	
+		}
+	});
+	
+	};
+
+	const style = {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		width: 400,
+		bgcolor: 'background.paper',
+		border: '2px solid #000',
+		boxShadow: 24,
+		p: 4,
+	  };
 
   return (
-    <div className="detail-container">
-      <div className="detail-header">
+      <div className="detail-container">
+		{isLoading && (
+          <div className="loading-overlay">
+            <div className="loading-container">
+              <SyncLoader color="#2a00b7" />
+            </div>
+          </div>
+        )}
+		<div className="detail-header">
+		<div className="header-left">
         <h2 className="detail-title">{syllabus.topic_name}</h2>
         <div className="detail-head-title">
           <h1 className="topic-name">{syllabus.topic_name}</h1>
@@ -214,7 +299,44 @@ const SyllabusDetail = () => {
           <div className="detail-code">Code: {syllabus.topic_code}</div>
           <div className="detail-version">Version: {syllabus.version}.0</div>
         </div>
+		
+		</div>
+		<div className="header-right">
+			<BsThreeDots className="three-dot-icon" onClick={() => handleOpen()}/>
+			{option && <div className="option-edit">
+				<div className="option-header">Manage</div>
+				<hr></hr>
+				<div className="option-pick">
+					<BsPencil className="option-icon"/>	Edit
+				</div>
+				<div className="option-pick" onClick={handleOpened}>
+					<HiOutlineDuplicate className="option-icon" /> Duplicate
+				</div>
+				<div className="option-pick">
+				<FiEyeOff className="option-icon"/> De-active syllabus
+				</div>
+				<Modal
+        		open={open}
+        		onClose={handleClose}
+        		aria-labelledby="modal-modal-title"
+        		aria-describedby="modal-modal-description"
+      			>
+        		<Box sx={style}>
+          		<Typography id="modal-modal-title" variant="h6" component="h2">
+           			 Verify!
+         		</Typography>
+          		<Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            	Are you sure to duplicate the syllabus with code {paramName.id}
+          		</Typography>
+				  <Button onClick={handleClose}>Cancel</Button>
+				  <Button onClick={duplicateSyllabus}>Yes</Button>
+        		</Box>
+      			</Modal>
+	  		</div>}
+			
+		</div>
       </div>
+	  
       <hr></hr>
       <div className="step-bar">
         <div

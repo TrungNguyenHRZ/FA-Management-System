@@ -2,6 +2,7 @@ package com.example.BE.service;
 
 
 import com.example.BE.model.entity.Syllabus;
+import com.example.BE.model.entity.TrainingContent;
 import com.example.BE.model.entity.TrainingUnit;
 
 import org.springframework.data.domain.Page;
@@ -39,7 +40,22 @@ public interface SyllabusService {
 
 	TrainingUnit convert(TrainingUnitResponse unitResponse);
 
-	void duplicateSyllabus(int code);
+	Syllabus duplicateSyllabus(int code);
 
 	int generateNextId();
+
+	List<TrainingUnit> duplicateUnits(int code, Syllabus newSyllabus);	
+	
+	void duplicateContents(List<TrainingContent> original, TrainingUnit tu);
+
+	int genrateLastUnitCode();
+
+	List<TrainingUnit> updateUnit(List<TrainingUnit> units);
+
+	List<TrainingContent> updateContents(List<TrainingContent> contents);
+
+	void activateSyllabus(int code);
+
+	void deactivateSyllabus(int code);
+
 }
