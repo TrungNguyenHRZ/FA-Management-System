@@ -3,10 +3,12 @@ import { MdClose } from "react-icons/md";
 import apiClassInstance from "../../../../../service/api-class";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [thisClass, setThisClass] = useState({});
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+
   let tmp1 = 0;
   tmp1 = classId;
 
@@ -20,7 +22,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
         console.error(error);
       });
 
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
@@ -31,7 +33,6 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
     apiClassInstance
       .get(`/${tmp1}`)
       .then((response) => {
-        console.log(typeof response.data.status);
         setThisClass(response.data);
       })
       .catch((error) => {
@@ -189,8 +190,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
 
               <div className="input-form input-phone">
                 <select
-                  defaultValue={toString(thisClass.status)}
-                  //defaultValue="Scheduled"
+                  defaultValue={thisClass.status}
                   className="user-type-select"
                   onChange={changeStatus}
                 >
@@ -235,6 +235,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.create_by}
                   onChange={changeCreate_by}
+                  readOnly
                 />
               </div>
             </div>

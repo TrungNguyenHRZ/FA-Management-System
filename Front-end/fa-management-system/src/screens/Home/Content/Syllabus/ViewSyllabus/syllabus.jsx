@@ -53,27 +53,6 @@ const Syllabus = () => {
       .finally(() => setIsLoading(false));
   };
 
-  //--------------Test view syllabus by code---------------
-  // let topic_code = "";
-  // const viewSyllabus = (topic_code) => {
-  // //   setIsLoading(true);
-  //   apiSyllabusInstance
-  //     .get(`/viewSyllabus/${topic_code}`)
-  //     .then((response) => {
-  //       setSyllabus(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     })
-  // //     .finally(() => setIsLoading(false));
-  //   console.log("abc");
-  // }
-
-  // const getCode = (code) =>{
-  //   console.log(code);
-  // }
-
   const handlePageClick = (data) => {
     setThisPage(data.selected);
     console.log(data.selected);
@@ -96,7 +75,7 @@ const Syllabus = () => {
           <td>{item.create_by}</td>
           <td>NULL</td>
           <td>NULL</td>
-          <td>
+          <td className="td-syllabus-status">
             <div
               className={
                 item.publish_status === "active"
@@ -183,7 +162,7 @@ const Syllabus = () => {
               <th>Create by</th>
               <th>Duration</th>
               <th>Output standard</th>
-              <th>Status</th>
+              <th className="th-syllabus-status">Status</th>
             </tr>
           </thead>
 

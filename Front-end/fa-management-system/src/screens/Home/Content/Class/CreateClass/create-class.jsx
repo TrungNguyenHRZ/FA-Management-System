@@ -5,6 +5,7 @@ import "./create-class.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 const CreateClass = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
@@ -19,7 +20,7 @@ const CreateClass = () => {
         console.error(error);
       });
 
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
@@ -72,21 +73,6 @@ const CreateClass = () => {
     classCreate_by = e.target.value;
   };
 
-  let classCreatedDate = null;
-  const changeCreatedDate = (e) => {
-    classCreatedDate = e.target.value;
-  };
-
-  let classModified_date = null;
-  const changeModified_date = (e) => {
-    classModified_date = e.target.value;
-  };
-
-  let classModified_by = null;
-  const changeModified_by = (e) => {
-    classModified_by = e.target.value;
-  };
-
   let classTrainingProgram_id = null;
   const changeTrainingProgram_id = (e) => {
     classTrainingProgram_id = e.target.value;
@@ -104,9 +90,6 @@ const CreateClass = () => {
         start_date: classStart_date,
         end_date: classEnd_date,
         create_by: classCreate_by,
-        createdDate: classCreatedDate,
-        modified_date: classModified_date,
-        modified_by: classModified_by,
         trainingProgram_id: classTrainingProgram_id,
       })
       .then(function (response) {
@@ -178,29 +161,12 @@ const CreateClass = () => {
               readOnly
             />
           </div>
-          <div className="input-class-date input-create">
-            <div className=" input-create-date">
-              <label>Created date</label>
-              <input type="date" onChange={changeCreatedDate} />
-            </div>
-            <div className="input-modify-date">
-              <label>Modified date</label>
-              <input type="date" onChange={changeModified_date} />
-            </div>
-          </div>
-
-          <div className="input-class input-modify-by">
-            <label>Modified by</label>
-            <input
-              type="text"
-              onChange={changeModified_by}
-              value={userInfo && userInfo.name}
-              readOnly
-            />
-          </div>
           <div className="input-class input-training-program">
             <label>Training Program </label>
-            <select onChange={changeTrainingProgram_id}>
+            <select
+              className="select-training-program"
+              onChange={changeTrainingProgram_id}
+            >
               {listTrainingProgram?.map((item, index) => {
                 return (
                   <option value={item.training_code} key={item.training_code}>

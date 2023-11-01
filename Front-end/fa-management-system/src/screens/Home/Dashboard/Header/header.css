@@ -18,17 +18,14 @@
 }
 .header-action {
   display: flex;
-  gap: 20px;
-  color: #fff;
+  gap: 10px;
+  color: #2a00b7;
   align-items: center;
+  background-color: #fff;
+  margin-right: 10px;
+  border-radius: 10px;
 }
 
-.header-notification {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-size: 20px;
-}
 .btn-message,
 .btn-notification {
   border: none;
@@ -42,45 +39,48 @@
 .btn-notification:hover {
   background-color: #d97bc5;
 }
-.welcome-user {
-  margin-right: 40px;
-  background-color: #fff;
-  color: #2a00b7;
-  padding: 10px;
-  border-radius: 7px;
-  cursor: pointer;
-  width: 122px;
+.user-action {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
-.user {
-  position: relative;
+.role-user {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 5px;
 }
-
-.sub-menu-user {
-  display: none;
-  position: absolute;
-  background-color: #fff;
-  color: #2a00b7;
-  top: 79%;
-  left: -0.5%;
-  width: 124px;
-  border: 1px solid #2a00b7;
-  border-top: none;
-  border-radius: 0px 0px 5px 5px;
-  padding: 10px;
-  z-index: 1;
+.role-user-admin {
+  background-color: rgb(22, 186, 22);
 }
-
-.sub-menu-user.show-sub-menu-user {
-  display: block;
+.role-user-trainer {
+  background-color: rgb(35, 35, 241);
+}
+.role-user-super-admin {
+  background-color: rgb(235, 160, 20);
+}
+.name-user {
+  font-size: 25px;
   cursor: pointer;
 }
 
-.sub-menu-user.show-sub-menu-user > div:last-child {
-  margin-top: 10px;
+.name-user:hover {
+  text-decoration: underline;
 }
-
-.sub-menu-user.show-sub-menu-user > div:hover {
-  color: #d97bc5;
+.logout-user {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.logout-user:hover {
+  background-color: #2a00b7;
+  color: #fff;
+}
+.logout-user > svg {
+  font-size: 25px;
 }

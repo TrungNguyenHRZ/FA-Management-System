@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./login.css";
 import { FaUserLarge, FaLock } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import apiUserInstance from "../../service/api-user";
 import ClipLoader from "react-spinners/ClipLoader";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ const Login = () => {
 
       if (response.status === 200) {
         const data = response.data;
-        localStorage.setItem("token", data.accessToken);
+        Cookies.set("token", data.accessToken, { expires: 7 });
         apiUserInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data.accessToken}`;

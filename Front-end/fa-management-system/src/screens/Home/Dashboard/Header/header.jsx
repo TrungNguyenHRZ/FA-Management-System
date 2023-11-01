@@ -1,35 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./header.css";
-import { FaBell } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { BiLogOut } from "react-icons/bi";
+import Cookies from "js-cookie";
 
 const Header = () => {
-  const [isSubMenuUser, setIsSubMenuUser] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
+  const [info, setInfo] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
       setUserInfo(decodedToken);
+      setInfo(decodedToken.userInfo);
     }
   }, []);
 
-  const handleMouseEnter = () => {
-    setIsSubMenuUser(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsSubMenuUser(false);
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/login");
   };
 
@@ -39,33 +31,22 @@ const Header = () => {
         <h1>Fresher Academy Management System</h1>
       </div>
       <div className="header-action">
-        <div className="header-notification">
-          <button className="btn-message">
-            <FaMessage />
-          </button>
-          <button className="btn-notification">
-            <FaBell />
-          </button>
+        <div className="user-action">
+          <div
+            className={
+              info[0] === "Supper_Admin"
+                ? "role-user role-user-super-admin"
+                : info[0] === "Admin"
+                ? "role-user role-user-admin"
+                : "role-user role-user-trainer"
+            }
+          >
+            {userInfo ? userInfo.userInfo : "null"}
+          </div>
+          <div className="name-user">{userInfo ? userInfo.name : "null"}</div>
         </div>
-        <div className="user">
-          <div
-            className="welcome-user"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {userInfo ? userInfo.name : "null"}
-          </div>
-
-          <div
-            className={`sub-menu-user ${
-              isSubMenuUser ? "show-sub-menu-user" : ""
-            }`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div>Information</div>
-            <div onClick={handleLogout}>Log out</div>
-          </div>
+        <div className="logout-user" onClick={handleLogout}>
+          <BiLogOut />
         </div>
       </div>
     </div>

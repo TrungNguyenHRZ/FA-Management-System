@@ -94,12 +94,12 @@ const ViewClass = () => {
               <div
                 className={
                   item.status === "Planning"
-                    ? "td-status-planning"
+                    ? "td-status td-status-planning"
                     : item.status === "Opening"
-                    ? "td-status-opening"
+                    ? "td-status td-status-opening"
                     : item.status === "Scheduled"
-                    ? "td-status-scheduled"
-                    : "td-status-completed"
+                    ? "td-status td-status-scheduled"
+                    : "td-status td-status-completed"
                 }
               >
                 {item.status}
@@ -169,7 +169,7 @@ const ViewClass = () => {
               <th>Created on</th>
               <th>Created by</th>
               <th>Duration</th>
-              <th>Status</th>
+              <th className="th-view-class">Status</th>
               <th>Location</th>
               <th>FSU</th>
               <th>...</th>
