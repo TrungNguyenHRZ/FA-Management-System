@@ -1,6 +1,7 @@
 package com.example.BE.service.Impl;
 
 import com.example.BE.model.dto.response.TrainingProgramSyllabusResponse;
+import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;

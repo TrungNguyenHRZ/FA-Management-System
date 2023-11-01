@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrainingProgramSyllabusRepo extends JpaRepository<TrainingProgramSyllabus, TrainingProgramSyllabusId> {
 
@@ -17,4 +18,5 @@ public interface TrainingProgramSyllabusRepo extends JpaRepository<TrainingProgr
     @Query(value= "select * from training_program_syllabus where training_program_code = :num"
     ,nativeQuery = true)
     public List<TrainingProgramSyllabus> getSyllabusCode(int num);
+
 }

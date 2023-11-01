@@ -1,9 +1,12 @@
 package com.example.BE.service.Impl;
 
+import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
+import com.example.BE.model.entity.Class;
 import com.example.BE.model.entity.Syllabus;
 import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
+import com.example.BE.repository.ClassRepository;
 import com.example.BE.repository.SyllabusRepository;
 import com.example.BE.repository.TrainingProgramRepository;
 import com.example.BE.service.SyllabusService;
@@ -22,6 +25,8 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     private SyllabusRepository syllabusRepository;
     @Autowired
     SyllabusService syllabusService;
+    @Autowired
+    ClassRepository classRepository;
 
     @Override
     public List<TrainingProgramResponse> findAllTrainingProgram(){
@@ -88,6 +93,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         trainingProgram.setCreatedDate(t.getCreatedDate());
         trainingProgram.setModified_date(t.getModified_date());
         trainingProgram.setModified_by(t.getModified_by());
+        trainingProgram.setGeneralInfo(t.getGeneralInfo());
 
 //        if (t.getSyllabusIds() != null && !t.getSyllabusIds().isEmpty()) {
 //            List<Syllabus> syllabuses = syllabusRepository.findAllById(t.getSyllabusIds());
@@ -125,6 +131,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         newTp.setCreatedDate(original.getCreatedDate());
         newTp.setModified_date(original.getModified_date());
         newTp.setModified_by(original.getModified_by());
+        newTp.setGeneralInfo(original.getGeneralInfo());
         List<TrainingProgramSyllabus> originalSyllabus = original.getSyllabus();
         List<TrainingProgramSyllabus> newSyllabus = new ArrayList<>();
         for (TrainingProgramSyllabus originalTps : originalSyllabus){
@@ -139,5 +146,14 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     @Override
     public List<TrainingProgramResponse> findTPByKeyword(String keyword){
         return trainingProgramRepository.findTPByKeyword(keyword, keyword);
+    }
+
+    @Override
+    public TrainingProgramDetailResponse getTrainingProgramDetail(int trainingProgramCode) {
+        TrainingProgram trainingProgram = findById(trainingProgramCode);
+        if (trainingProgram != null) {
+            return new TrainingProgramDetailResponse(trainingProgram);
+        }
+        return null;
     }
 }

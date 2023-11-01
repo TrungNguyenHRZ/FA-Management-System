@@ -4,6 +4,7 @@ import com.example.BE.model.dto.response.TrainingProgramResponse;
 import com.example.BE.model.entity.TrainingProgram;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface TrainingProgramMapper {
     @Mapping(source = "trainingProgram.createdDate", target = "createdDate")
     @Mapping(source = "trainingProgram.modified_date", target = "modified_date")
     @Mapping(source = "trainingProgram.modified_by", target = "modified_by")
+    @Mapping(source = "trainingProgram.generalInfo", target = "generalInfo")
     @Mapping(source = "trainingProgram.user_training", target = "user_training")
     @Mapping(source = "trainingProgram.syllabusProgram", target = "syllabus")
     List<TrainingProgramResponse> toTrainingProgramResponseList (List<TrainingProgram> trainingProgramList);
