@@ -94,7 +94,9 @@ const UserList = () => {
                         ? "td-status-admin"
                         : item.userType === "Trainer"
                         ? "td-status-trainer"
-                        : "td-status-superAdmin"
+                        : item.userType === "Supper_Admin"
+                        ? "td-status-superAdmin"
+                        : ""
                     }
                   >
                     {item.userType}

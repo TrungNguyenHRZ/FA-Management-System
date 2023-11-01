@@ -112,7 +112,9 @@ const ViewClass = () => {
                     ? "td-status-opening"
                     : item.status === "Scheduled"
                     ? "td-status-scheduled"
-                    : "td-status-completed"
+                    : item.status === "Completed"
+                    ? "td-status-completed"
+                    : ""
                 }
               >
                 {item.status}
