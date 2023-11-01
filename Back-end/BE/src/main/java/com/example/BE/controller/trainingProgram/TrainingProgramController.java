@@ -2,6 +2,7 @@ package com.example.BE.controller.trainingProgram;
 
 import com.example.BE.mapper.TrainingProgramMapper;
 import com.example.BE.model.dto.ApiResponse;
+import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
 import com.example.BE.model.dto.response.TrainingProgramSyllabusResponse;
 import com.example.BE.model.entity.Syllabus;
@@ -9,22 +10,20 @@ import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import com.example.BE.repository.SyllabusRepository;
-import com.example.BE.repository.TrainingProgramRepository;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
 import com.example.BE.service.TrainingProgramSyllabusService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/TrainingProgram")
@@ -145,6 +144,9 @@ public class TrainingProgramController {
             if (t.getModified_by() != null){
                 tp.setModified_by(t.getModified_by());
             }
+            if (t.getGeneralInfo() != null){
+                tp.setGeneralInfo(t.getGeneralInfo());
+            }
 
 //            if (t.getSyllabusIds() != null && !t.getSyllabusIds().isEmpty()){
 //                List<Syllabus> newSyllabuses = syllabusRepository.findAllById(t.getSyllabusIds());
@@ -180,13 +182,15 @@ public class TrainingProgramController {
 ////                    }
 ////                }
 ////            }
-                TrainingProgram tp2 = trainingProgramService.updateTrainingProgram(tp);
-                TrainingProgramResponse result = new TrainingProgramResponse(tp2);
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            TrainingProgram tp2 = trainingProgramService.updateTrainingProgram(tp);
+            TrainingProgramResponse result = new TrainingProgramResponse(tp2);
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
         }
+    }
+
+
 
     @PostMapping("/duplicate-training-program/{id}")
     public ResponseEntity<TrainingProgramResponse> duplicateTrainingProgram(@PathVariable int id){
@@ -218,6 +222,16 @@ public class TrainingProgramController {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.ok(tpsRes);
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/training-programs/{trainingProgramCode}/detail")
+    public ResponseEntity<TrainingProgramDetailResponse> getTrainingProgramDetail(@PathVariable int trainingProgramCode) {
+        TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(trainingProgramCode);
+        if (programDetail != null) {
+            return ResponseEntity.ok(programDetail);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

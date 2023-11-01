@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Integer> {
-    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name = :name")
+    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name LIKE %?1%")
     List<TrainingProgramResponse> findByTrainingName(@Param("name") String name);
 
     @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name LIKE %?1% OR tp.create_by LIKE %?2%")
