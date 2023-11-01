@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.BE.model.dto.response.ClassResponse;
 import com.example.BE.model.entity.Class;
+import com.example.BE.model.entity.TrainingProgram;
 
 
 public interface ClassService {
@@ -15,6 +16,9 @@ public interface ClassService {
 
     Class findById(int ClassID);
     List<Class> searchByStatus(String status);
+
+    List<Class> findAllClassByTrainingProgram(TrainingProgram t);
+
     List<ClassResponse> sortByModifiedDate(List<ClassResponse> classes);
     Class convert(ClassResponse c);
 
@@ -22,5 +26,4 @@ public interface ClassService {
     List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate);
 
     List<ClassResponse> findClassByKeyWord(String keyword);
-
 }

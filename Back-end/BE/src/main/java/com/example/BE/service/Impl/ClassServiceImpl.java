@@ -83,6 +83,12 @@ public class ClassServiceImpl implements ClassService {
     public List<ClassResponse> findClassByKeyWord(String keyword) {
         return classRepository.findClassesByKeyword(keyword, keyword);
     }
+
+    @Override
+    public List<Class> findAllClassByTrainingProgram(TrainingProgram t) {
+        return classRepository.findClassesByTrainingProgramId(t.getTraining_code());
+    }
+
     public List<ClassResponse> sortByModifiedDate(List<ClassResponse> classes) {
         classes.sort(Comparator.comparing(ClassResponse::getModified_date).reversed());
         return classes;

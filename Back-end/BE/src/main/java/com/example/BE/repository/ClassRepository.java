@@ -23,4 +23,6 @@ public interface ClassRepository extends JpaRepository<Class, Integer> {
     List<ClassResponse> findClassesByKeyword(@Param("keyword1") String keyword1, @Param("keyword2") String keyword2);
     @Query("SELECT c FROM Class c WHERE c.status = %?1%")
     List<Class> findClassesByStatus(@Param("keyword1") String keyword1);
+    @Query("SELECT c FROM Class c WHERE c.program_class = ?1")
+    List<Class> findClassesByTrainingProgramId(@Param("keyword1") int keyword1);
 }
