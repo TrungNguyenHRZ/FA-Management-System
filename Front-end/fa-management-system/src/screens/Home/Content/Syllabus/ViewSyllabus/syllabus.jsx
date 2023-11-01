@@ -78,11 +78,11 @@ const Syllabus = () => {
           <td className="td-syllabus-status">
             <div
               className={
-                item.publish_status === "active"
+                item.publish_status.toLowerCase() === "active"
                   ? "td-status-active"
-                  : item.publish_status === "inactive"
+                  : item.publish_status.toLowerCase() === "inactive"
                   ? "td-status-inactive"
-                  : item.publish_status === "draft"
+                  : item.publish_status.toLowerCase() === "draft"
                   ? "td-status-drafting"
                   : ""
               }

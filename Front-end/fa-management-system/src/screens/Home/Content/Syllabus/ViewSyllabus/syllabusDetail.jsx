@@ -38,6 +38,7 @@ const SyllabusDetail = () => {
 	const[option,setOption] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [open, setOpen] = React.useState(false);
+	const [activated,setActivated] = useState(false);
 	const handleOpened = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const navigate = useNavigate();
@@ -267,6 +268,39 @@ const SyllabusDetail = () => {
 	
 	};
 
+	let handleDeactivated = () => {
+		setIsLoading(true);
+		apiSyllabusInstance
+	.get(`/deactivate/${paramName.id}`)
+	.then((response) => {
+	  console.log(response.data.payload);
+	})
+	.catch((error) => {
+	  console.error(error);
+	})
+	.finally(()  => {
+		handleClose();
+		setIsLoading(false);
+		navigate(`/view-syllabus/${paramName.id}`);
+	});
+	}
+
+	let handleActivated = () => {
+		setIsLoading(true);
+		apiSyllabusInstance
+	.get(`/activate/${paramName.id}`)
+	.then((response) => {
+	  console.log(response.data.payload);
+	})
+	.catch((error) => {
+	  console.error(error);
+	})
+	.finally(()  => {
+		handleClose();
+		setIsLoading(false);
+	});
+	}
+
 	const style = {
 		position: 'absolute',
 		top: '50%',
@@ -312,8 +346,11 @@ const SyllabusDetail = () => {
 				<div className="option-pick" onClick={handleOpened}>
 					<HiOutlineDuplicate className="option-icon" /> Duplicate
 				</div>
-				<div className="option-pick">
-				<FiEyeOff className="option-icon"/> De-active syllabus
+				<div className="option-pick" 
+				onClick={syllabus.publish_status.toLowerCase() === 'active' ? handleDeactivated : handleActivated}>
+				<FiEyeOff className="option-icon" 
+				/> 
+				{syllabus.publish_status.toLowerCase() === 'active' ? 'De-activate syllabus' : 'Activate syllabus'}
 				</div>
 				<Modal
         		open={open}

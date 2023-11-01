@@ -369,26 +369,33 @@ public class ViewSyllabusController {
 		return ResponseEntity.ok(apiResponse);
 	}
 
-	// @PostMapping("/duplicateUnits/{code}")
-	// public ResponseEntity<ApiResponse> duplicateUnits(@PathVariable int code){
-	// 	ApiResponse apiResponse = new ApiResponse();
-	// 	Syllabus chosenSyllabus = syllabusService.getSyllabusByTopic_Code(code);
-	// 	try{
-	// 		if(chosenSyllabus != null){
-	// 		List<TrainingUnit> units = syllabusService.duplicateUnits(code,31);
-	// 		// List<TrainingUnit> unitList = unitRepo.saveAll(units);
-	// 		apiResponse.ok(unitMapper.toTrainingUnitResponseList(units));
-	// 					// apiResponse.ok(syllabusMapper.toResponse(newSyll));
+	@GetMapping("deactivate/{id}")
+	public ResponseEntity<ApiResponse> deactivate(@PathVariable int id){
+		ApiResponse apiResponse = new ApiResponse();
+		Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+		if(existedSyllabus != null){
+			syllabusService.deactivateSyllabus(id);
+			apiResponse.ok(syllabusMapper.toResponse(existedSyllabus));
+		}else{
+			apiResponse.error("Syllabus not found");
+		}
+		return ResponseEntity.ok(apiResponse);
+	}
 
-	// 		} else{
-	// 			apiResponse.error("Syllabus not found");
+	@GetMapping("activate/{id}")
+	public ResponseEntity<ApiResponse> activate(@PathVariable int id){
+		ApiResponse apiResponse = new ApiResponse();
+		Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+		if(existedSyllabus != null){
+			syllabusService.activateSyllabus(id);
+			apiResponse.ok(syllabusMapper.toResponse(existedSyllabus));
+		}else{
+			apiResponse.error("Syllabus not found");
+		}
+		return ResponseEntity.ok(apiResponse);
+	}
 
-	// 		}
-	// 	}catch(Exception e){
-	// 		apiResponse.error(e);
-	// 	}	
-	// 	return ResponseEntity.ok(apiResponse);
-	// }
+
 
 	
 
