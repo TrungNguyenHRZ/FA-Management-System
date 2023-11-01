@@ -92,6 +92,14 @@
   padding: 10px;
   box-shadow: 5px 10px 18px #888888;
 }
+.th-syllabus-status {
+  text-align: center;
+}
+.td-syllabus-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .loading-overlay {
   position: absolute;
   top: 0;

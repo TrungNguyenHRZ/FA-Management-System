@@ -39,12 +39,25 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+.th-user-list-type,
+.th-user-list-gender,
+.th-user-list-status,
+.td-gender-male,
+.td-gender-female,
+.cb-user-list-status {
+  text-align: center;
+}
 .td-gender-male {
   color: #2a00b7;
 }
 
 .td-gender-female {
   color: #ff00dd;
+}
+.td-user-list-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .td-status-superAdmin,
 .td-status-trainer,

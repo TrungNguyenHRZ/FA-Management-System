@@ -65,9 +65,9 @@ const UserList = () => {
               <th>Full name</th>
               <th>Email</th>
               <th>Date of birth</th>
-              <th>Gender</th>
-              <th>Type</th>
-              <th>Status</th>
+              <th className="th-user-list-gender">Gender</th>
+              <th className="th-user-list-type">Type</th>
+              <th className="th-user-list-status">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -87,7 +87,7 @@ const UserList = () => {
                   >
                     <IoPerson />
                   </td>
-                  <td>
+                  <td className="td-user-list-status">
                     <div
                       className={
                         item.userType === "Admin"
@@ -100,7 +100,7 @@ const UserList = () => {
                       {item.userType}
                     </div>
                   </td>
-                  <td>
+                  <td className="cb-user-list-status">
                     <input
                       type="checkbox"
                       checked={item.status}
