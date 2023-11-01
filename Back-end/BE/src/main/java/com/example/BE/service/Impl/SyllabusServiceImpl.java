@@ -364,14 +364,30 @@ public class SyllabusServiceImpl implements SyllabusService {
 	@Override
 	public void activateSyllabus(int code) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'activateSyllabus'");
+		try{
+			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
+			if(existedSyllabus != null){
+				existedSyllabus.setPublish_status("Active");
+				syllabusRepository.save(existedSyllabus);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 
 	@Override
 	public void deactivateSyllabus(int code) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deactivateSyllabus'");
+		try{
+			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
+			if(existedSyllabus != null){
+				existedSyllabus.setPublish_status("Inactive");
+				syllabusRepository.save(existedSyllabus);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	
