@@ -70,4 +70,8 @@ public class Class implements Serializable {
     @JoinColumn(name = "program_id")
     private TrainingProgram program_class;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "clazz")
+    private List<Schedule> scheduleList;
+
 }
