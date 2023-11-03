@@ -60,8 +60,9 @@ const Syllabus = () => {
 
   let renderData = () => {
     return list.length !== 0 ? (
-      list.slice(thisPage * 9, (thisPage + 1) * 9).map((item) => (
+      list.slice(thisPage * 9, (thisPage + 1) * 9).map((item, index) => (
         <tr key={item.topic_code}>
+          <td>{index + 1 + thisPage * itemPerPage}</td>
           <td>
             <Link
               style={{ textDecoration: "none", color: "#d97bc5" }}
@@ -156,6 +157,7 @@ const Syllabus = () => {
         <table className="table-syllabus">
           <thead>
             <tr>
+              <th>No.</th>
               <th>Syllabus</th>
               <th>Code</th>
               <th>Create on</th>

@@ -21,11 +21,12 @@
   gap: 10px;
   color: #2a00b7;
   align-items: center;
+  padding: 5px;
   background-color: #fff;
   margin-right: 10px;
   border-radius: 10px;
+  justify-content: space-between;
 }
-
 .btn-message,
 .btn-notification {
   border: none;
@@ -71,6 +72,7 @@
 .name-user:hover {
   text-decoration: underline;
 }
+
 .logout-user {
   padding: 10px;
   margin: 10px;

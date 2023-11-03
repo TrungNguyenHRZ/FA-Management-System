@@ -83,8 +83,9 @@ const ViewClass = () => {
     if (list && list.length > 0) {
       return list
         .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-        .map((item) => (
+        .map((item, index) => (
           <tr key={item.topic_code}>
+            <td>{index + 1 + thisPage * itemPerPage}</td>
             <td>{item.className}</td>
             <td>{item.classCode}</td>
             <td>{item.createdDate}</td>
@@ -164,6 +165,7 @@ const ViewClass = () => {
         <table className="table-syllabus">
           <thead>
             <tr>
+              <th>No.</th>
               <th>Class</th>
               <th>Class code</th>
               <th>Created on</th>
