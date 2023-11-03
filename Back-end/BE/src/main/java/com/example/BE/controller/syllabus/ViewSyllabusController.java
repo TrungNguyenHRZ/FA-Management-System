@@ -133,7 +133,6 @@ public class ViewSyllabusController {
         Syllabus result = repo.save(syllabus);
 		for(TrainingUnit tu : result.getSyllabus_unit()){
 			tu.setUnit_topic_code(result);
-
 		}
 		List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
 		for(TrainingUnit tun : unitList){
@@ -142,7 +141,7 @@ public class ViewSyllabusController {
 			}
 			contentService.saveAllTrainingContents(tun.getTraining_content());
 		}
-		SyllabusResponse resultResponse = syllabusMapper.toResponse(result);
+		SyllabusResponse resultResponse = syllabusService.getSyllabusByTopicCode(result.getTopic_code());
 		apiResponse.ok(resultResponse);
 		// result.setUser_syllabus(null);
 		return ResponseEntity.ok(apiResponse);
@@ -258,8 +257,11 @@ public class ViewSyllabusController {
 					existedSyllabus.setUser_syllabus(user_existedSyllabus);
 				}				
 				Syllabus updatedSyllabus = syllabusService.updateSyllabus(existedSyllabus);
-				SyllabusResponse updatedSyllabusResponse = syllabusMapper.toResponse(updatedSyllabus);
-				apiResponse.ok(updatedSyllabusResponse);
+				List<TrainingUnit> updatedUnits = syllabusService.updateUnitResponse(syResponse.getUnitList());
+				SyllabusResponse afterSyllabus = syllabusService.getSyllabusByTopicCode(id);
+				// SyllabusResponse updatedSyllabusResponse = syllabusMapper.toResponse(afterSyllabus);
+
+				apiResponse.ok(afterSyllabus);
 				return ResponseEntity.ok(apiResponse);
 			}else{
 				apiResponse.error("Syllabus not found");;
@@ -393,6 +395,21 @@ public class ViewSyllabusController {
 			apiResponse.error("Syllabus not found");
 		}
 		return ResponseEntity.ok(apiResponse);
+	}
+
+	@PutMapping("/updateUnits")
+	public ResponseEntity<ApiResponse> updateUnits(@RequestBody List<TrainingUnitResponse> unitResponses){
+		ApiResponse apiResponse = new ApiResponse();
+		List<TrainingUnit> unitList = syllabusService.updateUnitResponse(unitResponses);
+		List<TrainingUnitResponse> unitListResponse = new ArrayList<>();
+		
+		for(TrainingUnit tu : unitList){
+			unitListResponse.add(unitMapper.toResponse(tu));
+		}
+		apiResponse.ok(unitListResponse);
+		return ResponseEntity.ok(apiResponse);
+
+
 	}
 
 

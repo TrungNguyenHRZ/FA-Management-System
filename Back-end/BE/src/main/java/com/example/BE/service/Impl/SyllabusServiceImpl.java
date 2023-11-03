@@ -390,6 +390,61 @@ public class SyllabusServiceImpl implements SyllabusService {
 		}
 	}
 
+
+	@Override
+	public List<TrainingUnit> updateUnitResponse(List<TrainingUnitResponse> unitResponse) {
+		// TODO Auto-generated method stub
+		List<TrainingUnit> unitList = new ArrayList<>();
+		List<TrainingContent> contentList = new ArrayList<>();
+		// for(TrainingUnitResponse response : unitResponse){
+		// 	TrainingUnit unit = convert(response);
+		// 	unitList.add(unit);
+		// }
+		for(TrainingUnitResponse response : unitResponse){
+			TrainingUnit unit = unitRepo.getTrainingUnitByUnitCode(response.getUnit_code());
+			if(unit != null){
+				if(response.getUnit_name() != null){
+					unit.setUnit_name(response.getUnit_name());
+				}
+				if(response.getDay_number() != 0){
+					unit.setDay_number(response.getDay_number());
+				}
+				if(response.getContentList() != null){
+					for(TrainingContentResponse cResponse : response.getContentList()){
+						TrainingContent content = contentRepo.getContentById(cResponse.getContentId());
+						if(content != null){
+							if(cResponse.getContent() != null){
+								content.setContent(cResponse.getContent());
+							}
+							if(cResponse.getLearningObjective() != null){
+								content.setLearningObjective(cResponse.getLearningObjective());
+							}
+							if(cResponse.getDeliveryType() != null){
+								content.setDeliveryType(cResponse.getDeliveryType());
+							}
+							if(cResponse.getDuration() > 0){
+								content.setDuration(cResponse.getDuration());
+							}
+							if(cResponse.getNote() != null){
+								content.setNote(cResponse.getNote());
+							}
+							if(cResponse.getTrainingFormat() != null){
+								content.setTrainingFormat(cResponse.getTrainingFormat());
+							}
+							content.setUnitCode(unit);
+						}
+						contentList.add(content);
+					}
+				}				
+			}
+			unit.setTraining_content(contentList);
+			unitList.add(unit);
+		}
+		List<TrainingUnit> trainingUnitList = updateUnit(unitList);
+		List<TrainingContent> trainingContentList = contentRepo.saveAll(contentList);
+		return trainingUnitList;
+	}
+
 	
 
 	

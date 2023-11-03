@@ -58,4 +58,6 @@ public interface SyllabusService {
 
 	void deactivateSyllabus(int code);
 
+	List<TrainingUnit> updateUnitResponse(List<TrainingUnitResponse> unitResponse);
+
 }
