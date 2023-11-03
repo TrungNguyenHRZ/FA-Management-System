@@ -20,4 +20,8 @@ public interface TrainingContentRepository extends JpaRepository<TrainingContent
 	@Query(value="select top 1 * from training_content order by content_id desc",
 	nativeQuery = true)
 	TrainingContent getLastContent();
+
+	@Query(value="select * from training_content where content_id = :id",
+	nativeQuery = true)
+	TrainingContent getContentById(int id);
 }
