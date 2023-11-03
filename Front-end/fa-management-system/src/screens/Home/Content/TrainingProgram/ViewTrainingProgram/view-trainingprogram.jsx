@@ -75,11 +75,11 @@ const ViewTrainingProgram = () => {
 
   const submit = (e) => {
     apiTrainingProgramInstance
-      .get(`/${id}`)
+      .get("/search-TP-by-keyword?key=" + id)
       .then((response) => {
-        setList(response.data);
+        setList(response.data.payload);
         console.log(list);
-        setTotalPage(Math.ceil(response.data.length / itemPerPage));
+        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
       })
       .catch((error) => {
         console.error(error);
