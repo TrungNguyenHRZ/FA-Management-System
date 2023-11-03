@@ -181,24 +181,6 @@ public class ViewSyllabusController {
 		return ResponseEntity.ok(apiResponse);
 	}
 
-	@GetMapping("/testLearning")
-	public List<SyllabusResponse> getLearningList() {
-		List<SyllabusResponse> syList = syllabusService.getAll();
-		for(SyllabusResponse syr : syList) {
-			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
-			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-			syr.setLearningList(syObjsResult);
-		}
-		return syList;
-	}
-
-	@GetMapping("/test1")
-	public List<SyllabusObjectResponse> testLearningList() {
-		List<SyllabusObjectResponse> syList;
-		List<SyllabusObject> syObj = syObjectRepo.findAll();
-		List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-		return syObjsResult;
-	}
 
 	@PutMapping("/updateSyllabus/{id}")
 	public ResponseEntity<ApiResponse> updateSyllabus(@PathVariable int id, @RequestBody SyllabusResponse syResponse){
