@@ -74,3 +74,7 @@
 .btn-class-create:hover {
   opacity: 0.8;
 }
+
+.select-create-class {
+  width: auto;
+}

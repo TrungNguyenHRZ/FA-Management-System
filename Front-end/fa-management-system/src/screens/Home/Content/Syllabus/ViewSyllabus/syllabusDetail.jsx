@@ -23,37 +23,36 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 const SyllabusDetail = () => {
+  const paramName = useParams();
+  // console.log(paramName.id);
+  const [syllabus, setSyllabus] = useState([]);
+  const [duplicatedSyllabus, setDuplicatedSyllabus] = useState([]);
+  const [page, setPage] = useState(1);
+  const [openItems, setOpenItems] = useState([]);
+  // setParams(paramName.id);
+  const [option, setOption] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [activated, setActivated] = useState(false);
+  const handleOpened = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
 
-	const  paramName   = useParams();
-	// console.log(paramName.id);
-	const [syllabus,setSyllabus] = useState([]);
-	const [duplicatedSyllabus,setDuplicatedSyllabus] = useState([]);
-	const[page,setPage] = useState(1);
-	const [openItems, setOpenItems] = useState([]);
-	// setParams(paramName.id);
-	const[option,setOption] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [open, setOpen] = React.useState(false);
-	const [activated,setActivated] = useState(false);
-	const handleOpened = () => setOpen(true);
-	const handleClose = () => setOpen(false);
-	const navigate = useNavigate();
-	
-	useEffect(() => {
-		apiSyllabusInstance
-		  .get(`/viewSyllabus/${paramName.id}`)
-		  .then((response) => {
-			console.log(response.data.payload);
-			setSyllabus(response.data.payload);
-			// setUnit(syllabus.unitList);
-		  })
-		  .catch((error) => {
-			console.error(error);
-		  });
-	  }, []);
-	//   if (syllabus.learningList) {
-	// 	console.log(syllabus.learningList);
-	//   }
+  useEffect(() => {
+    apiSyllabusInstance
+      .get(`/viewSyllabus/${paramName.id}`)
+      .then((response) => {
+        console.log(response.data.payload);
+        setSyllabus(response.data.payload);
+        // setUnit(syllabus.unitList);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  //   if (syllabus.learningList) {
+  // 	console.log(syllabus.learningList);
+  //   }
 
   useEffect(() => {
     apiSyllabusInstance
@@ -311,50 +310,50 @@ const SyllabusDetail = () => {
       });
   };
 
-	let handleDeactivated = () => {
-		setIsLoading(true);
-		apiSyllabusInstance
-	.get(`/deactivate/${paramName.id}`)
-	.then((response) => {
-	  console.log(response.data.payload);
-	})
-	.catch((error) => {
-	  console.error(error);
-	})
-	.finally(()  => {
-		handleClose();
-		setIsLoading(false);
-		navigate(`/view-syllabus/${paramName.id}`);
-	});
-	}
+  let handleDeactivated = () => {
+    setIsLoading(true);
+    apiSyllabusInstance
+      .get(`/deactivate/${paramName.id}`)
+      .then((response) => {
+        console.log(response.data.payload);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        handleClose();
+        setIsLoading(false);
+        navigate(`/view-syllabus/${paramName.id}`);
+      });
+  };
 
-	let handleActivated = () => {
-		setIsLoading(true);
-		apiSyllabusInstance
-	.get(`/activate/${paramName.id}`)
-	.then((response) => {
-	  console.log(response.data.payload);
-	})
-	.catch((error) => {
-	  console.error(error);
-	})
-	.finally(()  => {
-		handleClose();
-		setIsLoading(false);
-	});
-	}
+  let handleActivated = () => {
+    setIsLoading(true);
+    apiSyllabusInstance
+      .get(`/activate/${paramName.id}`)
+      .then((response) => {
+        console.log(response.data.payload);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        handleClose();
+        setIsLoading(false);
+      });
+  };
 
-	const style = {
-		position: 'absolute',
-		top: '50%',
-		left: '50%',
-		transform: 'translate(-50%, -50%)',
-		width: 400,
-		bgcolor: 'background.paper',
-		border: '2px solid #000',
-		boxShadow: 24,
-		p: 4,
-	  };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <div className="detail-container">
@@ -420,45 +419,6 @@ const SyllabusDetail = () => {
             </div>
           )}
         </div>
-	
-		</div>
-		<div className="header-right">
-			<BsThreeDots className="three-dot-icon" onClick={() => handleOpen()}/>
-			{option && <div className="option-edit">
-				<div className="option-header">Manage</div>
-				<hr></hr>
-				<div className="option-pick">
-					<BsPencil className="option-icon"/>	Edit
-				</div>
-				<div className="option-pick" onClick={handleOpened}>
-					<HiOutlineDuplicate className="option-icon" /> Duplicate
-				</div>
-				<div className="option-pick" 
-				onClick={syllabus.publish_status.toLowerCase() === 'active' ? handleDeactivated : handleActivated}>
-				<FiEyeOff className="option-icon" 
-				/> 
-				{syllabus.publish_status.toLowerCase() === 'active' ? 'De-activate syllabus' : 'Activate syllabus'}
-				</div>
-				<Modal
-        		open={open}
-        		onClose={handleClose}
-        		aria-labelledby="modal-modal-title"
-        		aria-describedby="modal-modal-description"
-      			>
-        		<Box sx={style}>
-          		<Typography id="modal-modal-title" variant="h6" component="h2">
-           			 Verify!
-         		</Typography>
-          		<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            	Are you sure to duplicate the syllabus with code {paramName.id}
-          		</Typography>
-				  <Button onClick={handleClose}>Cancel</Button>
-				  <Button onClick={duplicateSyllabus}>Yes</Button>
-        		</Box>
-      			</Modal>
-	  		</div>}
-			
-		</div>
       </div>
 
       <hr></hr>

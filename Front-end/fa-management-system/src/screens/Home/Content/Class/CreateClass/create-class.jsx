@@ -70,6 +70,7 @@ const CreateClass = () => {
         const tmp = values;
         tmp.trainingProgram_id = TrainingProgram;
         tmp.status = status;
+        tmp.create_by = userInfo.name;
 
         if (values != null) {
           apiClassInstance.post("/CreateClass", tmp);
@@ -95,10 +96,6 @@ const CreateClass = () => {
                       <div style={{ color: "red" }}>{errors.className}</div>
                     ) : null}
                   </div>
-                  <div className="input-class input-code">
-                    <label>Class code</label>
-                    <Field type="text" name="classCode" />
-                  </div>
                   <div className="input-class input-duration">
                     <label>Duration</label>
                     <Field type="number" name="duration" />
@@ -109,6 +106,7 @@ const CreateClass = () => {
                   <div className="input-class input-status">
                     <label>Status</label>
                     <select
+                      className="select-create-class"
                       defaultValue={"Planning"}
                       onChange={(e) => {
                         setStatus(e.target.value);
@@ -145,29 +143,18 @@ const CreateClass = () => {
                   </div>
                   <div className="input-class input-create-by">
                     <label>Create by</label>
-                    <Field type="text" name="create_by" />
-                  </div>
-                  <div className="input-class-date input-create">
-                    <div className=" input-create-date">
-                      <label>Created date</label>
-                      <Field type="date" name="createdDate" />
-                    </div>
-                    <div className="input-modify-date">
-                      <label>Modified date</label>
-
-                      <Field type="date" name="modified_date" />
-                    </div>
-                  </div>
-
-                  <div className="input-class input-modify-by">
-                    <label>Modified by</label>
-
-                    <Field type="text" name="modified_by" />
+                    <Field
+                      type="text"
+                      name="create_by"
+                      disabled
+                      placeholder={userInfo && userInfo.name}
+                    />
                   </div>
                   <div className="input-class input-training-program">
                     <label>Training Program </label>
 
                     <select
+                      className="select-create-class"
                       name="trainingProgram_id"
                       id=""
                       onChange={(e) => {

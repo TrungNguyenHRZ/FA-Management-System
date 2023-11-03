@@ -79,11 +79,11 @@ const Syllabus = () => {
           <td className="td-syllabus-status">
             <div
               className={
-                item.publish_status.toLowerCase() === "active"
+                item && item.publish_status === "active"
                   ? "td-status-active"
-                  : item.publish_status.toLowerCase() === "inactive"
+                  : item.publish_status === "inactive"
                   ? "td-status-inactive"
-                  : item.publish_status.toLowerCase() === "draft"
+                  : item.publish_status === "draft"
                   ? "td-status-drafting"
                   : ""
               }
@@ -96,7 +96,11 @@ const Syllabus = () => {
     ) : (
       <tr>
         <td style={{ textAlign: "center" }} colSpan={7}>
-          No result found
+          <div className="loading-overlay">
+            <div className="loading-container">
+              <SyncLoader color="#2a00b7" />
+            </div>
+          </div>
         </td>
       </tr>
     );
