@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 // import App from "./App";
@@ -18,69 +18,85 @@ import Overview from "./screens/Home/Content/Overview/overview";
 import ErrorPage from "./screens/Error/error-page";
 import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
+import Cookies from "js-cookie";
 
-const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/",
-    element: <Sidebar />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "/overview",
-        element: <Overview />,
-      },
-      {
-        path: "/view-syllabus",
-        element: <Syllabus />,
-      },
-      {
-        path: "/view-syllabus/:id",
-        element: <SyllabusDetail />,
-      },
-      {
-        path: "/create-syllabus",
-        element: <CreateSyllabus />,
-      },
-      {
-        path: "/training-program",
-        element: <TrainingProgram />,
-      },
-      {
-        path: "/view-trainingprogram",
-        element: <ViewTrainingProgram />,
-      },
-      {
-        path: "/create-trainingprogram",
-        element: <CreateTrainingProgram />,
-      },
-      {
-        path: "/view-class",
-        element: <ViewClass />,
-      },
-      {
-        path: "/create-class",
-        element: <CreateClass />,
-      },
-      {
-        path: "/user-list",
-        element: <UserList />,
-      },
-      {
-        path: "/user-permission",
-        element: <UserPermission />,
-      },
-    ],
-  },
-]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
-);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    // Check if the user has a valid token (you can implement this logic)
+    const token = Cookies.get("token"); // Change this to your actual storage method
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  const router = createBrowserRouter([
+    {
+      path: "/login",
+      element: <Login setIsAuthenticated={setIsAuthenticated} />,
+    },
+    {
+      path: "/",
+      element: isAuthenticated ? <Sidebar /> : <Login />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: "/overview",
+          element: <Overview />,
+        },
+        {
+          path: "/view-syllabus",
+          element: <Syllabus />,
+        },
+        {
+          path: "/view-syllabus/:id",
+          element: <SyllabusDetail />,
+        },
+        {
+          path: "/create-syllabus",
+          element: <CreateSyllabus />,
+        },
+        {
+          path: "/training-program",
+          element: <TrainingProgram />,
+        },
+        {
+          path: "/view-trainingprogram",
+          element: <ViewTrainingProgram />,
+        },
+        {
+          path: "/create-trainingprogram",
+          element: <CreateTrainingProgram />,
+        },
+        {
+          path: "/view-class",
+          element: <ViewClass />,
+        },
+        {
+          path: "/create-class",
+          element: <CreateClass />,
+        },
+        {
+          path: "/user-list",
+          element: <UserList />,
+        },
+        {
+          path: "/user-permission",
+          element: <UserPermission />,
+        },
+      ],
+    },
+  ]);
+  return (<RouterProvider router={router} />);
+
+}
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
