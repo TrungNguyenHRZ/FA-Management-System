@@ -13,11 +13,17 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      // Nếu có token, điều hướng người dùng đến trang "overview"
+      navigate("/overview");
+    }
+  }, []);
   const handleLogin = async () => {
     if (isLoading) {
       return;
     }
-
     setIsLoading(true);
     setError("");
     try {
@@ -33,7 +39,6 @@ const Login = () => {
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
         console.log(data.accessToken);
-
         navigate("/overview");
       } else {
         setError("Invalid email or password. Try again !!!");
