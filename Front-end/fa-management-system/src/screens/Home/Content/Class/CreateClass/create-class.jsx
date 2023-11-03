@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const SignupSchema = Yup.object().shape({
   className: Yup.string()
@@ -27,12 +29,7 @@ const CreateClass = () => {
   const [newTrainingProgram, setNewTrainingProgram] = useState({});
   const navigate = useNavigate();
 
-import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
-const CreateClass = () => {
-  const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
-
 
   useEffect(() => {
     apiTrainingProgramInstance
@@ -50,7 +47,6 @@ const CreateClass = () => {
       setUserInfo(decodedToken);
     }
   }, []);
-
 
   return (
     <Formik
@@ -79,7 +75,6 @@ const CreateClass = () => {
           apiClassInstance.post("/CreateClass", tmp);
           toast.success("Add class successfully !!!");
         }
-
       }}
     >
       {({ errors, touched }) => (
@@ -217,7 +212,6 @@ const CreateClass = () => {
               />
             </div>
           </div>
-
         </div>
       )}
     </Formik>

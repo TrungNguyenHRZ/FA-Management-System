@@ -80,15 +80,9 @@ const UserList = () => {
                   <td>{item.dob}</td>
                   <td
                     className={
-
-                      item.userType === "Admin"
-                        ? "td-status-admin"
-                        : item.userType === "Trainer"
-                        ? "td-status-trainer"
-                        : item.userType === "Supper_Admin"
-                        ? "td-status-superAdmin"
-                        : ""
-
+                      item.gender == "Male"
+                        ? "td-gender-male"
+                        : "td-gender-female"
                     }
                   >
                     <IoPerson />
