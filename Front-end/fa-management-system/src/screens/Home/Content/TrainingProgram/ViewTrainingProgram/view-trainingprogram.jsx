@@ -13,8 +13,8 @@ const ViewTrainingProgram = () => {
   const [list, setList] = useState([]);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
-  const [showFormAddUser, setShowFormAddUser] = useState(false);
-  const [Item, setItem] = useState(1);
+  // const [showFormAddUser, setShowFormAddUser] = useState(false);
+  // const [Item, setItem] = useState(1);
 
   const itemPerPage = 9;
 
@@ -35,9 +35,9 @@ const ViewTrainingProgram = () => {
     if (list && list.length > 0) {
       return list
         .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
-        .map((item) => (
+        .map((item, index) => (
           <tr key={item.training_code}>
-            <td>{item.training_code}</td>
+            <td>{index + 1 + thisPage * itemPerPage}</td>
             <td>{item.training_name}</td>
             <td>{item.createdDate}</td>
             <td>{item.create_by}</td>
@@ -126,7 +126,7 @@ const ViewTrainingProgram = () => {
         <table className="table-syllabus">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>No.</th>
               <th>Program name</th>
               <th>Created on</th>
               <th>Created by</th>

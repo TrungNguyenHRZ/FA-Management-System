@@ -61,7 +61,7 @@ const UserList = () => {
         <table className="table-syllabus">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>No.</th>
               <th>Full name</th>
               <th>Email</th>
               <th>Date of birth</th>
@@ -74,7 +74,7 @@ const UserList = () => {
             {list.length !== 0 ? (
               list.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{item.id}</td>
+                  <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.email}</td>
                   <td>{item.dob}</td>
