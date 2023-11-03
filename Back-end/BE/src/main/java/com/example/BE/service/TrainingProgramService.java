@@ -1,5 +1,6 @@
 package com.example.BE.service;
 
+import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
 import com.example.BE.model.entity.TrainingProgram;
 import org.springframework.stereotype.Service;
@@ -26,4 +27,6 @@ public interface TrainingProgramService {
     TrainingProgram duplicate(TrainingProgram tp);
 
     List<TrainingProgramResponse> findTPByKeyword(String keyword);
+
+    TrainingProgramDetailResponse getTrainingProgramDetail(int id);
 }

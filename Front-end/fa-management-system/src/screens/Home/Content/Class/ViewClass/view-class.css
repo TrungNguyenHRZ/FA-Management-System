@@ -30,15 +30,22 @@
   justify-content: center;
 }
 
+.th-view-class {
+  text-align: center;
+}
 .td-status-planning,
 .td-status-opening,
 .td-status-scheduled,
 .td-status-completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
   border-radius: 30px;
   width: 150px;
   text-align: center;
   height: 80%;
+  width: auto;
 }
 
 .td-status-opening {

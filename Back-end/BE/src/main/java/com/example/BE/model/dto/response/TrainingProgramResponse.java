@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,6 +24,7 @@ public class TrainingProgramResponse {
     protected Date createdDate;
     protected Date modified_date;
     protected String modified_by;
+    protected String generalInfo;
     protected List<Integer> syllabusIds;
 //    protected List<Integer> newSyllabusIds;
 //    protected Map<Integer, String> sequence;
@@ -39,9 +41,14 @@ public class TrainingProgramResponse {
         this.createdDate = trainingProgram.getCreatedDate();
         this.modified_date = trainingProgram.getModified_date();
         this.modified_by = trainingProgram.getModified_by();
-        if(!trainingProgram.getSyllabus().isEmpty()) {
-            this.syllabusIds = Collections.singletonList(trainingProgram.getSyllabus().iterator().next().getProgram_topic().getTopic_code());
-        }
+//        this.generalInfo = trainingProgram.getGeneralInfo();
+        this.syllabusIds = trainingProgram.getSyllabus()
+                .stream()
+                .map(s -> s.getProgram_topic().getTopic_code())
+                .collect(Collectors.toList());
+//        if(!trainingProgram.getSyllabus().isEmpty()) {
+//            this.syllabusIds = Collections.singletonList(trainingProgram.getSyllabus().iterator().next().getProgram_topic().getTopic_code());
+//        }
 //        TrainingProgramSyllabus syllabusProgram;
 //        this.user_training = trainingProgram.getUser_training().getUserId();
     }

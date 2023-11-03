@@ -14,9 +14,11 @@ import ViewClass from "./screens/Home/Content/Class/ViewClass/view-class";
 import Syllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/syllabus";
 import CreateClass from "./screens/Home/Content/Class/CreateClass/create-class";
 import SyllabusDetail from "./screens/Home/Content/Syllabus/ViewSyllabus/syllabusDetail";
-import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import Overview from "./screens/Home/Content/Overview/overview";
+import ErrorPage from "./screens/Error/error-page";
+import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
+
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -25,6 +27,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Sidebar />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/overview",
@@ -55,7 +58,6 @@ const router = createBrowserRouter([
         path: "/create-trainingprogram",
         element: <CreateTrainingProgram />,
       },
-
       {
         path: "/view-class",
         element: <ViewClass />,

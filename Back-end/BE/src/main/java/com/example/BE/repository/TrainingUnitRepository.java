@@ -15,4 +15,10 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit,Integ
 	@Query(value="Select * from training_unit where unit_code = :code" 
 	,nativeQuery = true)
 	public TrainingUnit getTrainingUnitByUnitCode(int code);
+
+	@Query(value= "select top 1 * from training_unit order by unit_code desc",
+	nativeQuery = true)
+	TrainingUnit getLastTrainingUnit();
+
+
 }

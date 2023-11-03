@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 
 const Syllabus = () => {
   const [list, setList] = useState([]);
-  const [id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
@@ -54,27 +53,6 @@ const Syllabus = () => {
       .finally(() => setIsLoading(false));
   };
 
-  //--------------Test view syllabus by code---------------
-  // let topic_code = "";
-  // const viewSyllabus = (topic_code) => {
-  // //   setIsLoading(true);
-  //   apiSyllabusInstance
-  //     .get(`/viewSyllabus/${topic_code}`)
-  //     .then((response) => {
-  //       setSyllabus(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     })
-  // //     .finally(() => setIsLoading(false));
-  //   console.log("abc");
-  // }
-
-  // const getCode = (code) =>{
-  //   console.log(code);
-  // }
-
   const handlePageClick = (data) => {
     setThisPage(data.selected);
     console.log(data.selected);
@@ -97,14 +75,14 @@ const Syllabus = () => {
           <td>{item.create_by}</td>
           <td>NULL</td>
           <td>NULL</td>
-          <td>
+          <td className="td-syllabus-status">
             <div
               className={
-                item.publish_status === "active"
+                item.publish_status.toLowerCase() === "active"
                   ? "td-status-active"
-                  : item.publish_status === "inactive"
+                  : item.publish_status.toLowerCase() === "inactive"
                   ? "td-status-inactive"
-                  : item.publish_status === "draft"
+                  : item.publish_status.toLowerCase() === "draft"
                   ? "td-status-drafting"
                   : ""
               }
@@ -115,7 +93,11 @@ const Syllabus = () => {
         </tr>
       ))
     ) : (
-      <h1>No result found</h1>
+      <tr>
+        <td style={{ textAlign: "center" }} colSpan={7}>
+          No result found
+        </td>
+      </tr>
     );
   };
 
@@ -180,7 +162,7 @@ const Syllabus = () => {
               <th>Create by</th>
               <th>Duration</th>
               <th>Output standard</th>
-              <th>Status</th>
+              <th className="th-syllabus-status">Status</th>
             </tr>
           </thead>
 

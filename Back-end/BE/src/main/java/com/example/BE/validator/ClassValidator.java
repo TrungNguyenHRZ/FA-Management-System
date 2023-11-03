@@ -15,8 +15,8 @@ public class ClassValidator implements Validator {
 
     public void validate(Object target, Errors errors) {
         ClassResponse c = (ClassResponse) target;
-        if (StringUtils.isEmpty(c.getClassName())) {
-            errors.rejectValue("className", "error.className", "Tên lớp không được để trống!");
+        if (StringUtils.isEmpty(c.getClassName()) || c.getClassName().isEmpty()) {
+            errors.rejectValue("className", "error.className", "ClassName is required!!!");
         }
     }
 }

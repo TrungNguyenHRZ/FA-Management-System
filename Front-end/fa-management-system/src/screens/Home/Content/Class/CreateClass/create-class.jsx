@@ -27,6 +27,13 @@ const CreateClass = () => {
   const [newTrainingProgram, setNewTrainingProgram] = useState({});
   const navigate = useNavigate();
 
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
+const CreateClass = () => {
+  const [listTrainingProgram, setListTrainingProgram] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
+
   useEffect(() => {
     apiTrainingProgramInstance
       .get("/all")
@@ -36,7 +43,14 @@ const CreateClass = () => {
       .catch((error) => {
         console.error(error);
       });
+
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+    }
   }, []);
+
 
   return (
     <Formik
@@ -65,6 +79,7 @@ const CreateClass = () => {
           apiClassInstance.post("/CreateClass", tmp);
           toast.success("Add class successfully !!!");
         }
+
       }}
     >
       {({ errors, touched }) => (
@@ -202,6 +217,7 @@ const CreateClass = () => {
               />
             </div>
           </div>
+
         </div>
       )}
     </Formik>

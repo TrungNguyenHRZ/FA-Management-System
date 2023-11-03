@@ -65,6 +65,9 @@ public class TrainingProgram implements Serializable {
     @Column(name = "Modified_By")
     private String modified_by;
 
+    @Column(name = "generalInfo", columnDefinition = "TEXT")
+    private String generalInfo;
+
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user_training;
@@ -75,7 +78,7 @@ public class TrainingProgram implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "program_class")
-    List<Class> training_class;
+    List<Class> training_class = new ArrayList<>();
 
 
 }

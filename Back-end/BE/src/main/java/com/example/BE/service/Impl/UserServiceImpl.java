@@ -274,13 +274,13 @@ public class UserServiceImpl implements UserService {
                 throw new UnauthorizeException(ErrorMessage.USER_NOT_FOUND);
             }
             String passHash = AESUtils.decrypt(user.getPassword(), keyAES);
-            log.info("PAss :{}", passHash);
+            log.info("Pass :{}", passHash);
             if (!passHash.equals(request.getPassword())) {
                 throw new UnauthorizeException(ErrorMessage.USER_PASSWORD_INCORRECT);
             }
 
             UserDetailsImpl userDetails = UserDetailsImpl.build(user);
-            String accessToken = JWTUtils.generateAccessToken(userDetails);
+            String accessToken = JWTUtils.generateAccessToken(userDetails, user);
             return new LoginResponse(user, accessToken);
 
         } catch (UnauthorizeException e) {

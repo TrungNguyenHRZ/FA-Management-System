@@ -1,9 +1,9 @@
 package com.example.BE.service.Impl;
 
 
-import java.sql.Date;
+// import java.sql.Date;
 import java.util.ArrayList;
-// import java.util.Date;
+import java.util.Date;
 import java.util.List;
 
 import org.springdoc.core.converters.models.Pageable;
@@ -25,6 +25,7 @@ import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
 import com.example.BE.repository.SyllabusRepository;
 import com.example.BE.repository.TrainingContentRepository;
+import com.example.BE.repository.TrainingUnitRepository;
 import com.example.BE.repository.UserRepository;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingUnitService;
@@ -54,6 +55,9 @@ public class SyllabusServiceImpl implements SyllabusService {
 
 	@Autowired
 	UserRepository userRepo;
+
+	@Autowired
+	TrainingUnitRepository unitRepo;
 
 	@Override
 	public List<Syllabus> getAllSyllabus() {
@@ -240,11 +244,12 @@ public class SyllabusServiceImpl implements SyllabusService {
 
 
 	@Override
-	public void duplicateSyllabus(int code) {
+	public Syllabus duplicateSyllabus(int code) {
 		// TODO Auto-generated method stub
 		Syllabus duplicatedSyllabus = new Syllabus();
 		Syllabus chosenSyllabus = getSyllabusByTopic_Code(code);
 		int nextId = generateNextId();
+		Date now = new Date();
 
 		if(chosenSyllabus != null){
 			duplicatedSyllabus.setTopic_code(nextId);
@@ -259,11 +264,20 @@ public class SyllabusServiceImpl implements SyllabusService {
 			duplicatedSyllabus.setLevel(chosenSyllabus.getLevel());
 			duplicatedSyllabus.setPublish_status(chosenSyllabus.getPublish_status());
 			duplicatedSyllabus.setCreate_by(chosenSyllabus.getCreate_by());
-			duplicatedSyllabus.setCreatedDate(chosenSyllabus.getCreatedDate());
+			duplicatedSyllabus.setCreatedDate(now);
 			duplicatedSyllabus.setModified_by(chosenSyllabus.getModified_by());
 			duplicatedSyllabus.setModified_date(chosenSyllabus.getModified_date());
+			duplicatedSyllabus.setUser_syllabus(chosenSyllabus.getUser_syllabus());
+			// duplicatedSyllabus.setSyllabus_unit(chosenSyllabus.getSyllabus_unit());
 		}
-		syllabusRepository.saveAndFlush(duplicatedSyllabus);
+		// Syllabus newSyllabus = syllabusRepository.saveAndFlush(duplicatedSyllabus);
+		// List<TrainingUnit> duplicatedUnits = duplicateUnits(chosenSyllabus.getTopic_code(),nextId);
+		// duplicatedSyllabus.setSyllabus_unit(duplicatedUnits);
+		// for(TrainingUnit tu : duplicatedSyllabus.getSyllabus_unit()){
+		// 		tu.setUnit_topic_code(newSyllabus);
+		// }
+		// unitRepo.saveAllAndFlush(duplicatedSyllabus.getSyllabus_unit());
+		return duplicatedSyllabus;
 	}
 
 	@Override
@@ -271,5 +285,113 @@ public class SyllabusServiceImpl implements SyllabusService {
 		// TODO Auto-generated method stub
 		return syllabusRepository.getLastSyllabus().getTopic_code() + 1;
 	}
+
+
+	@Override
+	public List<TrainingUnit> duplicateUnits(int code, Syllabus newSyllabus) {
+		// TODO Auto-generated method stub
+		List<TrainingUnit> duplicatedUnitList = new ArrayList<>();
+		List<TrainingUnit> unitList = getSyllabusByTopic_Code(code).getSyllabus_unit();
+		
+		int newId = genrateLastUnitCode() + 1;
+		for(int i = 0; i < unitList.size(); i++) {
+			TrainingUnit duplicatedUnit = new TrainingUnit();
+			duplicatedUnit.setUnit_code(newId);
+			duplicatedUnit.setUnit_name(unitList.get(i).getUnit_name());
+			duplicatedUnit.setDay_number(unitList.get(i).getDay_number());
+			duplicatedUnit.setUnit_topic_code(newSyllabus);
+			// duplicatedUnit.setTraining_content(unitList.get(i).getTraining_content());
+			// duplicateContent(unitList.get(i).getTraining_content(), duplicatedUnit);
+			duplicatedUnitList.add(duplicatedUnit);
+			// duplicateContents(code, duplicatedUnitList);
+			newId++;
+		}
+		newSyllabus.setSyllabus_unit(duplicatedUnitList);
+		return duplicatedUnitList;
+		// return unitRepo.saveAll(duplicatedUnitList);
+	}
+
+
+	@Override
+	public void duplicateContents(List<TrainingContent> original, TrainingUnit tu) {
+		// TODO Auto-generated method stub
+		int newId = contentRepo.getLastContent().getContentId() + 1;
+		// List<TrainingUnit> unitList = getSyllabusByTopic_Code(code).getSyllabus_unit();;
+			List<TrainingContent> copiedContents = new ArrayList<>();
+			for(int i = 0;i<original.size();i++){
+				TrainingContent content = new TrainingContent();
+				content.setContentId(newId);
+				content.setContent(original.get(i).getContent());
+				content.setDeliveryType(original.get(i).getDeliveryType());
+				content.setDuration(original.get(i).getDuration());
+				content.setLearningObjective(original.get(i).getLearningObjective());
+				content.setNote(original.get(i).getNote());
+				content.setTrainingFormat(original.get(i).getTrainingFormat());
+				content.setUnitCode(tu);
+				copiedContents.add(content);
+				newId++;
+			}
+		tu.setTraining_content(copiedContents);
+		// return contentList;
+		contentRepo.saveAll(copiedContents);
+		}
+
+
+
+	@Override
+	public int genrateLastUnitCode() {
+		// TODO Auto-generated method stub
+		int lastId = unitRepo.getLastTrainingUnit().getUnit_code();
+		return lastId;
+	}
+
+
+	@Override
+	public List<TrainingUnit> updateUnit(List<TrainingUnit> units) {
+		// TODO Auto-generated method stub
+		// List<TrainingUnit> unitList = unitRepo.getTrainingUnitsByTopicCode(code);
+		return unitRepo.saveAll(units);
+	}
+
+
+	@Override
+	public List<TrainingContent> updateContents(List<TrainingContent> contents) {
+		// TODO Auto-generated method stub
+		return contentRepo.saveAll(contents);
+	}
+
+
+	@Override
+	public void activateSyllabus(int code) {
+		// TODO Auto-generated method stub
+		try{
+			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
+			if(existedSyllabus != null){
+				existedSyllabus.setPublish_status("Active");
+				syllabusRepository.save(existedSyllabus);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+	@Override
+	public void deactivateSyllabus(int code) {
+		// TODO Auto-generated method stub
+		try{
+			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
+			if(existedSyllabus != null){
+				existedSyllabus.setPublish_status("Inactive");
+				syllabusRepository.save(existedSyllabus);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	
+
+	
 
 }

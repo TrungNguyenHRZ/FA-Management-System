@@ -28,9 +28,6 @@ const Sidebar = () => {
   const changeCreateSyllabus = () => {
     setPage(3);
   };
-  const changerTrainingProgram = () => {
-    setPage(4);
-  };
   const changeViewClass = () => {
     setPage(5);
   };

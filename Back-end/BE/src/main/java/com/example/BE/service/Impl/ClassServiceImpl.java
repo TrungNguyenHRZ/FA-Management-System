@@ -9,6 +9,7 @@ import com.example.BE.service.TrainingProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -81,5 +82,15 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassResponse> findClassByKeyWord(String keyword) {
         return classRepository.findClassesByKeyword(keyword, keyword);
+    }
+
+    @Override
+    public List<Class> findAllClassByTrainingProgram(TrainingProgram t) {
+        return classRepository.findClassesByTrainingProgramId(t.getTraining_code());
+    }
+
+    public List<ClassResponse> sortByModifiedDate(List<ClassResponse> classes) {
+        classes.sort(Comparator.comparing(ClassResponse::getModified_date).reversed());
+        return classes;
     }
 }
