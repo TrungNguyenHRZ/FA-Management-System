@@ -20,13 +20,11 @@ import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrai
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
 import Cookies from "js-cookie";
 
-
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if the user has a valid token (you can implement this logic)
-    const token = Cookies.get("token"); // Change this to your actual storage method
+    const token = Cookies.get("token");
     if (token) {
       setIsAuthenticated(true);
     } else {
@@ -91,10 +89,8 @@ const App = () => {
       ],
     },
   ]);
-  return (<RouterProvider router={router} />);
-
-}
-
+  return <RouterProvider router={router} />;
+};
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 // If you want to start measuring performance in your app, pass a function

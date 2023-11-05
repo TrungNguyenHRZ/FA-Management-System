@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./sidebar.css";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
@@ -11,6 +11,8 @@ import {
 } from "react-icons/fa6";
 import Header from "./Header/header";
 import Footer from "./Footer/footer";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const Sidebar = () => {
   const [isSubMenuSyllabus, setSubMenuSyllabus] = useState(false);
@@ -18,6 +20,15 @@ const Sidebar = () => {
   const [isSubMenuClass, setSubMenuClass] = useState(false);
   const [isSubMenuTrainingProgram, setSubMenuTrainingProgram] = useState(false);
   const [isPage, setPage] = useState(0);
+  const [info, setInfo] = useState([]);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setInfo(decodedToken.userInfo);
+    }
+  }, []);
 
   const changeOverview = () => {
     setPage(1);
@@ -154,29 +165,36 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
-
-            <li onClick={toggleSubMenuUser}>
-              <FaUserGroup className="icon-sidebar" />
-              <span className="home-link">User management</span>
-            </li>
-            <ul className={`sub-menu ${isSubMenuUser ? "show-sub-menu" : ""}`}>
-              <li
-                className={isPage === 7 ? "sidebar-page" : ""}
-                onClick={changeUserList}
-              >
-                <Link to={"/user-list"} className="home-link">
-                  User list
-                </Link>
-              </li>
-              <li
-                className={isPage === 8 ? "sidebar-page" : ""}
-                onClick={changeUserPermission}
-              >
-                <Link to={"/user-permission"} className="home-link">
-                  User permission
-                </Link>
-              </li>
-            </ul>
+            {info[0] === "Supper_Admin" ? (
+              <>
+                <li onClick={toggleSubMenuUser}>
+                  <FaUserGroup className="icon-sidebar" />
+                  <span className="home-link">User management</span>
+                </li>
+                <ul
+                  className={`sub-menu ${isSubMenuUser ? "show-sub-menu" : ""}`}
+                >
+                  <li
+                    className={isPage === 7 ? "sidebar-page" : ""}
+                    onClick={changeUserList}
+                  >
+                    <Link to={"/user-list"} className="home-link">
+                      User list
+                    </Link>
+                  </li>
+                  <li
+                    className={isPage === 8 ? "sidebar-page" : ""}
+                    onClick={changeUserPermission}
+                  >
+                    <Link to={"/user-permission"} className="home-link">
+                      User permission
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <></>
+            )}
           </ul>
         </div>
         <div className="content-container">
