@@ -10,6 +10,7 @@ import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import com.example.BE.repository.SyllabusRepository;
+import com.example.BE.repository.TrainingProgramRepository;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
@@ -43,6 +44,9 @@ public class TrainingProgramController {
     TrainingProgramMapper trainingProgramMapper;
 
     @Autowired
+    TrainingProgramRepository trainingProgramRepository;
+
+    @Autowired
     TrainingProgramSyllabusRepo psRepo;
 
     @Autowired
@@ -72,8 +76,11 @@ public class TrainingProgramController {
 //    }
 
     @GetMapping(value = {"", "/all"})
-    public ResponseEntity<List<TrainingProgramResponse>> getAllTrainingPrograms() {
-        return ResponseEntity.ok(trainingProgramService.findAllTrainingProgram());
+    public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getAllTrainingPrograms() {
+        ApiResponse apiResponse = new ApiResponse();
+        List<TrainingProgramResponse> trainingPrograms = trainingProgramRepository.findAllTrainingProgram();
+        apiResponse.ok(trainingPrograms);
+        return ResponseEntity.ok(apiResponse);
     }
 
 //    @GetMapping(value = {"/{name}"})
@@ -82,14 +89,16 @@ public class TrainingProgramController {
 //    }
 
     @GetMapping(value = {"/{name}"})
-    public ResponseEntity<List<TrainingProgramResponse>> getTrainingProgramsByName(@PathVariable String name) {
-        return ResponseEntity.ok(trainingProgramService.findByTrainingName(name));
+    public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getTrainingProgramsByName(@RequestParam(required = true) String name) {
+        ApiResponse apiResponse = new ApiResponse();
+        List<TrainingProgramResponse> tpRes = trainingProgramRepository.findByTrainingName(name);
+        apiResponse.ok(tpRes);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping(value = {"/create-training-program"})
     public ResponseEntity<ApiResponse> createTrainingProgram(@Valid @RequestBody TrainingProgramResponse t, BindingResult bindingResult) {
         ApiResponse apiResponse = new ApiResponse();
-
         TrainingProgram tp = trainingProgramService.saveTrainingProgram(trainingProgramService.convert(t));
         TrainingProgramResponse tp2 = new TrainingProgramResponse(tp);
         apiResponse.ok(tp2);
@@ -97,7 +106,8 @@ public class TrainingProgramController {
     }
 
     @PostMapping(value = {"/create-training-program-syllabus"})
-    public ResponseEntity<TrainingProgramSyllabus> createTrainingProgramSyllabus(@Valid @RequestBody TrainingProgramSyllabusResponse tpsRes){
+    public ResponseEntity<ApiResponse> createTrainingProgramSyllabus(@Valid @RequestBody TrainingProgramSyllabusResponse tpsRes){
+        ApiResponse apiResponse = new ApiResponse();
         TrainingProgramSyllabus tps = new TrainingProgramSyllabus();
         tps.setId(new TrainingProgramSyllabusId(tpsRes.getTrainingProgram(), tpsRes.getSyllabus()));
         tps.setSequence(tpsRes.getSequence());
@@ -109,12 +119,14 @@ public class TrainingProgramController {
         tps.setProgram_topic(syllabus);
 
         TrainingProgramSyllabus createdTps = trainingProgramSyllabusService.saveTPS(tps);
-        return new ResponseEntity<>(createdTps, HttpStatus.CREATED);
+        apiResponse.ok(createdTps);
+        return ResponseEntity.ok(apiResponse);
     }
 
 
     @PutMapping(value = {"update-training-program/{id}"})
-    public ResponseEntity<TrainingProgramResponse> updateTrainingProgram(@PathVariable int id, @RequestBody TrainingProgramResponse t) {
+    public ResponseEntity<ApiResponse<TrainingProgramResponse>> updateTrainingProgram(@PathVariable int id, @RequestBody TrainingProgramResponse t) {
+        ApiResponse apiResponse = new ApiResponse();
         TrainingProgram tp = trainingProgramService.findById(id);
         if (tp != null) {
             if (t.getTraining_name() != null){
@@ -184,22 +196,46 @@ public class TrainingProgramController {
 ////            }
             TrainingProgram tp2 = trainingProgramService.updateTrainingProgram(tp);
             TrainingProgramResponse result = new TrainingProgramResponse(tp2);
-            return ResponseEntity.ok(result);
+            apiResponse.ok(result);
+            return ResponseEntity.ok(apiResponse);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-
+    @PutMapping(value = {"update-training-program-syllabus/{tpid}/{sid}"})
+    public ResponseEntity<ApiResponse<TrainingProgramSyllabusResponse>> updateTPS(@PathVariable int tpid,
+                                                                     @PathVariable int sid,
+                                                                     @RequestBody TrainingProgramSyllabusResponse tpsRes) {
+        ApiResponse apiResponse = new ApiResponse();
+        TrainingProgramSyllabus tps = psRepo.findByProgramAndProgram_topic(tpid, sid);
+        if (tps != null){
+            if (tpsRes.getSyllabus() != 0){
+                tps.setProgram_topic(syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus()));
+            }
+            if (tpsRes.getSequence() != null){
+                tps.setSequence(tpsRes.getSequence());
+            }
+            TrainingProgramSyllabus tps2 = trainingProgramSyllabusService.saveTPS(tps);
+//            TrainingProgramSyllabus tps2 = psRepo.save(tps);
+            TrainingProgramSyllabusResponse result = new TrainingProgramSyllabusResponse(tps2);
+            apiResponse.ok(result);
+            return ResponseEntity.ok(apiResponse);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping("/duplicate-training-program/{id}")
-    public ResponseEntity<TrainingProgramResponse> duplicateTrainingProgram(@PathVariable int id){
+    public ResponseEntity<ApiResponse<TrainingProgramResponse>> duplicateTrainingProgram(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
         TrainingProgram exTp = trainingProgramService.findById(id);
         if (exTp != null){
             TrainingProgram newTp = trainingProgramService.duplicate(exTp);
             TrainingProgram savedTp = trainingProgramService.saveTrainingProgram(newTp);
             TrainingProgramResponse result = new TrainingProgramResponse(savedTp);
-            return ResponseEntity.ok(result);
+            apiResponse.ok(result);
+            return ResponseEntity.ok(apiResponse);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -225,10 +261,12 @@ public class TrainingProgramController {
     }
 
     @GetMapping("/training-programs/{trainingProgramCode}/detail")
-    public ResponseEntity<TrainingProgramDetailResponse> getTrainingProgramDetail(@PathVariable int trainingProgramCode) {
+    public ResponseEntity<ApiResponse<TrainingProgramDetailResponse>> getTrainingProgramDetail(@PathVariable int trainingProgramCode) {
+        ApiResponse apiResponse = new ApiResponse();
         TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(trainingProgramCode);
         if (programDetail != null) {
-            return ResponseEntity.ok(programDetail);
+            apiResponse.ok(programDetail);
+            return ResponseEntity.ok(apiResponse);
         } else {
             return ResponseEntity.notFound().build();
         }
