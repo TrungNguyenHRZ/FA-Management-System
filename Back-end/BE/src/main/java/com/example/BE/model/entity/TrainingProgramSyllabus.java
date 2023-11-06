@@ -25,7 +25,7 @@ public class TrainingProgramSyllabus {
 
     @ManyToOne
     @MapsId(value = "topic_code")
-    @JoinColumn(name = "topic_code")
+    @JoinColumn(name = "topic_code", updatable = true)
     private Syllabus program_topic;
 
     @Column
