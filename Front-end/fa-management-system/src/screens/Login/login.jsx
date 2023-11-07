@@ -16,7 +16,6 @@ const Login = () => {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      // Nếu có token, điều hướng người dùng đến trang "overview"
       navigate("/overview");
     }
   }, []);
@@ -31,21 +30,16 @@ const Login = () => {
         email,
         password,
       });
-
       if (response.status === 200) {
         const data = response.data;
         Cookies.set("token", data.accessToken, { expires: 7 });
         apiUserInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
-        console.log(data.accessToken);
         navigate("/overview");
-      } else {
-        setError("Invalid email or password. Try again !!!");
       }
     } catch (error) {
-      console.error("Error", error);
-      setError("An error occurred. Please try again.");
+      setError("Invalid email or password. Try again !!!");
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +86,7 @@ const Login = () => {
           />
         </div>
       </div>
-      <div className="error-message">{error && <>{error}</>}</div>
+      <div className="error-message">{error}</div>
 
       <div className="forgot-password">
         If you forget your password. Please contact your administrator for
