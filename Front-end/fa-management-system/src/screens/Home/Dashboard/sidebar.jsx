@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./sidebar.css";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import {
   FaChartPie,
@@ -21,12 +21,15 @@ const Sidebar = () => {
   const [isSubMenuTrainingProgram, setSubMenuTrainingProgram] = useState(false);
   const [isPage, setPage] = useState(0);
   const [info, setInfo] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       setInfo(decodedToken.userInfo);
+    } else {
+      navigate("/login");
     }
   }, []);
 
