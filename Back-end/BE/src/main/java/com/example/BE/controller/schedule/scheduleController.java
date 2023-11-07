@@ -39,6 +39,25 @@ public class scheduleController {
             apiResponse.ok(result);
             return ResponseEntity.ok(apiResponse);
         }
-
+//    @PostMapping(value = {"/create"})
+//    public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(@RequestBody ScheduleResponse scheduleResponse) {
+//        ApiResponse apiResponse = new ApiResponse();
+//        Schedule savedSchedule = scheduleService.Create(scheduleResponse);
+//        if (savedSchedule != null) {
+//            apiResponse.ok(new ScheduleResponse(savedSchedule));
+//            return ResponseEntity.ok(apiResponse);
+//        } else {
+//            apiResponse.error("Failed to create the schedule");
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+//        }
+//    }
+        @PostMapping(value = {"/create"})
+        public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(@RequestBody ScheduleResponse schedule) {
+            ApiResponse apiResponse = new ApiResponse();
+            Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
+            ScheduleResponse response = new ScheduleResponse(savedSchedule);
+            apiResponse.ok(response);
+            return ResponseEntity.ok(apiResponse);
+        }
 
 }

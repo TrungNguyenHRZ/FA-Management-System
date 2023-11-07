@@ -4,6 +4,7 @@ import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
+import com.example.BE.model.dto.response.ClassUserRespone;
 import com.example.BE.model.entity.*;
 import com.example.BE.model.entity.Class;
 import com.example.BE.repository.ClassUserRepository;
@@ -207,5 +208,21 @@ public class ClassController {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.ok(cr);
         return ResponseEntity.ok(apiResponse);
+    }
+    @PutMapping(value = {"/UpdateClassUser/{userId}/{classId}"})
+    public ResponseEntity<ApiResponse<ClassUserRespone>> updateClassUser(@PathVariable("userId") int userId,
+                                                     @PathVariable("classId") int classId,
+                                                     @RequestBody ClassUserDTO classUserDTO) {
+        ApiResponse apiResponse = new ApiResponse();
+        ClassUser classUser = classUserService.getClassUserById(userId, classId);
+        if (classUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            ClassUser updatedClassUser = new ClassUser(classUserDTO.getUserId(), classUserDTO.getClassId(), classUserDTO.getUserType());
+            classUserRepository.deleteByUserIdAndClassId(userId, classId);
+            ClassUserRespone result = new ClassUserRespone(updatedClassUser);
+            apiResponse.ok(result);
+            return ResponseEntity.ok(apiResponse);
+        }
     }
 }

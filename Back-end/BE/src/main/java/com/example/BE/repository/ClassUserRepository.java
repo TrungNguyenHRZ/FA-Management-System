@@ -3,6 +3,7 @@ package com.example.BE.repository;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.entity.ClassUser;
 import com.example.BE.model.entity.ClassUserId;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +17,16 @@ public interface ClassUserRepository extends JpaRepository<ClassUser, Integer>{
     List<ClassUser> findAllClassUserByClassId(@Param("id") int id);
 
 
-    
+    @Query("SELECT c FROM ClassUser c WHERE c.id.userId = :userId AND c.id.classId = :classId")
+    ClassUser findByClassUserId(@Param("userId") int userId, @Param("classId") int classId);
+    @Transactional
+    @Query(value = "DELETE FROM user_class WHERE user_id = :userId AND class_id = :classId", nativeQuery = true)
+    void deleteByUserIdAndClassId(@Param("userId") int userId, @Param("classId") int classId) {
+        entity
+
+    Manager.createNativeQuery("DELETE FROM user_class WHERE user_id = :userId AND class_id = :classId")
+                .setParameter("userId", userId)
+                .setParameter("classId", classId)
+                .execute();
+    }
 }
