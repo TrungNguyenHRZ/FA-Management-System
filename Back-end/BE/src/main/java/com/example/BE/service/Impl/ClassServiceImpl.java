@@ -9,6 +9,7 @@ import com.example.BE.service.TrainingProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +83,39 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassResponse> findClassByKeyWord(String keyword) {
         return classRepository.findClassesByKeyword(keyword, keyword);
+    }
+
+    @Override
+    public List<ClassResponse> findClassByFSU(String fsu) {
+        return classRepository.findClassesByFSU(fsu);
+    }
+
+    @Override
+    public List<ClassResponse> findClassByLocation(String keyword) {
+        return classRepository.findClassesBylocation(keyword);
+    }
+
+    @Override
+    public List<ClassResponse> sortClassesByModifiedDate(List<ClassResponse> classes) {
+        Collections.sort(classes, new Comparator<ClassResponse>() {
+            @Override
+            public int compare(ClassResponse class1, ClassResponse class2) {
+                Date modifiedDate1 = class1.getModified_date();
+                Date modifiedDate2 = class2.getModified_date();
+
+                if (modifiedDate1 == null && modifiedDate2 == null) {
+                    return 0;
+                } else if (modifiedDate1 == null) {
+                    return 1; // Đẩy những mục có modifiedDate là null xuống cuối
+                } else if (modifiedDate2 == null) {
+                    return -1; // Đẩy những mục có modifiedDate là null xuống cuối
+                } else {
+                    return modifiedDate2.compareTo(modifiedDate1); // Sắp xếp từ mới nhất đến cũ nhất
+                }
+            }
+        });
+
+        return classes;
     }
 
     @Override

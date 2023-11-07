@@ -7,8 +7,8 @@ public class ClassUserRespone {
     protected int classId;
     protected String userType;
 
-//    public ClassUserRespone() {
-//    }
+    public ClassUserRespone() {
+    }
 
     public ClassUserRespone(ClassUser cu) {
         this.userId = cu.getUser().getUserId();
