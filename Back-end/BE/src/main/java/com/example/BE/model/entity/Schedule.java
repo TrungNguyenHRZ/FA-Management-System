@@ -1,5 +1,7 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -30,6 +32,7 @@ public class Schedule implements Serializable{
     @Column(name = "day")
     private Date day;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Class clazz;
