@@ -63,6 +63,9 @@ public class Syllabus {
     @Column(name = "Modified_By")
     private String modified_by;
 
+    @Column(name = "Download_url")
+    private String download_url;
+
     @JsonIgnore
     @OneToMany(mappedBy = "program_topic")
     Set<TrainingProgramSyllabus> training_program = new HashSet<>();

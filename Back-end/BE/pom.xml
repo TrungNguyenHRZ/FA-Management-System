@@ -80,6 +80,11 @@
 			<version>3.12.4</version> <!-- Thay phiên bản phù hợp -->
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+       	 	<groupId>org.apache.commons</groupId>
+        	<artifactId>commons-lang3</artifactId>
+        	<version>3.12.0</version> <!-- Thay đổi phiên bản theo mong muốn -->
+    	</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
