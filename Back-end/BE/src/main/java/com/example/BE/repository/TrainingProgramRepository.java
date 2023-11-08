@@ -15,4 +15,7 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
 
     @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name LIKE %?1% OR tp.create_by LIKE %?2%")
     List<TrainingProgramResponse> findTPByKeyword(@Param("keyword1") String keyword1, @Param("keyword2") String keyword2);
+
+    @Query("SELECT tp FROM TrainingProgram tp")
+    List<TrainingProgramResponse> findAllTrainingProgram();
 }

@@ -4,6 +4,7 @@ import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,6 @@ public interface TrainingProgramSyllabusRepo extends JpaRepository<TrainingProgr
     public List<TrainingProgramSyllabus> getSyllabus(int num);
     // List<TrainingProgramSyllabus> findByIdTopicCode(int code);
 
-    @Query(value= "select * from training_program_syllabus where training_program_code = :num"
-    ,nativeQuery = true)
-    public List<TrainingProgramSyllabus> getSyllabusCode(int num);
-
+    @Query("SELECT tps FROM TrainingProgramSyllabus tps WHERE tps.id.training_program_code = :training_code AND tps.id.topic_code = :topicCode")
+    public TrainingProgramSyllabus findByProgramAndProgram_topic(@Param("training_code") int training_code,@Param("topicCode") int topicCode);
 }

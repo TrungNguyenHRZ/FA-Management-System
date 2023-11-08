@@ -1,8 +1,8 @@
 package com.example.BE.service.Impl;
 
 import com.example.BE.model.dto.response.TrainingProgramSyllabusResponse;
-import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
+import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
@@ -23,6 +23,11 @@ public class TrainingProgramSyllabusServiceImpl implements TrainingProgramSyllab
     @Override
     public List<TrainingProgramSyllabus> findAllTPS(){
         return trainingProgramSyllabusRepo.findAll();
+    }
+
+    @Override
+    public TrainingProgramSyllabus updateTPS(TrainingProgramSyllabus tps) {
+        return trainingProgramSyllabusRepo.saveAndFlush(tps);
     }
 
     @Override

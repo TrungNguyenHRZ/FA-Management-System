@@ -13,6 +13,13 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      navigate("/overview");
+    }
+  }, []);
   const handleLogin = async () => {
     if (isLoading) {
       return;
@@ -24,7 +31,6 @@ const Login = () => {
         email,
         password,
       });
-
       if (response.status === 200) {
         const data = response.data;
         Cookies.set("token", data.accessToken, { expires: 7 });
@@ -32,8 +38,6 @@ const Login = () => {
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
         navigate("/overview");
-      } else {
-        setError("Invalid email or password. Try again !!!");
       }
     } catch (error) {
       setError("Invalid email or password. Try again !!!");

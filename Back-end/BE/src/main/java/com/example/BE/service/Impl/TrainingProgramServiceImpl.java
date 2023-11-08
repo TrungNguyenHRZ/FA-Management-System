@@ -30,14 +30,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
 
     @Override
     public List<TrainingProgramResponse> findAllTrainingProgram(){
-        List<TrainingProgram> trainingPrograms = trainingProgramRepository.findAll();
-        List<TrainingProgramResponse> responses = new ArrayList<>();
-
-        for (TrainingProgram program : trainingPrograms) {
-            responses.add(new TrainingProgramResponse(program));
-        }
-
-        return responses;
+        return trainingProgramRepository.findAllTrainingProgram();
     }
 
 //    @Override

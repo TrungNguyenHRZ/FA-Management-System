@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 // import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
@@ -21,24 +25,14 @@ import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/Create
 import Cookies from "js-cookie";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
-
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login setIsAuthenticated={setIsAuthenticated} />,
+      element: <Login />,
     },
     {
       path: "/",
-      element: isAuthenticated ? <Sidebar /> : <Login />,
+      element: <Sidebar />,
       errorElement: <ErrorPage />,
       children: [
         {
