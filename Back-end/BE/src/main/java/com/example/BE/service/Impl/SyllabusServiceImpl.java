@@ -1,17 +1,28 @@
 package com.example.BE.service.Impl;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 // import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.BE.mapper.SyllabusMapper;
 import com.example.BE.mapper.TrainingContentMapper;
@@ -443,6 +454,45 @@ public class SyllabusServiceImpl implements SyllabusService {
 		List<TrainingUnit> trainingUnitList = updateUnit(unitList);
 		List<TrainingContent> trainingContentList = contentRepo.saveAll(contentList);
 		return trainingUnitList;
+	}
+
+
+	@Override
+	public String uploadFile(String fileName, MultipartFile file) {
+		// TODO Auto-generated method stub
+		Path uploadDirectory = Paths.get("File-upload");
+		Path filePath = null;
+		if(Files.isDirectory(uploadDirectory)){
+			String fileCode = RandomStringUtils.randomAlphanumeric(8);
+			try(InputStream inputStream = file.getInputStream()){
+				filePath = uploadDirectory.resolve(fileCode + "-" + fileName);
+				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+			return filePath.toString();
+		}else {
+			 return "Folder not found";
+		}
+	}
+
+	private Path foundFile;
+	@Override
+	public Resource downloadFile(String fileCode) throws IOException {
+		
+		Path uploadDirectory = Paths.get("File-upload");
+
+		Files.list(uploadDirectory).forEach(file -> {
+			if(file.getFileName().toString().startsWith(fileCode)){
+				foundFile = file;
+				return;
+			}
+		});
+		if(foundFile != null){
+			
+			return new UrlResource(foundFile.toUri());
+		}
+		return null;
 	}
 
 	

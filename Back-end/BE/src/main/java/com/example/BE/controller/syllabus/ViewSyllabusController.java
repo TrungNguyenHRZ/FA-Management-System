@@ -22,15 +22,29 @@ import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingContentService;
 import com.example.BE.service.TrainingUnitService;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/syllabus")
@@ -239,7 +253,9 @@ public class ViewSyllabusController {
 					existedSyllabus.setUser_syllabus(user_existedSyllabus);
 				}				
 				Syllabus updatedSyllabus = syllabusService.updateSyllabus(existedSyllabus);
-				List<TrainingUnit> updatedUnits = syllabusService.updateUnitResponse(syResponse.getUnitList());
+				if(syResponse.getUnitList() != null){
+					List<TrainingUnit> updatedUnits = syllabusService.updateUnitResponse(syResponse.getUnitList());
+				}
 				SyllabusResponse afterSyllabus = syllabusService.getSyllabusByTopicCode(id);
 				// SyllabusResponse updatedSyllabusResponse = syllabusMapper.toResponse(afterSyllabus);
 
@@ -250,6 +266,7 @@ public class ViewSyllabusController {
 				return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			apiResponse.error("Server failed");;
 			return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
 		}
@@ -390,9 +407,55 @@ public class ViewSyllabusController {
 		}
 		apiResponse.ok(unitListResponse);
 		return ResponseEntity.ok(apiResponse);
-
-
 	}
+
+	@PostMapping("/uploadMaterials/{id}")
+	public ResponseEntity<ApiResponse> uploadMaterials(
+		@RequestParam("file") MultipartFile file,
+		@PathVariable int id
+	){
+		ApiResponse apiResponse = new ApiResponse();
+		Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+		if(existedSyllabus != null){
+			String fileName = file.getOriginalFilename();
+			String filePath = syllabusService.uploadFile(fileName, file);
+			existedSyllabus.setDownload_url(filePath);
+			existedSyllabus.setTraining_materials(fileName);
+			Syllabus afterSyllabus = syllabusService.updateSyllabus(existedSyllabus);
+			apiResponse.ok(afterSyllabus.getDownload_url());
+			return ResponseEntity.ok(apiResponse);
+		}else {
+			apiResponse.error("Syllabus not found");
+			return ResponseEntity.ok(apiResponse);
+		}
+	}
+
+	Path foundFile = null;
+	@GetMapping(value="/downloadMaterials/{id}")
+	public ResponseEntity<?> downloadFiles(@PathVariable int id) {
+			ApiResponse apiResponse = new ApiResponse();
+			Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+			Resource resource = null;
+			String filePath = existedSyllabus.getDownload_url();
+			try{
+				resource = new UrlResource(Paths.get(filePath).toUri());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			String contentType = "application/octet-stream";
+			String headerValue = "attachment;fileName=\"" + resource.getFilename() + "\"";
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + existedSyllabus.getTraining_materials() + "\"");
+			return ResponseEntity.ok()
+			.headers(headers)
+			.contentType(MediaType.APPLICATION_OCTET_STREAM)
+			.body(resource);
+	}
+
+	
+
+
 
 
 
