@@ -16,10 +16,12 @@ import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
 import com.example.BE.repository.SyllabusObjectRepository;
 import com.example.BE.repository.SyllabusRepository;
+import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.repository.TrainingUnitRepository;
 import com.example.BE.repository.UserRepository;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingContentService;
+import com.example.BE.service.TrainingProgramSyllabusService;
 import com.example.BE.service.TrainingUnitService;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -86,13 +88,24 @@ public class ViewSyllabusController {
 	@Autowired 
 	TrainingContentMapper contentMapper;
 
+	@Autowired 
+	TrainingProgramSyllabusService tpsService;
+
+	@Autowired 
+	TrainingProgramSyllabusRepo tpsRepo;
+
 
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus(){
 		List<SyllabusResponse> syList = syllabusService.getAll();
+		int duration = 0 ; 
 		for(SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+			duration = tpsService.getSyllabusDuration(syr.getTopic_code());
+			if(duration != 0 ){
+				syr.setProgramDuration(duration);
+			}
 			syr.setLearningList(syObjsResult);
 		}
 		return syList;
@@ -123,9 +136,14 @@ public class ViewSyllabusController {
 		try{
 			Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(code);
 			if(existedSyllabus != null){
+				int duration = 0;
 				SyllabusResponse syllabus = syllabusService.getSyllabusByTopicCode(code);
 				List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
 				List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+				duration = tpsService.getSyllabusDuration(code);
+				if(duration != 0){
+					syllabus.setProgramDuration(duration);
+				}
 				syllabus.setLearningList(syObjsResult);
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
@@ -452,6 +470,7 @@ public class ViewSyllabusController {
 			.contentType(MediaType.APPLICATION_OCTET_STREAM)
 			.body(resource);
 	}
+
 
 	
 
