@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./login.css";
 import { FaUserLarge, FaLock } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +13,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      // Nếu có token, điều hướng người dùng đến trang "overview"
-      navigate("/overview");
-    }
-  }, []);
   const handleLogin = async () => {
     if (isLoading) {
       return;
@@ -38,14 +31,12 @@ const Login = () => {
         apiUserInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
-        console.log(data.accessToken);
         navigate("/overview");
       } else {
         setError("Invalid email or password. Try again !!!");
       }
     } catch (error) {
-      console.error("Error", error);
-      setError("An error occurred. Please try again.");
+      setError("Invalid email or password. Try again !!!");
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +83,7 @@ const Login = () => {
           />
         </div>
       </div>
-      <div className="error-message">{error && <>{error}</>}</div>
+      <div className="error-message">{error}</div>
 
       <div className="forgot-password">
         If you forget your password. Please contact your administrator for

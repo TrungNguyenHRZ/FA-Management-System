@@ -22,7 +22,6 @@ import Cookies from "js-cookie";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
