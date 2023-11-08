@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 // import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
@@ -20,28 +24,15 @@ import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrai
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
 import Cookies from "js-cookie";
 
-
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Check if the user has a valid token (you can implement this logic)
-    const token = Cookies.get("token"); // Change this to your actual storage method
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
-
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login setIsAuthenticated={setIsAuthenticated} />,
+      element: <Login />,
     },
     {
       path: "/",
-      element: isAuthenticated ? <Sidebar /> : <Login />,
+      element: <Sidebar />,
       errorElement: <ErrorPage />,
       children: [
         {
@@ -91,10 +82,8 @@ const App = () => {
       ],
     },
   ]);
-  return (<RouterProvider router={router} />);
-
-}
-
+  return <RouterProvider router={router} />;
+};
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 // If you want to start measuring performance in your app, pass a function

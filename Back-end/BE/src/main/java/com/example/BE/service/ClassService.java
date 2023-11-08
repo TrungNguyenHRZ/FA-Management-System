@@ -26,4 +26,7 @@ public interface ClassService {
     List<ClassResponse> findClassesInDateRange(Date startDate, Date endDate);
 
     List<ClassResponse> findClassByKeyWord(String keyword);
+    List<ClassResponse> findClassByFSU(String keyword);
+    List<ClassResponse> findClassByLocation(String keyword);
+    List<ClassResponse> sortClassesByModifiedDate(List<ClassResponse> classes);
 }

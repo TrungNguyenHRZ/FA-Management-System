@@ -4,6 +4,7 @@ import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
+import com.example.BE.model.dto.response.ClassUserRespone;
 import com.example.BE.model.entity.*;
 import com.example.BE.model.entity.Class;
 import com.example.BE.repository.ClassUserRepository;
@@ -208,4 +209,74 @@ public class ClassController {
         apiResponse.ok(cr);
         return ResponseEntity.ok(apiResponse);
     }
+//    @PutMapping(value = {"/UpdateClassUser/{userId}/{classId}"})
+//    public ResponseEntity<ApiResponse<ClassUserRespone>> updateClassUser(@PathVariable("userId") int userId,
+//                                                     @PathVariable("classId") int classId,
+//                                                     @RequestBody ClassUserDTO classUserDTO) {
+//        ApiResponse apiResponse = new ApiResponse();
+//        ClassUser classUser = classUserService.getClassUserById(userId, classId);
+//        if (classUser == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }else{
+//            ClassUser updatedClassUser = new ClassUser(classUserDTO.getUserId(), classUserDTO.getClassId(), classUserDTO.getUserType());
+//            //
+//            Class classObject = classService.findById(classUserDTO.getClassId());
+//            updatedClassUser.setClass_object(classObject);
+//            User user = userService.getUserById2(classUserDTO.getUserId());
+//            updatedClassUser.setUser(user);
+//            //
+//            classUserRepository.deleteByUserIdAndClassId(userId, classId);
+//            ClassUser tmp = classUserService.saveClassUser(updatedClassUser);
+//            ClassUserRespone result = new ClassUserRespone(tmp);
+//            apiResponse.ok(result);
+//            return ResponseEntity.ok(apiResponse);
+//        }
+//    }
+        @PutMapping(value = {"/UpdateClassUser/{userId}/{classId}"})
+        public ResponseEntity<ApiResponse<ClassUser>> updateClassUser(@PathVariable("userId") int userId,
+                                                                             @PathVariable("classId") int classId,
+                                                                             @RequestBody ClassUserDTO classUserDTO) {
+            ApiResponse apiResponse = new ApiResponse();
+            ClassUser classUser = classUserService.getClassUserById(userId, classId);
+            if (classUser == null) {
+                apiResponse.error("ClassUser not found");
+                return ResponseEntity.notFound().build();
+            }else{
+                ClassUser updatedClassUser = new ClassUser(classUserDTO.getUserId(), classUserDTO.getClassId(), classUserDTO.getUserType());
+                //
+                Class classObject = classService.findById(classUserDTO.getClassId());
+                updatedClassUser.setClass_object(classObject);
+                User user = userService.getUserById2(classUserDTO.getUserId());
+                updatedClassUser.setUser(user);
+                //
+                classUserRepository.deleteByUserIdAndClassId(userId, classId);
+                ClassUser tmp = classUserService.saveClassUser(updatedClassUser);
+                apiResponse.ok(tmp);
+                return ResponseEntity.ok(apiResponse);
+            }
+        }
+        @GetMapping("/FilterByFsuOrLocation")
+        public ResponseEntity<List<ClassResponse>> searchClasses(@RequestParam(required = false) String fsu, @RequestParam(required = false) String location) {
+            if (fsu != null && location != null) {
+                List<ClassResponse> classes = classService.findClassByFSU(fsu);
+                List<ClassResponse> result = new ArrayList<>();
+                for (ClassResponse c:classes) {
+                    if(c.getLocation().equalsIgnoreCase(location.trim())){
+                        result.add(c);
+                    }
+                }
+                return ResponseEntity.ok(classService.sortClassesByModifiedDate(result));
+            } else if (fsu != null) {
+                // Tìm lớp học bằng fsu
+                List<ClassResponse> classes = classService.findClassByFSU(fsu);
+                return ResponseEntity.ok(classService.sortClassesByModifiedDate(classes));
+            } else if (location != null) {
+                // Tìm lớp học bằng location
+                List<ClassResponse> classes = classService.findClassByLocation(location);
+                return ResponseEntity.ok(classService.sortClassesByModifiedDate(classes));
+            } else {
+                // Nếu không cung cấp bất kỳ tham số nào
+                return ResponseEntity.badRequest().build();
+            }
+        }
 }

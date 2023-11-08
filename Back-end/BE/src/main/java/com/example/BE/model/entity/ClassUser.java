@@ -18,17 +18,24 @@ public class ClassUser implements Serializable {
     @EmbeddedId
     private ClassUserId id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId(value = "userId")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId(value = "classID")
     @JoinColumn(name = "classId")
     private Class class_object;
 
     @Column(name = "UserType")
     private String userType;
+    public ClassUser(){
+
+    }
+    public ClassUser(int userId,int classId, String userType) {
+        this.setId(new ClassUserId(userId,classId));
+        this.userType = userType;
+    }
 
 }

@@ -31,6 +31,12 @@ public interface ClassRepository extends JpaRepository<Class, Integer> {
     @Query("SELECT c FROM Class c WHERE c.program_class = :program")
     List<Class> findByProgram_class(@Param("program") TrainingProgram trainingProgram);
 
+    @Query("SELECT c FROM Class c WHERE c.fsu = ?1")
+    List<ClassResponse> findClassesByFSU(@Param("keyword1") String keyword1);
+
+    @Query("SELECT c FROM Class c WHERE c.location = ?1")
+    List<ClassResponse> findClassesBylocation(@Param("keyword1") String keyword1);
+
 //    @Query("SELECT t1_0.program_class, t1_0.classId, t1_0.classCode, t1_0.className, t1_0.duration, t1_0.status, t1_0.location, t1_0.fsu, t1_0.start_date, t1_0.end_date, t1_0.create_by, t1_0.createdDate, t1_0.modified_date, t1_0.modified_by FROM Class t1_0 WHERE t1_0.program_class = :programId")
 //    List<Class> findByProgram(@Param("programId") int programId);
 }

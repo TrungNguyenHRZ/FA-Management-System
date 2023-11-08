@@ -153,29 +153,33 @@ const CreateClass = () => {
                   <div className="input-class input-training-program">
                     <label>Training Program </label>
 
-                    <select
-                      className="select-create-class"
-                      name="trainingProgram_id"
-                      id=""
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setTrainingProgram(e.target.value);
-                      }}
-                    >
-                      <option value="" key="">
-                        ...
-                      </option>
-                      {listTrainingProgram?.map((item, index) => {
-                        return (
-                          <option
-                            value={item.training_code}
-                            key={item.training_code}
-                          >
-                            {item.training_name}
-                          </option>
-                        );
-                      })}
-                    </select>
+                    {listTrainingProgram && listTrainingProgram.length > 0 ? (
+                      <select
+                        className="select-create-class"
+                        name="trainingProgram_id"
+                        id=""
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setTrainingProgram(e.target.value);
+                        }}
+                      >
+                        <option value="" key="">
+                          ...
+                        </option>
+                        {listTrainingProgram.map((item, index) => {
+                          return (
+                            <option
+                              value={item.training_code}
+                              key={item.training_code}
+                            >
+                              {item.training_name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    ) : (
+                      <p>Loading training programs...</p>
+                    )}
                   </div>
                   <button type="submit reset" className="btn-class-create">
                     {/* <button type="submit" className="btn-class-create"> */}
