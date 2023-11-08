@@ -471,7 +471,16 @@ public class ViewSyllabusController {
 			.body(resource);
 	}
 
+	@GetMapping("/testGetDuration/{id}")
+	public ResponseEntity<ApiResponse> getDuration(@PathVariable int id){
+		ApiResponse apiResponse = new ApiResponse();
+		int duration = syllabusService.getAllContentDuration(id);
+		apiResponse.ok(duration);
+		return ResponseEntity.ok(apiResponse);
 
+	}
+
+	
 	
 
 

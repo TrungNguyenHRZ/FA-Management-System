@@ -66,4 +66,6 @@ public interface SyllabusService {
 	public String uploadFile(String fileName, MultipartFile file);
 
 	public Resource downloadFile(String fileCode) throws IOException;
+
+	public int getAllContentDuration(int code);
 }

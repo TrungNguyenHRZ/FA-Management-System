@@ -495,6 +495,21 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return null;
 	}
 
+
+	@Override
+	public int getAllContentDuration(int code) {
+		// TODO Auto-generated method stub
+		List<TrainingUnit> unitList = unitRepo.getTrainingUnitsByTopicCode(code);
+		int duration = 0;
+		for(TrainingUnit tu : unitList){
+			List<TrainingContent> contentList = contentRepo.getTrainingContentByUnitCode(tu.getUnit_code());
+			for(TrainingContent tc : contentList){
+				duration += tc.getDuration();
+			}
+		}
+		return duration;
+	}
+
 	
 
 	
