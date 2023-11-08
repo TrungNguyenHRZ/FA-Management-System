@@ -60,4 +60,6 @@ public interface SyllabusService {
 
 	List<TrainingUnit> updateUnitResponse(List<TrainingUnitResponse> unitResponse);
 
+	public byte[] convertStringToBinary(String inputString);
+
 }

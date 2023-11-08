@@ -1,6 +1,7 @@
 package com.example.BE.service.Impl;
 
 
+import java.io.UnsupportedEncodingException;
 // import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Date;
@@ -444,6 +445,19 @@ public class SyllabusServiceImpl implements SyllabusService {
 		List<TrainingContent> trainingContentList = contentRepo.saveAll(contentList);
 		return trainingUnitList;
 	}
+
+	@Override
+	public byte[] convertStringToBinary(String inputString) {
+    try {
+        // Sử dụng mã hóa UTF-8 để chuyển chuỗi thành mảng byte
+        byte[] binaryData = inputString.getBytes("UTF-8");
+        return binaryData;
+    } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+        // Xử lý lỗi nếu có
+        return null;
+    }
+}
 
 	
 

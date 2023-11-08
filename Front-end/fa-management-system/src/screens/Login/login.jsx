@@ -39,7 +39,10 @@ const Login = () => {
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
         console.log(data.accessToken);
-        navigate("/overview");
+        if(data.accessToken){
+          navigate("/overview");
+          console.log("abc");
+        }
       } else {
         setError("Invalid email or password. Try again !!!");
       }
@@ -48,6 +51,10 @@ const Login = () => {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
+      if(Cookies.get("token")){
+        // navigate("/overview");
+        // console.log("abc");
+      }
     }
   };
 

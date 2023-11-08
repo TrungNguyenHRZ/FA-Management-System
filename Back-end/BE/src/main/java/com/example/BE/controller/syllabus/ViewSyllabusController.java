@@ -25,10 +25,15 @@ import com.example.BE.service.TrainingUnitService;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,6 +118,10 @@ public class ViewSyllabusController {
 				List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
 				List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
 				syllabus.setLearningList(syObjsResult);
+				if(existedSyllabus.getData() != null){
+					syllabus.setData1(syllabusService.convertStringToBinary(existedSyllabus.getData()));
+
+				}
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
 			}else {
@@ -390,8 +399,48 @@ public class ViewSyllabusController {
 		}
 		apiResponse.ok(unitListResponse);
 		return ResponseEntity.ok(apiResponse);
+	}
 
 
+	@PostMapping("/uploadMaterials/{id}")
+	public ResponseEntity<ApiResponse> uploadMaterials(@PathVariable int id, @RequestParam("file") MultipartFile file){
+		ApiResponse apiResponse = new ApiResponse();
+		try{
+			
+			Syllabus syllabus = syllabusService .getSyllabusByTopic_Code(id);
+			if(syllabus != null){
+				String originalFilename = file.getOriginalFilename();
+				String fileExtension = StringUtils.getFilenameExtension(originalFilename).toLowerCase();
+				String materialData = new String(file.getBytes(), StandardCharsets.UTF_8);
+				syllabus.setTraining_materials(originalFilename.toLowerCase());
+				byte[] data = syllabusService.convertStringToBinary(materialData);
+				syllabus.setData(materialData);
+				SyllabusResponse syResponse = syllabusMapper.toResponse(syllabus);
+				syResponse.setData1(data);
+				repo.save(syllabus);
+				apiResponse.ok(syResponse);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(apiResponse);
+
+	}
+
+	@GetMapping("/downloadFile/{id}")
+	public ResponseEntity<String> downloadMaterials(@PathVariable int id){
+			Syllabus syllabus = syllabusService .getSyllabusByTopic_Code(id);
+			if(syllabus != null){
+				String fileData = syllabus.getData();
+				HttpHeaders headers = new HttpHeaders();
+            	headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + syllabus.getTraining_materials());
+            	return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(fileData);
+			}else{
+				return ResponseEntity.notFound().build();
+			}
 	}
 
 

@@ -37,6 +37,7 @@ public class SyllabusResponse {
 	private String modified_by;
 	private int userId;
 	private String userName;
+	private byte[] data1;
 	// private User user;
 	private List<SyllabusObjectResponse> learningList;
 	List<TrainingUnitResponse> unitList;

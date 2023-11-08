@@ -63,6 +63,10 @@ public class Syllabus {
     @Column(name = "Modified_By")
     private String modified_by;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String data;
+
     @JsonIgnore
     @OneToMany(mappedBy = "program_topic")
     Set<TrainingProgramSyllabus> training_program = new HashSet<>();
