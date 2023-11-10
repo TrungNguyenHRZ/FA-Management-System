@@ -1,3 +1,41 @@
 .create-syllabus-container {
   padding: 20px;
 }
+
+.step-bar {
+  text-align: center;
+  display: flex;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 0.2%;
+}
+
+.step-bar-item {
+  width: 200px;
+  margin-right: 0.1%;
+  padding: 0.5%;
+  background-color: rgb(192, 192, 192);
+  color: black;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  cursor: pointer;
+}
+
+.step-bar-item:hover {
+  color: white;
+  transition: 0.2s ease;
+}
+
+.step-bar-item-choose {
+  width: 200px;
+  margin-right: 0.1%;
+  padding: 0.5%;
+  background-color: #2a00b7;
+  color: #fff;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  cursor: pointer;
+}
+.step-bar-item:hover {
+  color: white;
+  transition: 0.2s ease;
+}

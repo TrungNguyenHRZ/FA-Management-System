@@ -1,0 +1,5 @@
+﻿1	Super Admin	2023-10-11	2003-11-28	baocao@gmail.com	Male	Super Admin	2023-10-11	Bao	123	0984345195	1	a	Super Admin
+2	Super Admin	2023-10-09	2003-10-28	baocao1@gmail.com	Male	Super Admin	2023-10-09	Bao	123	0984345196	1	a	Admin
+3	Super Admin	2023-10-11	2003-09-28	baocao2@gmail.com	Male	Super Admin	2023-10-10	Bao	123	0984345197	1	a	Trainer
+4	NULL	2023-10-24	2003-11-28	Admin@gmail.com	Male	NULL	NULL	a	x4+dmIn3c8l2Wwgdh0O2UVFXGyUKVFKzd3RhvAdqa+w=	0984345195	ACTIVE	4	Supper_Admin
+5	NULL	2023-11-03	2023-11-03	Admin1@gmail.com	Male	NULL	NULL	string	N4CB08tTKI8QTKyjMi14c3JsBzvhsXfc0Gk0TZi5df4=	string	ACTIVE	5	Supper_Admin

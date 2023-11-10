@@ -59,5 +59,22 @@ public class scheduleController {
             apiResponse.ok(response);
             return ResponseEntity.ok(apiResponse);
         }
+    @PostMapping("/test")
+    public ResponseEntity<ApiResponse<ScheduleResponse[]>> createSchedules(@RequestBody ScheduleResponse[] schedules) {
+        ApiResponse<ScheduleResponse[]> apiResponse = new ApiResponse<>();
+        List<Schedule> savedSchedules = new ArrayList<>();
 
+        for (ScheduleResponse schedule : schedules) {
+            Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
+            savedSchedules.add(savedSchedule);
+        }
+
+        ScheduleResponse[] responses = new ScheduleResponse[savedSchedules.size()];
+        for (int i = 0; i < savedSchedules.size(); i++) {
+            responses[i] = new ScheduleResponse(savedSchedules.get(i));
+        }
+
+        apiResponse.ok(responses);
+        return ResponseEntity.ok(apiResponse);
+    }
 }

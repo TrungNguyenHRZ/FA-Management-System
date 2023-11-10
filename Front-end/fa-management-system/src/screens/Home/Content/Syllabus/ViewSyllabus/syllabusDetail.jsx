@@ -355,8 +355,30 @@ const SyllabusDetail = () => {
     p: 4,
   };
 
+  // let downloadFile = () => {
+  //   // Thay đổi URL bằng URL của tệp bạn muốn tải xuống.
+  //   const fileUrl = 'http://localhost:8080/syllabus/downloadMaterials/180';
+
+  //   // Tạo một yêu cầu tải xuống tệp.
+  //   const link = document.createElement('a');
+  //   link.href = fileUrl;
+
+  //   // Lấy tên tệp từ URL hoặc đặt tên tùy ý.
+  //   const fileName = 'file.pdf';
+  //   link.download = fileName;
+
+  //   // Thêm liên kết tải xuống vào trang và kích hoạt nó.
+  //   document.body.appendChild(link);
+  //   link.click();
+
+  //   // Xóa liên kết sau khi tải xong.
+  //   document.body.removeChild(link);
+  // };
+
+
   return (
     <div className="detail-container">
+      
       {isLoading && (
         <div className="loading-overlay">
           <div className="loading-container">
