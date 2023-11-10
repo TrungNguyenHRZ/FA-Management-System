@@ -8,6 +8,7 @@ import {
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
+import { BiEdit } from "react-icons/bi";
 import "./view-class.css";
 
 const ViewClass = () => {
@@ -99,12 +100,10 @@ const ViewClass = () => {
                     : item.status === "Opening"
                     ? "td-status td-status-opening"
                     : item.status === "Scheduled"
-
                     ? "td-status-scheduled"
                     : item.status === "Completed"
                     ? "td-status-completed"
                     : ""
-
                 }
               >
                 {item.status}
@@ -113,13 +112,13 @@ const ViewClass = () => {
             <td>{item.location}</td>
             <td>{item.fsu}</td>
             <td>
-              <div className="add-user">
+              <div className="edit-user">
                 <button
                   value={item.classId}
                   className="btn-add-user"
                   onClick={openForm}
                 >
-                  Update Class
+                  <BiEdit />
                 </button>
               </div>
             </td>
@@ -178,7 +177,7 @@ const ViewClass = () => {
               <th className="th-view-class">Status</th>
               <th>Location</th>
               <th>FSU</th>
-              <th>...</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>{renderData()}</tbody>
