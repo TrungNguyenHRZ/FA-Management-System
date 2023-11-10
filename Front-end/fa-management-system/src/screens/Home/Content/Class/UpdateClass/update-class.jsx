@@ -161,6 +161,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.className}
                   onChange={changeName}
+                  required
                 />
               </div>
             </div>
@@ -171,6 +172,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.classCode}
                   onChange={changeCode}
+                  required
                 />
               </div>
             </div>
@@ -183,6 +185,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="number"
                   defaultValue={thisClass.duration}
                   onChange={changeDuration}
+                  required
                 />
               </div>
             </div>
@@ -194,6 +197,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   defaultValue={thisClass.status}
                   className="user-type-select"
                   onChange={changeStatus}
+                  required
                 >
                   <option value="">...</option>
                   <option value="Opening">Opening</option>
@@ -213,6 +217,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.location}
                   onChange={changeLocation}
+                  required
                 />
               </div>
             </div>
@@ -224,6 +229,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.fsu}
                   onChange={changeFsu}
+                  required
                 />
               </div>
             </div>
@@ -236,6 +242,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.create_by}
                   onChange={changeCreate_by}
+                  required
                   readOnly
                 />
               </div>
@@ -320,7 +327,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
           </div>
 
           <div className="btn-action-form">
-            <button className="btn-action-save" onClick={update}>
+            <button type="submit" className="btn-action-save" onClick={update}>
               Save
             </button>
           </div>

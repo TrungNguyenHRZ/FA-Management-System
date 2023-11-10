@@ -88,7 +88,8 @@ const CreateClass = () => {
                   {" "}
                   <div className="input-class input-name">
                     <label>Class name</label>
-                    <Field name="className" />
+                    <Field name="className" defaultValue={"test"} />
+
                     {errors.className && touched.className ? (
                       <div style={{ color: "red" }}>{errors.className}</div>
                     ) : null}
