@@ -24,7 +24,7 @@ const CreateTrainingProgram = () => {
     apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setListTrainingProgram(response.data);
+        setListTrainingProgram(response.data.payload);
       })
       .catch((error) => {
         console.error(error);

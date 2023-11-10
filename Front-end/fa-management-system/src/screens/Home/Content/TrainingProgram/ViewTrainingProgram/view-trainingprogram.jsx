@@ -22,9 +22,9 @@ const ViewTrainingProgram = () => {
     apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setList(response.data);
-        setTotalPage(Math.ceil(response.data.length / itemPerPage));
-        console.log(response.data);
+        setList(response.data.payload);
+        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
+        console.log(response.data.payload);
       })
       .catch((error) => {
         console.error(error);
