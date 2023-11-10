@@ -4,6 +4,7 @@ import apiClassInstance from "../../../../../service/api-class";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
+
 const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [thisClass, setThisClass] = useState({});
   const [listTrainingProgram, setListTrainingProgram] = useState([]);

@@ -24,7 +24,9 @@ const ViewTrainingProgram = () => {
       .then((response) => {
         setList(response.data.payload);
         setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
+
         console.log(response.data.payload);
+
       })
       .catch((error) => {
         console.error(error);

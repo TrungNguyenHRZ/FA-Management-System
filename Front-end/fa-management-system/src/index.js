@@ -23,6 +23,7 @@ import ErrorPage from "./screens/Error/error-page";
 import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
 import Cookies from "js-cookie";
+import CreateMultipleSchedules from "./screens/Home/Content/Class/CreateClass/test";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -70,6 +71,10 @@ const App = () => {
         {
           path: "/create-class",
           element: <CreateClass />,
+        },
+        {
+          path: "/create-cadidate",
+          element: <CreateMultipleSchedules />,
         },
         {
           path: "/user-list",

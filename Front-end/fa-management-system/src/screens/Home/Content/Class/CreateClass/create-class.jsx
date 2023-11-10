@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 
@@ -26,8 +25,6 @@ const CreateClass = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [TrainingProgram, setTrainingProgram] = useState(0);
   const [status, setStatus] = useState("Planning");
-  const [newTrainingProgram, setNewTrainingProgram] = useState({});
-  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState(null);
 

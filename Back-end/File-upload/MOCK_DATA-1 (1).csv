@@ -1,0 +1,11 @@
+trainingId,name,createBy,createDate,modifyBy,modifyDate,startTime,duration,topicId,status
+1,Treeflex,Wesley,2023-09-05,Åke,2023-02-12,2023-06-17,5,1,Active
+2,Otcom,Edwina,2023-06-16,Inès,2023-03-05,2022-10-21,63,2,Active
+3,Aerified,Timothy,2022-11-20,Eugénie,2023-02-17,2023-06-12,60,3,Active
+4,Trippledex,Samuele,2023-05-07,Almérinda,2023-08-21,2023-10-04,3,4,Active
+5,Subin,Ambrosius,2023-03-31,Camélia,2023-01-14,2023-02-06,65,5,Active
+6,Konklux,Porter,2023-05-03,Mén,2023-08-03,2023-05-05,32,6,Active
+7,Trippledex,Maurene,2023-07-06,Nuó,2022-12-13,2023-05-24,16,7,Active
+8,Opela,Deerdre,2023-05-07,Jú,2023-03-26,2022-11-18,63,8,Active
+9,Keylex,Hill,2023-03-25,Athéna,2023-01-15,2023-08-03,6,9,Active
+10,Konklux,Beltran,2023-02-11,Eugénie,2022-11-09,2023-07-12,21,10,Active

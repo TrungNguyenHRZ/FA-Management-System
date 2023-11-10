@@ -16,21 +16,37 @@ import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
 import com.example.BE.repository.SyllabusObjectRepository;
 import com.example.BE.repository.SyllabusRepository;
+import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.repository.TrainingUnitRepository;
 import com.example.BE.repository.UserRepository;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingContentService;
+import com.example.BE.service.TrainingProgramSyllabusService;
 import com.example.BE.service.TrainingUnitService;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/syllabus")
@@ -72,13 +88,24 @@ public class ViewSyllabusController {
 	@Autowired 
 	TrainingContentMapper contentMapper;
 
+	@Autowired 
+	TrainingProgramSyllabusService tpsService;
+
+	@Autowired 
+	TrainingProgramSyllabusRepo tpsRepo;
+
 
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus(){
 		List<SyllabusResponse> syList = syllabusService.getAll();
+		int duration = 0 ; 
 		for(SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+			duration = tpsService.getSyllabusDuration(syr.getTopic_code());
+			if(duration != 0 ){
+				syr.setProgramDuration(duration);
+			}
 			syr.setLearningList(syObjsResult);
 		}
 		return syList;
@@ -109,9 +136,14 @@ public class ViewSyllabusController {
 		try{
 			Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(code);
 			if(existedSyllabus != null){
+				int duration = 0;
 				SyllabusResponse syllabus = syllabusService.getSyllabusByTopicCode(code);
 				List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
 				List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+				duration = tpsService.getSyllabusDuration(code);
+				if(duration != 0){
+					syllabus.setProgramDuration(duration);
+				}
 				syllabus.setLearningList(syObjsResult);
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
@@ -239,7 +271,9 @@ public class ViewSyllabusController {
 					existedSyllabus.setUser_syllabus(user_existedSyllabus);
 				}				
 				Syllabus updatedSyllabus = syllabusService.updateSyllabus(existedSyllabus);
-				List<TrainingUnit> updatedUnits = syllabusService.updateUnitResponse(syResponse.getUnitList());
+				if(syResponse.getUnitList() != null){
+					List<TrainingUnit> updatedUnits = syllabusService.updateUnitResponse(syResponse.getUnitList());
+				}
 				SyllabusResponse afterSyllabus = syllabusService.getSyllabusByTopicCode(id);
 				// SyllabusResponse updatedSyllabusResponse = syllabusMapper.toResponse(afterSyllabus);
 
@@ -250,6 +284,7 @@ public class ViewSyllabusController {
 				return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			apiResponse.error("Server failed");;
 			return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
 		}
@@ -390,9 +425,65 @@ public class ViewSyllabusController {
 		}
 		apiResponse.ok(unitListResponse);
 		return ResponseEntity.ok(apiResponse);
+	}
 
+	@PostMapping("/uploadMaterials/{id}")
+	public ResponseEntity<ApiResponse> uploadMaterials(
+		@RequestParam("file") MultipartFile file,
+		@PathVariable int id
+	){
+		ApiResponse apiResponse = new ApiResponse();
+		Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+		if(existedSyllabus != null){
+			String fileName = file.getOriginalFilename();
+			String filePath = syllabusService.uploadFile(fileName, file);
+			existedSyllabus.setDownload_url(filePath);
+			existedSyllabus.setTraining_materials(fileName);
+			Syllabus afterSyllabus = syllabusService.updateSyllabus(existedSyllabus);
+			apiResponse.ok(afterSyllabus.getDownload_url());
+			return ResponseEntity.ok(apiResponse);
+		}else {
+			apiResponse.error("Syllabus not found");
+			return ResponseEntity.ok(apiResponse);
+		}
+	}
+
+	Path foundFile = null;
+	@GetMapping(value="/downloadMaterials/{id}")
+	public ResponseEntity<?> downloadFiles(@PathVariable int id) {
+			ApiResponse apiResponse = new ApiResponse();
+			Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+			Resource resource = null;
+			String filePath = existedSyllabus.getDownload_url();
+			try{
+				resource = new UrlResource(Paths.get(filePath).toUri());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			String contentType = "application/octet-stream";
+			String headerValue = "attachment;fileName=\"" + resource.getFilename() + "\"";
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + existedSyllabus.getTraining_materials() + "\"");
+			return ResponseEntity.ok()
+			.headers(headers)
+			.contentType(MediaType.APPLICATION_OCTET_STREAM)
+			.body(resource);
+	}
+
+	@GetMapping("/testGetDuration/{id}")
+	public ResponseEntity<ApiResponse> getDuration(@PathVariable int id){
+		ApiResponse apiResponse = new ApiResponse();
+		int duration = syllabusService.getAllContentDuration(id);
+		apiResponse.ok(duration);
+		return ResponseEntity.ok(apiResponse);
 
 	}
+
+	
+	
+
+
 
 
 
