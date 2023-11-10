@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
 import { FaUserLarge, FaLock } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const token = Cookies.get("token");

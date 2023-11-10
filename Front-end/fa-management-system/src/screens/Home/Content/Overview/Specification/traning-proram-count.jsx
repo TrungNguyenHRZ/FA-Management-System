@@ -10,7 +10,7 @@ const CountTrainingProgram = () => {
     apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setCountTrainingProgram(response.data.length);
+        setCountTrainingProgram(response.data.payload.length);
       })
       .catch((error) => {
         console.error(error);

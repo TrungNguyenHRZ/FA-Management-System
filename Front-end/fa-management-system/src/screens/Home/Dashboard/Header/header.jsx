@@ -4,6 +4,7 @@ import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import Cookies from "js-cookie";
+import { RxAvatar } from "react-icons/rx";
 
 const Header = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -28,9 +29,18 @@ const Header = () => {
   return (
     <div className="header-container">
       <div className="header-title">
+        <div className="logo-header">
+          <img
+            src="https://insacmau.com/wp-content/uploads/2023/02/logo-FPT-Polytechnic-.png"
+            alt=""
+          />
+        </div>
         <h1>Fresher Academy Management System</h1>
       </div>
       <div className="header-action">
+        <div className="avatar-user">
+          <RxAvatar />
+        </div>
         <div className="user-action">
           <div
             className={
@@ -43,6 +53,7 @@ const Header = () => {
           >
             {userInfo ? userInfo.userInfo : "null"}
           </div>
+
           <div className="name-user">{userInfo ? userInfo.name : "null"}</div>
         </div>
         <div className="logout-user" onClick={handleLogout}>
