@@ -491,8 +491,10 @@ public class ViewSyllabusController {
 		int duration = syllabusService.getAllContentDuration(id);
 		apiResponse.ok(duration);
 		return ResponseEntity.ok(apiResponse);
-
 	}
+
+
+
 	
 	
 
