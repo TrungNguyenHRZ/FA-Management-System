@@ -152,7 +152,6 @@ public class ViewSyllabusController {
 					syllabus.setProgramDuration(duration);
 				}
 				syllabus.setLearningList(syObjsResult);
-	
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
 			}else {
@@ -493,6 +492,7 @@ public class ViewSyllabusController {
 		apiResponse.ok(duration);
 		return ResponseEntity.ok(apiResponse);
 	}
+
 
 
 	
