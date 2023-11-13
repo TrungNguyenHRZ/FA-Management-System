@@ -22,11 +22,16 @@ import Overview from "./screens/Home/Content/Overview/overview";
 import ErrorPage from "./screens/Error/error-page";
 import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
+
 import UpdateSyllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/updateSyllabus";
 import Cookies from "js-cookie";
 import CreateMultipleSchedules from "./screens/Home/Content/Class/CreateClass/test";
 
+import CreateMultipleSchedules from "./screens/Home/Content/Schedule/create-schedule";
+
+
 const App = () => {
+
   const router = createBrowserRouter([
     {
       path: "/login",
@@ -74,7 +79,7 @@ const App = () => {
           element: <CreateClass />,
         },
         {
-          path: "/create-cadidate",
+          path: "/create-schedules",
           element: <CreateMultipleSchedules />,
         },
         {

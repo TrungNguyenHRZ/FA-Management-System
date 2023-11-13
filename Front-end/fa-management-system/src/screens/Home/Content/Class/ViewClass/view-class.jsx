@@ -8,7 +8,8 @@ import {
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
-import { BiEdit } from "react-icons/bi";
+
+import { RiFileEditFill } from "react-icons/ri";
 import "./view-class.css";
 
 const ViewClass = () => {
@@ -118,7 +119,7 @@ const ViewClass = () => {
                   className="btn-add-user"
                   onClick={openForm}
                 >
-                  <BiEdit />
+                  Edit
                 </button>
               </div>
             </td>

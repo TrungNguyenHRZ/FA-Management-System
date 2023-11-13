@@ -82,3 +82,9 @@
 .td-user-status {
   text-align: center;
 }
+
+.view-user-pagination {
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
+}

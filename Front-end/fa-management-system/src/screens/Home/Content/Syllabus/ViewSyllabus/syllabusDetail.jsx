@@ -467,6 +467,7 @@ const SyllabusDetail = () => {
       </div>
 
       {page === 1 ? renderGeneral() : page === 2 ? renderOutline() : null}
+      <image src={`data:image/png;base64,${syllabus.data1}`} />
     </div>
   );
 };
