@@ -152,10 +152,7 @@ public class ViewSyllabusController {
 					syllabus.setProgramDuration(duration);
 				}
 				syllabus.setLearningList(syObjsResult);
-				if(existedSyllabus.getData() != null){
-					syllabus.setData1(syllabusService.convertStringToBinary(existedSyllabus.getData()));
-
-				}
+	
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
 			}else {
@@ -495,23 +492,8 @@ public class ViewSyllabusController {
 		int duration = syllabusService.getAllContentDuration(id);
 		apiResponse.ok(duration);
 		return ResponseEntity.ok(apiResponse);
-
-
-	@GetMapping("/downloadFile/{id}")
-	public ResponseEntity<String> downloadMaterials(@PathVariable int id){
-			Syllabus syllabus = syllabusService .getSyllabusByTopic_Code(id);
-			if(syllabus != null){
-				String fileData = syllabus.getData();
-				HttpHeaders headers = new HttpHeaders();
-            	headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + syllabus.getTraining_materials());
-            	return ResponseEntity.ok()
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(fileData);
-			}else{
-				return ResponseEntity.notFound().build();
-			}
 	}
+
 
 	
 	
