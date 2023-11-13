@@ -104,7 +104,9 @@ const CreateMultipleSchedules = () => {
 
       <div className="schedule-forms-container">
         {numberOfSchedules === 0 ? (
-          <h3>Please choose the number of schedules want to create.</h3>
+          <h3 style={{ color: "red" }}>
+            Please choose the number of schedules want to create !!!{" "}
+          </h3>
         ) : (
           <div className="schedule-forms-input">{renderScheduleForms()}</div>
         )}
