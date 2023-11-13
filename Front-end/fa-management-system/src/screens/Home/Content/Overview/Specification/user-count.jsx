@@ -3,10 +3,12 @@ import { FaUserGroup } from "react-icons/fa6";
 import "./specification.css";
 import CountUp from "react-countup";
 import apiUserInstance from "../../../../../service/api-user";
+import Authorization from "../../../../Authentication/Auth";
 const CountUser = () => {
   const [countUser, setCountUser] = useState(0);
 
   useEffect(() => {
+    Authorization();
     apiUserInstance
       .get("/all")
       .then((response) => {
