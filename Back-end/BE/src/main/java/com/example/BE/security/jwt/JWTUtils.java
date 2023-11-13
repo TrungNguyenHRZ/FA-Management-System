@@ -48,7 +48,7 @@ public class JWTUtils {
             .withClaim("DoB", simpleDateFormat.format(user.getDob()))
             .withClaim("gender", user.getGender())
             .withClaim("status",user.getStatus())
-            .withClaim("permission", Objects.equals(user.getPermission().getRole(), Role.SUPER_ADMIN.getRole()) ? "Supper admin" : user.getPermission().getRole())
+            .withClaim("permission", Objects.equals(user.getPermission().getRole(), Role.SUPER_ADMIN.getRole()) ? "Super admin" : user.getPermission().getRole())
             .sign(algorithm);
     }
 
