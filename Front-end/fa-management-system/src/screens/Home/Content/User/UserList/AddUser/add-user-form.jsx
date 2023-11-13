@@ -124,7 +124,7 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                 <div className="user-email">
                   <label htmlFor="email">Password</label>
                   <div className="input-form input-email">
-                    <Field name="password" />
+                    <Field name="password" type="password" />
                     {errors.password && touched.password ? (
                       <div style={{ color: "red" }}>{errors.password}</div>
                     ) : null}
