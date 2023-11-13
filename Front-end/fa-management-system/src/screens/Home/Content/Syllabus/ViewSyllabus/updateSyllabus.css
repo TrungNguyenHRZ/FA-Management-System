@@ -1,0 +1,39 @@
+.step-bar {
+	text-align: center;
+	display: flex;
+	border-bottom: 1px solid lightgray;
+	margin-bottom: 0.2%;
+  }
+  
+  .step-bar-item {
+	width: 200px;
+	margin-right: 0.1%;
+	padding: 0.5%;
+	background-color: rgb(192, 192, 192);
+	color: black;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+	cursor: pointer;
+  }
+  
+  .step-bar-item:hover {
+	color: white;
+	transition: 0.2s ease;
+  }
+  .update-general{
+	display: flex;
+	flex-direction: column;
+  }
+
+  .custom-file-input-label {
+	display: inline-block;
+	padding: 6px 12px;
+	cursor: pointer;
+	background-color: #4285f4;
+	color: #fff;
+	border-radius: 4px;
+  }
+  
+  .custom-file-input {
+	display: none;
+  }

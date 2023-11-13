@@ -45,6 +45,8 @@ const CreateClass = () => {
     }
   }, []);
 
+  console.log(userInfo.id);
+
   return (
     <Formik
       initialValues={{

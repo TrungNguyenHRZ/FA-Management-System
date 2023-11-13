@@ -11,7 +11,7 @@ import {
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
-import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllbus";
+import CreateSyllabus from "./screens/Home/Content/Syllabus/CreateSyllbus/create-syllabus";
 import UserList from "./screens/Home/Content/User/UserList/user-list";
 import UserPermission from "./screens/Home/Content/User/UserPermission/user-permission";
 import ViewClass from "./screens/Home/Content/Class/ViewClass/view-class";
@@ -22,7 +22,13 @@ import Overview from "./screens/Home/Content/Overview/overview";
 import ErrorPage from "./screens/Error/error-page";
 import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
+
+import UpdateSyllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/updateSyllabus";
+import Cookies from "js-cookie";
+import CreateMultipleSchedules from "./screens/Home/Content/Class/CreateClass/test";
+
 import CreateMultipleSchedules from "./screens/Home/Content/Schedule/create-schedule";
+
 
 const App = () => {
 
@@ -84,6 +90,10 @@ const App = () => {
           path: "/user-permission",
           element: <UserPermission />,
         },
+        {
+          path: "/update-syllabus/:id",
+          element: <UpdateSyllabus />,
+        }
       ],
     },
   ]);
