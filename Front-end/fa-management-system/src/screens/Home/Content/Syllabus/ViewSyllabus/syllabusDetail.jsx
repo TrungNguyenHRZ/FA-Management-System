@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import { SyncLoader } from "react-spinners";
 import "./syllabusDetail.css";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
   AiOutlineStar,
@@ -119,6 +119,7 @@ const SyllabusDetail = () => {
                 <div>
                   <AiOutlineSetting />
                 </div>
+                <div><Link to={`/update-syllabus/${syllabus.topic_code}`}>Update</Link></div>
                 <div>Technical Requirement(s)</div>
               </div>
             </div>

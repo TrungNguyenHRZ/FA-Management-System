@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Syllabus {
     Set<TrainingProgramSyllabus> training_program = new HashSet<>();
 
     @OneToMany(mappedBy="syllabus_object_code")
-    Set<SyllabusObject> syllabus_object = new HashSet<>();
+    List<SyllabusObject> syllabus_object = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "userid")
