@@ -2,13 +2,16 @@ package com.example.BE.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.BE.enums.Role;
 import com.example.BE.model.entity.User;
+import com.example.BE.model.entity.UserPermission;
 import com.example.BE.security.UserDetailsImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 ;
@@ -45,6 +48,7 @@ public class JWTUtils {
             .withClaim("DoB", simpleDateFormat.format(user.getDob()))
             .withClaim("gender", user.getGender())
             .withClaim("status",user.getStatus())
+            .withClaim("permission", Objects.equals(user.getPermission().getRole(), Role.SUPER_ADMIN.getRole()) ? "Supper admin" : user.getPermission().getRole())
             .sign(algorithm);
     }
 
