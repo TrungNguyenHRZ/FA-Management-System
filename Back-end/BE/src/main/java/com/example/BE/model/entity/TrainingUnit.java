@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,6 +28,7 @@ public class TrainingUnit {
 	@JoinColumn(name="topic_code")
 	private Syllabus unit_topic_code;
 
+    @JsonIgnore
 	@OneToMany(mappedBy="unitCode")
 	private List<TrainingContent> training_content;
 }

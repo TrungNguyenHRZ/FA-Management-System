@@ -3,8 +3,10 @@ package com.example.BE.repository;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,13 @@ public interface TrainingProgramSyllabusRepo extends JpaRepository<TrainingProgr
     @Query("SELECT tps FROM TrainingProgramSyllabus tps WHERE tps.id.training_program_code = :training_code AND tps.id.topic_code = :topicCode")
     public TrainingProgramSyllabus findByProgramAndProgram_topic(@Param("training_code") int training_code,@Param("topicCode") int topicCode);
 
+
     @Query(value= "select * from training_program_syllabus where topic_code = :num",
     nativeQuery = true)
      public List<TrainingProgramSyllabus> getTrainingPrograms(int num);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM training_program_syllabus WHERE training_program_code = :training_code AND topic_code = :topicCode", nativeQuery = true)
+    void deleteByProgramAndProgram_topic(@Param("training_code") int training_code, @Param("topicCode") int topicCode);
 }

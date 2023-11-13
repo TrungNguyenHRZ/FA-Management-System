@@ -72,9 +72,9 @@ public interface SyllabusService {
 
 	public int getAllContentDuration(int code);
 
-
 	public void saveObjective(LearningObject object, int topic_code);
 
 	LearningObject convertObject(LearningObjectiveResponse lObjectiveResponse);
 
+	public int getAllDuration(int code);
 }

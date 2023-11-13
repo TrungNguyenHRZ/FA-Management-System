@@ -1,5 +1,6 @@
 package com.example.BE.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -49,6 +50,7 @@ public class TrainingContent {
 
     @ManyToOne
     @JoinColumn(name = "unit_code")
+    @JsonIgnore
     private TrainingUnit unitCode;
 
 	@OneToMany(mappedBy = "content_id")
