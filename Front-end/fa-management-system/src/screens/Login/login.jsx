@@ -36,19 +36,12 @@ const Login = () => {
         apiUserInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data.accessToken}`;
-
-      } else {
-        setError("Invalid email or password. Try again !!!");
         navigate("/overview");
       }
     } catch (error) {
       setError("Invalid email or password. Try again !!!");
     } finally {
       setIsLoading(false);
-      if(Cookies.get("token")){
-        // navigate("/overview");
-        // console.log("abc");
-      }
     }
   };
 
