@@ -60,3 +60,8 @@
 .td-status-completed {
   background-color: black;
 }
+
+.edit-user {
+  display: flex;
+  justify-content: right;
+}
