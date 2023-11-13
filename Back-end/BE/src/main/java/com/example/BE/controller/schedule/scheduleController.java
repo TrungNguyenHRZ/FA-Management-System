@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 @RestController
@@ -28,8 +29,10 @@ import java.util.List;
 public class scheduleController {
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    ClassService classService;
         @GetMapping(value = {"/all"})
-        public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getAllClass() {
+        public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getAllSchedule() {
             ApiResponse apiResponse = new ApiResponse();
             List<Schedule> ScheList = scheduleService.findAllSchedule();
             List<ScheduleResponse> result = new ArrayList<>();
@@ -39,18 +42,6 @@ public class scheduleController {
             apiResponse.ok(result);
             return ResponseEntity.ok(apiResponse);
         }
-//    @PostMapping(value = {"/create"})
-//    public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(@RequestBody ScheduleResponse scheduleResponse) {
-//        ApiResponse apiResponse = new ApiResponse();
-//        Schedule savedSchedule = scheduleService.Create(scheduleResponse);
-//        if (savedSchedule != null) {
-//            apiResponse.ok(new ScheduleResponse(savedSchedule));
-//            return ResponseEntity.ok(apiResponse);
-//        } else {
-//            apiResponse.error("Failed to create the schedule");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
-//        }
-//    }
         @PostMapping(value = {"/create"})
         public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(@RequestBody ScheduleResponse schedule) {
             ApiResponse apiResponse = new ApiResponse();
@@ -59,22 +50,105 @@ public class scheduleController {
             apiResponse.ok(response);
             return ResponseEntity.ok(apiResponse);
         }
-    @PostMapping("/test")
-    public ResponseEntity<ApiResponse<ScheduleResponse[]>> createSchedules(@RequestBody ScheduleResponse[] schedules) {
-        ApiResponse<ScheduleResponse[]> apiResponse = new ApiResponse<>();
-        List<Schedule> savedSchedules = new ArrayList<>();
+    @GetMapping(value = {"/getScheduleByClassId"})
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getScheduleByClassId(@RequestParam int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        List<Schedule> ScheList = scheduleService.findScheduleByClassId(id);
+        List<ScheduleResponse> result = new ArrayList<>();
+        for (Schedule s :ScheList) {
+            result.add(new ScheduleResponse(s));
+        }
+        apiResponse.ok(result);
+        return ResponseEntity.ok(apiResponse);
+    }
+    @PostMapping(value = {"/autoGenarateSchedule"})
+    public ResponseEntity<ApiResponse<ScheduleResponse>> test1(@RequestBody ScheduleResponse schedule,@RequestParam int classid) {
+        ApiResponse apiResponse = new ApiResponse();
+        Class c = classService.findById(classid);
+        List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+        if(ScheList.size() < c.getDuration()){
+            Date currentDate = schedule.getDay();
+            // Using Calendar to extract the day
 
-        for (ScheduleResponse schedule : schedules) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+            int updatedDay = currentDay + 7;
+            // Updating the day in the Calendar
+            calendar.set(Calendar.DAY_OF_MONTH, updatedDay);
+            // Setting the updated Date back to the schedule object
+            schedule.setDay(calendar.getTime());
+            schedule.setClass_id(classid);
             Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
-            savedSchedules.add(savedSchedule);
+            ScheduleResponse response = new ScheduleResponse(savedSchedule);
+            apiResponse.ok(response);
+        }else{
+            apiResponse.error("Max duration reached!!!");
+            return ResponseEntity.badRequest().body(apiResponse);
         }
-
-        ScheduleResponse[] responses = new ScheduleResponse[savedSchedules.size()];
-        for (int i = 0; i < savedSchedules.size(); i++) {
-            responses[i] = new ScheduleResponse(savedSchedules.get(i));
+        return ResponseEntity.ok(apiResponse);
+    }
+    @PostMapping(value = {"/TestautoGenarateSchedule"})
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> test1(@RequestBody ScheduleResponse schedule,@RequestParam int classid,@RequestParam int slotPerWeek) {
+        ApiResponse apiResponse = new ApiResponse();
+        Class c = classService.findById(classid);
+        int duration = c.getDuration();
+        List<ScheduleResponse> scheduleResponseList = new ArrayList<>();
+        if(duration%slotPerWeek==0){
+            int n = duration/slotPerWeek;
+            //
+            List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+            for(int i = 0; i < n; i++)
+            {
+                Date currentDate = schedule.getDay();
+                // Using Calendar to extract the day
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(currentDate);
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                int updatedDay = currentDay + 7*(i);
+                // Updating the day in the Calendar
+                calendar.set(Calendar.DAY_OF_MONTH, updatedDay);
+                // Setting the updated Date back to the schedule object
+                schedule.setDay(calendar.getTime());
+                schedule.setClass_id(classid);
+                Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
+                ScheduleResponse response = new ScheduleResponse(savedSchedule);
+                scheduleResponseList.add(response);
+            }
+            apiResponse.ok(scheduleResponseList);
         }
-
-        apiResponse.ok(responses);
+        else{
+            duration = duration+duration%slotPerWeek;
+            int n = duration/slotPerWeek;
+            List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+            for(int i = 0; i < n; i++)
+            {
+                Date currentDate = schedule.getDay();
+                // Using Calendar to extract the day
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(currentDate);
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                int updatedDay = currentDay + 7*(i);
+                // Updating the day in the Calendar
+                calendar.set(Calendar.DAY_OF_MONTH, updatedDay);
+                // Setting the updated Date back to the schedule object
+                schedule.setDay(calendar.getTime());
+                schedule.setClass_id(classid);
+                Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
+                ScheduleResponse response = new ScheduleResponse(savedSchedule);
+                scheduleResponseList.add(response);
+                List<ScheduleResponse> result = scheduleService.sortScheduleByDate(scheduleResponseList);
+                for(int j = 0; j<duration; j++){
+                    if (result.get(duration-1) != null) {
+                        if (result.get(j).getDay().after(result.get(duration - 1).getDay())) {
+                            scheduleService.deleteScheduleById(result.get(j).getSchedule_id());
+                            scheduleResponseList.remove(j);
+                        }
+                    }
+                }
+            }
+            apiResponse.ok(scheduleResponseList);
+        }
         return ResponseEntity.ok(apiResponse);
     }
 }
