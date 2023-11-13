@@ -34,6 +34,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +147,10 @@ public class ViewSyllabusController {
 					syllabus.setProgramDuration(duration);
 				}
 				syllabus.setLearningList(syObjsResult);
+				if(existedSyllabus.getData() != null){
+					syllabus.setData1(syllabusService.convertStringToBinary(existedSyllabus.getData()));
+
+				}
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
 			}else {
@@ -478,6 +484,21 @@ public class ViewSyllabusController {
 		apiResponse.ok(duration);
 		return ResponseEntity.ok(apiResponse);
 
+
+	@GetMapping("/downloadFile/{id}")
+	public ResponseEntity<String> downloadMaterials(@PathVariable int id){
+			Syllabus syllabus = syllabusService .getSyllabusByTopic_Code(id);
+			if(syllabus != null){
+				String fileData = syllabus.getData();
+				HttpHeaders headers = new HttpHeaders();
+            	headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + syllabus.getTraining_materials());
+            	return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(fileData);
+			}else{
+				return ResponseEntity.notFound().build();
+			}
 	}
 
 	

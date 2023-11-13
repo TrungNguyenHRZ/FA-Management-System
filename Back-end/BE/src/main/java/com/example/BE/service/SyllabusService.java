@@ -68,4 +68,5 @@ public interface SyllabusService {
 	public Resource downloadFile(String fileCode) throws IOException;
 
 	public int getAllContentDuration(int code);
+
 }
