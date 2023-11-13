@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
-
 import { Link } from "react-router-dom";
 
 const Syllabus = () => {

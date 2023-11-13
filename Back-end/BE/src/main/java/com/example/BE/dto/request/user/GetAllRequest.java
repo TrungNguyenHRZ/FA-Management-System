@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 public class GetAllRequest {
     private String keyword = "";
     private int page = 0;
-    private int size = 10;
+    private int size = 100;
     private String order = "create_date";
     private String dir = "asc";
 

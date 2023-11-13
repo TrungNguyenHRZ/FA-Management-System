@@ -7,20 +7,34 @@ import { IoPerson } from "react-icons/io5";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import ReactPaginate from "react-paginate";
+import Authorization from "../../../../Authentication/Auth";
 
 const UserList = () => {
   const [list, setList] = useState([]);
   const [showFormAddUser, setShowFormAddUser] = useState(false);
+  const [TotalPage, setTotalPage] = useState(0);
+  const [thisPage, setThisPage] = useState(0);
+  const itemPerPage = 9;
+
+  useEffect(() => {
+    Authorization();
+  });
 
   useEffect(() => {
     apiUserInstance
       .get("/all")
       .then((response) => {
         setList(response.data.userResponseList);
+        setTotalPage(
+          Math.ceil(response.data.userResponseList.length / itemPerPage)
+        );
       })
       .catch((error) => {
         console.error(error);
       });
+    console.log(list);
   }, []);
 
   const openForm = () => {
@@ -31,12 +45,32 @@ const UserList = () => {
     setShowFormAddUser(false);
   };
 
-  const handleCheckBoxChange = (userId, status) => {
+  const updateForm = () => {
+    setShowFormAddUser(false);
     apiUserInstance
-      .put(`/update/${userId}`, { status: !status })
+      .get("/all")
+      .then((response) => {
+        setList(response.data.userResponseList);
+        console.log(response.data.userResponseList);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    toast.success("Add User successfully !!!");
+  };
+
+  const handlePageClick = (data) => {
+    setThisPage(data.selected);
+    console.log(data.selected);
+  };
+
+  const handleCheckBoxChange = (userId, status) => {
+    const newStatus = status === "ACTIVE" ? "" : "ACTIVE";
+    apiUserInstance
+      .put(`/update/${userId}`, { status: newStatus })
       .then((response) => {
         const updatedList = list.map((user) =>
-          user.id === userId ? { ...user, status: !status } : user
+          user.id === userId ? { ...user, status: newStatus } : user
         );
         setList(updatedList);
       })
@@ -57,7 +91,11 @@ const UserList = () => {
         {showFormAddUser && (
           <div className="user-form-popup-container">
             <div className="user-form">
-              <AddUserForm openForm={openForm} closeForm={closeForm} />
+              <AddUserForm
+                openForm={openForm}
+                closeForm={closeForm}
+                updateForm={updateForm}
+              />
             </div>
           </div>
         )}
@@ -75,45 +113,61 @@ const UserList = () => {
           </thead>
           <tbody>
             {list.length !== 0 ? (
-              list.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.dob}</td>
-                  <td
-                    className={
-                      item.gender == "Male"
-                        ? "td-gender-male"
-                        : "td-gender-female"
-                    }
-                  >
-                    <IoPerson />
-                  </td>
-                  <td className="td-user-list-status">
-                    <div
+              list
+                .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
+                .map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.email}</td>
+                    <td>{item.dob}</td>
+                    <td
                       className={
-                        item.userType === "Admin"
-                          ? "td-status-admin"
-                          : item.userType === "Trainer"
-                          ? "td-status-trainer"
-                          : "td-status-superAdmin"
+                        item.gender == "Male"
+                          ? "td-gender-male"
+                          : "td-gender-female"
                       }
                     >
-                      {item.userType}
+                      <IoPerson />
+                    </td>
+                    <td className="td-user-list-status">
+                      <div
+                        className={
+                          item.userType === "Admin"
+                            ? "td-status-admin"
+                            : item.userType === "Trainer"
+                            ? "td-status-trainer"
+                            : "td-status-superAdmin"
+                        }
+                      >
+                        {item.userType}
+                      </div>
+                    </td>
+                    <td className="cb-user-list-status">
+                      <input
+                        type="checkbox"
+                        checked={item.status}
+                        onChange={() =>
+                          handleCheckBoxChange(item.id, item.status)
+                        }
+                      />
+                    </td>
+                    <div>
+                      <ToastContainer
+                        position="top-center"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="light"
+                      />
                     </div>
-                  </td>
-                  <td className="cb-user-list-status">
-                    <input
-                      type="checkbox"
-                      checked={item.status}
-                      onChange={() =>
-                        handleCheckBoxChange(item.id, item.status)
-                      }
-                    />
-                  </td>
-                </tr>
-              ))
+                  </tr>
+                ))
             ) : (
               <tr>
                 <td style={{ textAlign: "center" }} colSpan={7}>
@@ -123,6 +177,27 @@ const UserList = () => {
             )}
           </tbody>
         </table>
+        <div className="view-user-pagination">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            //marginPagesDisplayed={3}
+            pageCount={TotalPage}
+            previousLabel="<"
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+          />
+        </div>
       </div>
     </div>
   );

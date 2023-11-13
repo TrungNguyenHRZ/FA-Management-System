@@ -5,9 +5,12 @@ import com.example.BE.model.entity.Syllabus;
 import com.example.BE.model.entity.TrainingContent;
 import com.example.BE.model.entity.TrainingUnit;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
@@ -60,6 +63,10 @@ public interface SyllabusService {
 
 	List<TrainingUnit> updateUnitResponse(List<TrainingUnitResponse> unitResponse);
 
-	public byte[] convertStringToBinary(String inputString);
+	public String uploadFile(String fileName, MultipartFile file);
+
+	public Resource downloadFile(String fileCode) throws IOException;
+
+	public int getAllContentDuration(int code);
 
 }

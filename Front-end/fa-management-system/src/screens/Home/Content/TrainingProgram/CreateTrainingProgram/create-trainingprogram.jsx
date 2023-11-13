@@ -5,6 +5,8 @@ import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trai
 import { ToastContainer, toast } from "react-toastify";
 
 import * as Yup from "yup";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 
 const SignupSchema = Yup.object().shape({
   className: Yup.string()
@@ -20,20 +22,26 @@ const SignupSchema = Yup.object().shape({
 
 const CreateTrainingProgram = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
+  const [userInfo, setUserInfo] = useState();
   useEffect(() => {
     apiTrainingProgramInstance
       .get("/all")
       .then((response) => {
-        setListTrainingProgram(response.data);
+        setListTrainingProgram(response.data.payload);
       })
       .catch((error) => {
         console.error(error);
       });
+
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+    }
   }, []);
 
   return (
     <div className="view-training-program-container">
-      <h1>Create Training program</h1>
       <Formik
         initialValues={{
           className: "",
@@ -65,21 +73,21 @@ const CreateTrainingProgram = () => {
             <div className="create-class-container">
               <div className={"toast-container"}></div>
               <div className="title-class">
-                <h1>Add new class</h1>
+                <h1>Add new training program</h1>
               </div>
               <Form>
                 <div className="table-class-container">
                   <div className="table-class-left">
                     {" "}
                     <div className="input-class input-name">
-                      <label>Class name</label>
+                      <label>Training name</label>
                       <Field name="className" />
                       {errors.className && touched.className ? (
                         <div style={{ color: "red" }}>{errors.className}</div>
                       ) : null}
                     </div>
                     <div className="input-class input-code">
-                      <label>Class code</label>
+                      <label>Training code</label>
                       <Field type="date" name="duration" />
                     </div>
                     <div className="input-class input-duration">
@@ -100,10 +108,6 @@ const CreateTrainingProgram = () => {
                         <div style={{ color: "red" }}>{errors.location}</div>
                       ) : null}
                     </div>
-                    <div className="input-class input-fsu">
-                      <label>FSU</label>
-                      <input type="text" />
-                    </div>
                   </div>
                   <div className="table-class-right">
                     <div className="input-class-date input-start-end">
@@ -118,21 +122,10 @@ const CreateTrainingProgram = () => {
                     </div>
                     <div className="input-class input-create-by">
                       <label>Create by</label>
-                      <input type="text" />
+                      <input type="text" value={userInfo?.name} readOnly />
                     </div>
-                    <div className="input-class-date input-create">
-                      <div className=" input-create-date">
-                        <label>Created date</label>
-                        <input type="date" />
-                      </div>
-                      <div className="input-modify-date">
-                        <label>Modified date</label>
-                        <input type="date" />
-                      </div>
-                    </div>
-
-                    <div className="input-class input-modify-by">
-                      <label>Modified by</label>
+                    <div className="input-class input-fsu">
+                      <label>FSU</label>
                       <input type="text" />
                     </div>
                     <div className="input-class input-training-program">
@@ -151,7 +144,6 @@ const CreateTrainingProgram = () => {
                       </select>
                     </div>
                     <button type="submit" className="btn-class-create">
-                      {/* <button type="submit" className="btn-class-create"> */}
                       Add new
                     </button>
                   </div>

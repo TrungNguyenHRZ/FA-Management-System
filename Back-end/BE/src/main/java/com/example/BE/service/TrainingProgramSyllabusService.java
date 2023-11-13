@@ -11,4 +11,5 @@ public interface TrainingProgramSyllabusService {
     TrainingProgramSyllabus updateTPS(TrainingProgramSyllabus tps);
     TrainingProgramSyllabus saveTPS(TrainingProgramSyllabus TPS);
     TrainingProgramSyllabus convert(TrainingProgramSyllabusResponse tpsRes);
+    int getSyllabusDuration(int code);
 }
