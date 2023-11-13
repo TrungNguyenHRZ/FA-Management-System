@@ -79,5 +79,6 @@ public class Syllabus {
     private User user_syllabus;
 
 	@OneToMany(mappedBy="unit_topic_code")
+    @JsonIgnore
 	List<TrainingUnit> syllabus_unit;
 }

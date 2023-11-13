@@ -81,7 +81,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         trainingProgram.setTraining_topic_code(t.getTraining_topic_code());
         trainingProgram.setStatus(t.getStatus());
         trainingProgram.setStart_time(t.getStart_time());
-        trainingProgram.setDuration(t.getDuration());
+        trainingProgram.setDuration(0);
         trainingProgram.setCreate_by(t.getCreate_by());
         trainingProgram.setCreatedDate(t.getCreatedDate());
         trainingProgram.setModified_date(t.getModified_date());
