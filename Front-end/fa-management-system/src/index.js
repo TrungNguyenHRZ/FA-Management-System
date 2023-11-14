@@ -28,10 +28,9 @@ import Cookies from "js-cookie";
 // import CreateMultipleSchedules from "./screens/Home/Content/Class/CreateClass/t";
 
 import CreateMultipleSchedules from "./screens/Home/Content/Schedule/create-schedule";
-
+import Info from "./screens/Home/Information/info";
 
 const App = () => {
-
   const router = createBrowserRouter([
     {
       path: "/login",
@@ -42,6 +41,10 @@ const App = () => {
       element: <Sidebar />,
       errorElement: <ErrorPage />,
       children: [
+        {
+          path: "/view-info",
+          element: <Info />,
+        },
         {
           path: "/overview",
           element: <Overview />,
@@ -93,7 +96,7 @@ const App = () => {
         {
           path: "/update-syllabus/:id",
           element: <UpdateSyllabus />,
-        }
+        },
       ],
     },
   ]);
