@@ -3,7 +3,7 @@ package com.example.BE.enums;
 public enum Status {
 
     ACTIVE("ACTIVE"),
-    IN_ACTIVE("")
+    IN_ACTIVE("INACTIVE")
 
     ;
 
