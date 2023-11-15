@@ -59,14 +59,14 @@
   padding: 2px 5px;
   border-radius: 5px;
 }
-.role-user-admin {
-  background-color: rgb(22, 186, 22);
-}
 .role-user-trainer {
-  background-color: rgb(35, 35, 241);
+  background-color: #50b846;
+}
+.role-user-admin {
+  background-color: #024fa0;
 }
 .role-user-super-admin {
-  background-color: rgb(235, 160, 20);
+  background-color: #f2721e;
 }
 .name-user {
   font-size: 25px;

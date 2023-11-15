@@ -113,11 +113,14 @@ public class TrainingProgramController {
         tps.setSequence(tpsRes.getSequence());
 
         TrainingProgram trainingProgram = trainingProgramService.findById(tpsRes.getTrainingProgram());
-        tps.setProgram(trainingProgram);
-
+        int totalDuration = trainingProgram.getDuration();
         Syllabus syllabus = syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus());
-        tps.setProgram_topic(syllabus);
 
+        totalDuration += syllabusService.getAllDuration(tpsRes.getSyllabus());
+        trainingProgram.setDuration(totalDuration);
+
+        tps.setProgram(trainingProgram);
+        tps.setProgram_topic(syllabus);
         TrainingProgramSyllabus createdTps = trainingProgramSyllabusService.saveTPS(tps);
         apiResponse.ok(createdTps);
         return ResponseEntity.ok(apiResponse);
@@ -209,8 +212,11 @@ public class TrainingProgramController {
                                                                      @RequestBody TrainingProgramSyllabusResponse tpsRes) {
         ApiResponse apiResponse = new ApiResponse();
         TrainingProgramSyllabus tps = psRepo.findByProgramAndProgram_topic(tpid, sid);
-        if (tps != null){
-            if (tpsRes.getSyllabus() != 0){
+        if (tps == null){
+            apiResponse.error("Training Program Syllabus not found!");
+            return ResponseEntity.notFound().build();
+        } else {
+            /*if (tpsRes.getSyllabus() != 0){
                 tps.setProgram_topic(syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus()));
             }
             if (tpsRes.getSequence() != null){
@@ -219,10 +225,46 @@ public class TrainingProgramController {
             TrainingProgramSyllabus tps2 = trainingProgramSyllabusService.saveTPS(tps);
 //            TrainingProgramSyllabus tps2 = psRepo.save(tps);
             TrainingProgramSyllabusResponse result = new TrainingProgramSyllabusResponse(tps2);
-            apiResponse.ok(result);
+            apiResponse.ok(result);*/
+
+            TrainingProgram tp = trainingProgramService.findById(tpsRes.getTrainingProgram());
+
+            if (tp == null) {
+                apiResponse.error("Training Program not found!");
+                return ResponseEntity.notFound().build();
+            }
+
+            int oldDuration = tp.getDuration();
+            int newDuration = oldDuration;
+
+            if (tps.getProgram_topic() != null) {
+                int removedDuration = syllabusService.getAllContentDuration(tps.getProgram_topic().getTopic_code());
+                System.out.println("Removed duration before: " + removedDuration);
+                newDuration -= removedDuration;
+                System.out.println("Removed duration after: " + removedDuration);
+            }
+
+            if (tpsRes.getSyllabus() != 0) {
+                int addedDuration = syllabusService.getAllDuration(tpsRes.getSyllabus());
+                newDuration += addedDuration;
+                System.out.println("Added duration: " + addedDuration);
+            }
+
+            tp.setDuration(newDuration);
+
+            TrainingProgramSyllabus updatedTPS = new TrainingProgramSyllabus(tpsRes.getTrainingProgram(), tpsRes.getSyllabus(), tpsRes.getSequence());
+            updatedTPS.setProgram(tp);
+
+            if (tpsRes.getSyllabus() != 0){
+                Syllabus s = syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus());
+                updatedTPS.setProgram_topic(s);
+            }
+
+            psRepo.deleteByProgramAndProgram_topic(tpid, sid);
+
+            TrainingProgramSyllabus tmp = trainingProgramSyllabusService.saveTPS(updatedTPS);
+            apiResponse.ok(tmp);
             return ResponseEntity.ok(apiResponse);
-        } else {
-            return ResponseEntity.notFound().build();
         }
     }
 

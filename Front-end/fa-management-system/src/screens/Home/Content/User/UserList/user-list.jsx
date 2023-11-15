@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import Authorization from "../../../../Authentication/Auth";
 
+
 const UserList = () => {
   const [list, setList] = useState([]);
   const [showFormAddUser, setShowFormAddUser] = useState(false);
@@ -19,7 +20,9 @@ const UserList = () => {
   const itemPerPage = 9;
 
   useEffect(() => {
+
     Authorization();
+
   });
 
   useEffect(() => {
@@ -51,6 +54,9 @@ const UserList = () => {
       .get("/all")
       .then((response) => {
         setList(response.data.userResponseList);
+        setTotalPage(
+          Math.ceil(response.data.userResponseList.length / itemPerPage)
+        );
         console.log(response.data.userResponseList);
       })
       .catch((error) => {
@@ -64,15 +70,40 @@ const UserList = () => {
     console.log(data.selected);
   };
 
-  const handleCheckBoxChange = (userId, status) => {
-    const newStatus = status === "ACTIVE" ? "" : "ACTIVE";
+  const handleCheckBoxChange = async (item) => {
+    let flag = "ACTIVE";
+    // if (item.status == "ACTIVE") {
+    //   flag = "";
+    // } else {
+    //   flag = "ACTIVE";
+    // }
+
+    console.log(item);
+
+    await apiUserInstance
+      .put(`/update/${item.id}`, {
+        name: item.name,
+        phone: item.phone,
+        dob: item.dob,
+        genderTrueMale: 1,
+        status: flag,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     apiUserInstance
-      .put(`/update/${userId}`, { status: newStatus })
+      .get("/all")
       .then((response) => {
-        const updatedList = list.map((user) =>
-          user.id === userId ? { ...user, status: newStatus } : user
+        setList(response.data.userResponseList);
+        setTotalPage(
+          Math.ceil(response.data.userResponseList.length / itemPerPage)
+
         );
-        setList(updatedList);
+        console.log(response.data.userResponseList);
       })
       .catch((error) => {
         console.error(error);
@@ -147,9 +178,7 @@ const UserList = () => {
                       <input
                         type="checkbox"
                         checked={item.status}
-                        onChange={() =>
-                          handleCheckBoxChange(item.id, item.status)
-                        }
+                        onChange={() => handleCheckBoxChange(item)}
                       />
                     </td>
                     <div>

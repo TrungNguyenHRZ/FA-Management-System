@@ -1,0 +1,92 @@
+.info-container {
+  padding: 10px;
+  font-size: 20px;
+}
+.info-content {
+  display: flex;
+}
+
+.info-form-container {
+  display: flex;
+  align-items: center;
+  flex: 5;
+  gap: 20px;
+  flex-direction: column;
+  padding: 20px;
+}
+.info-form-show {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-form-show > input {
+  width: 500px;
+}
+.info-form-other {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border-left: 1px solid rgb(184, 184, 184);
+  padding: 20px;
+}
+
+.info-form-other > .info-avatar > svg {
+  font-size: 150px;
+  color: #2a00b7;
+}
+
+.info-role,
+.info-status {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+.role-super-admin {
+  background-color: #f2721e;
+}
+
+.role-admin {
+  background-color: #024fa0;
+}
+
+.role-trainer {
+  background-color: #50b846;
+}
+
+.status-active {
+  background-color: #50b846;
+}
+.status-inactive {
+  background-color: #ff0000;
+}
+
+.info-form-edit,
+.info-form-save {
+  padding: 10px;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+}
+
+.info-form-edit {
+  background-color: #f2721e;
+}
+
+.info-form-save {
+  background-color: #024fa0;
+}
+.info-form-cancel {
+  padding: 10px;
+  border: none;
+  color: black;
+  background: none;
+}
+.info-form-edit:hover,
+.info-form-save:hover {
+  opacity: 0.8;
+}
+.info-form-cancel:hover {
+  text-decoration: underline;
+}
