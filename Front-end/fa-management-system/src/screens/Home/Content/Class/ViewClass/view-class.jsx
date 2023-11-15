@@ -11,6 +11,7 @@ import {
 
 import { RiFileEditFill } from "react-icons/ri";
 import "./view-class.css";
+//import { Await } from "react-router";
 
 const ViewClass = () => {
   const [id, setId] = useState("");
@@ -35,8 +36,13 @@ const ViewClass = () => {
       });
   }, []);
 
-  const openForm = (e) => {
+  const openForm = async (e) => {
     setItem(e.target.value);
+    setShowFormAddUser(true);
+    console.log(e.target.value);
+  };
+
+  const openForm1 = (e) => {
     setShowFormAddUser(true);
   };
 
@@ -68,7 +74,7 @@ const ViewClass = () => {
       .get(`/searchClassByKeyword?key=${id}`)
       .then((response) => {
         setList(response.data.payload);
-        console.log(list);
+        console.log(response.data.payload);
         setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
       })
       .catch((error) => {
@@ -141,7 +147,7 @@ const ViewClass = () => {
         <div className="user-form-popup-container">
           <div className="user-form">
             <UpdateClass
-              openForm={openForm}
+              openForm={openForm1}
               closeForm={closeForm}
               classId={Item}
               updateForm={updateForm}

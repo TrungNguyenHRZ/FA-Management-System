@@ -10,8 +10,17 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
 
-  let tmp1 = 0;
-  tmp1 = classId;
+  useEffect(() => {
+    apiClassInstance
+      .get("/" + classId)
+      .then((response) => {
+        setThisClass(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   useEffect(() => {
     apiTrainingProgramInstance
@@ -28,17 +37,6 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
     }
-  }, []);
-
-  useEffect(() => {
-    apiClassInstance
-      .get(`/${tmp1}`)
-      .then((response) => {
-        setThisClass(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   }, []);
 
   const handleCloseForm = (e) => {
@@ -119,7 +117,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
 
   const update = async (e) => {
     await apiClassInstance
-      .put(`/UpdateClass/${tmp1}`, {
+      .put(`/UpdateClass/${classId}`, {
         className: className,
         classCode: classCode,
         duration: classDuration,
@@ -190,20 +188,38 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
               </div>
             </div>
             <div className="user-phone">
-              <label htmlFor="phone">Status: {thisClass.status}</label>
+              <label htmlFor="phone">Status</label>
 
               <div className="input-form input-phone">
                 <select
                   defaultValue={thisClass.status}
                   className="user-type-select"
                   onChange={changeStatus}
-                  required
                 >
-                  <option value="">...</option>
-                  <option value="Opening">Opening</option>
-                  <option value="Planning">Planning</option>
-                  <option value="Scheduled">Scheduled</option>
-                  <option value="Completed">Completed</option>
+                  <option
+                    value="Opening"
+                    selected={thisClass.status == "Opening"}
+                  >
+                    Opening
+                  </option>
+                  <option
+                    value="Planning"
+                    selected={thisClass.status == "Planning"}
+                  >
+                    Planning
+                  </option>
+                  <option
+                    value="Scheduled"
+                    selected={thisClass.status == "Scheduled"}
+                  >
+                    Scheduled
+                  </option>
+                  <option
+                    value="Completed"
+                    selected={thisClass.status == "Completed"}
+                  >
+                    Completed
+                  </option>
                 </select>
               </div>
             </div>
@@ -315,10 +331,15 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
               className="user-type-select"
               onChange={changeTrainingProgram_id}
             >
-              <option value="">...</option>
               {listTrainingProgram?.map((item, index) => {
                 return (
-                  <option value={item.training_code} key={item.training_code}>
+                  <option
+                    value={item.training_code}
+                    key={item.training_code}
+                    selected={
+                      thisClass.trainingProgram_id == item.training_code
+                    }
+                  >
                     {item.training_name}
                   </option>
                 );
