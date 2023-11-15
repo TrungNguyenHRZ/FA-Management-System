@@ -21,6 +21,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { styled } from "@mui/material/styles";
+import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
 
 const SyllabusDetail = () => {
   const paramName = useParams();
@@ -69,6 +73,33 @@ const SyllabusDetail = () => {
   //   if (syllabus.learningList) {
   // 	console.log(syllabus.learningList);
   //   }
+
+  const Accordion = styled((props) => (
+    <MuiAccordion disableGutters elevation={0} square {...props} />
+  ))(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    "&:not(:last-child)": {
+      borderBottom: 0,
+    },
+    "&:before": {
+      display: "none",
+    },
+  }));
+  const AccordionSummary = styled((props) => (
+    <MuiAccordionSummary {...props} />
+  ))(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#454545" : "#454545",
+    flexDirection: "row",
+    "& .MuiAccordionSummary-content": {
+      marginLeft: theme.spacing(1),
+    },
+    color: "#ffff",
+  }));
+
+  const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+    padding: theme.spacing(2),
+    borderTop: "1px solid rgba(0, 0, 0, .125)",
+  }));
 
   let renderGeneral = () => {
     return (
@@ -119,7 +150,11 @@ const SyllabusDetail = () => {
                 <div>
                   <AiOutlineSetting />
                 </div>
-                <div><Link to={`/update-syllabus/${syllabus.topic_code}`}>Update</Link></div>
+                <div>
+                  <Link to={`/update-syllabus/${syllabus.topic_code}`}>
+                    Update
+                  </Link>
+                </div>
                 <div>Technical Requirement(s)</div>
               </div>
             </div>
@@ -209,64 +244,71 @@ const SyllabusDetail = () => {
         <div className="outline">
           {syllabus.unitList
             ? groupedUnits.map((item) => (
-                <div className="syllabus-outline">
-                  <div className="syllabus-day-number">
-                    <div>Day {item.day_number}</div>
-                    <div>
-                      <MdOutlineExpandCircleDown
-                        className="syllabus-expand-icon"
-                        onClick={() => {
-                          handleToggle(item.day_number);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {toggledItems[item.day_number] &&
-                    item.units.map((unit) => (
-                      <div className="syllabus-content-container">
-                        <div className="unit-content">
-                          Unit {unit.unit_code}
-                        </div>
-
-                        {/* <div>{a} hrs</div>  */}
-                        <div className="content-container-right">
-                          <div className="content-name">{unit.unit_name}</div>
-                          <div>{duration(unit)} hrs</div>
-                          {
-                            <div className="unit-content-container">
-                              {unit.contentList
-                                ? unit.contentList.map((content) => (
-                                    <div className="syllabus-content-box">
-                                      <div className="syllabus-content-name">
-                                        {capitalizeFirstLetter(content.content)}
-                                      </div>
-                                      <div className="syllabus-content-box-right">
-                                        <div className="syllabus-content-format">
-                                          {content.deliveryType}
-                                        </div>
-                                        <div className="syllabus-content-box-duration">
-                                          {content.duration} hrs
-                                        </div>
-                                        <div
-                                          className={
-                                            content.trainingFormat === "offline"
-                                              ? "syllabus-content-format"
-                                              : "syllabus-content-format-online"
-                                          }
-                                        >
-                                          {content.trainingFormat}
-                                        </div>
-                                        <MdOutlineSnippetFolder className="material-upload" />
-                                      </div>
-                                    </div>
-                                  ))
-                                : null}
+                <Accordion className="syllabus-outline">
+                  <AccordionSummary
+                    expandIcon={
+                      <MdOutlineExpandCircleDown className="syllabus-expand-icon" />
+                    }
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>Day {item.day_number}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                      {
+                        item.units.map((unit) => (
+                          <div className="syllabus-content-container">
+                            <div className="unit-content">
+                              Unit {unit.unit_code}
                             </div>
-                          }
-                        </div>
-                      </div>
-                    ))}
-                </div>
+
+                            {/* <div>{a} hrs</div>  */}
+                            <div className="content-container-right">
+                              <div className="content-name">
+                                {unit.unit_name}
+                              </div>
+                              <div>{duration(unit)} hrs</div>
+                              {
+                                <div className="unit-content-container">
+                                  {unit.contentList
+                                    ? unit.contentList.map((content) => (
+                                        <div className="syllabus-content-box">
+                                          <div className="syllabus-content-name">
+                                            {capitalizeFirstLetter(
+                                              content.content
+                                            )}
+                                          </div>
+                                          <div className="syllabus-content-box-right">
+                                            <div className="syllabus-content-format">
+                                              {content.deliveryType}
+                                            </div>
+                                            <div className="syllabus-content-box-duration">
+                                              {content.duration} hrs
+                                            </div>
+                                            <div
+                                              className={
+                                                content.trainingFormat ===
+                                                "offline"
+                                                  ? "syllabus-content-format"
+                                                  : "syllabus-content-format-online"
+                                              }
+                                            >
+                                              {content.trainingFormat}
+                                            </div>
+                                            <MdOutlineSnippetFolder className="material-upload" />
+                                          </div>
+                                        </div>
+                                      ))
+                                    : null}
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        ))}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
               ))
             : null}
         </div>
@@ -376,10 +418,8 @@ const SyllabusDetail = () => {
   //   document.body.removeChild(link);
   // };
 
-
   return (
     <div className="detail-container">
-      
       {isLoading && (
         <div className="loading-overlay">
           <div className="loading-container">
@@ -389,7 +429,7 @@ const SyllabusDetail = () => {
       )}
       <div className="detail-header">
         <div className="header-left">
-          <h2 className="detail-title">{syllabus.topic_name}</h2>
+          <h2 className="detail-title">Syllabus</h2>
           <div className="detail-head-title">
             <h1 className="topic-name">{syllabus.topic_name}</h1>
             <div className="detail-status">{syllabus.publish_status}</div>
