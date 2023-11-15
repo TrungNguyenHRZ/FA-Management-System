@@ -41,7 +41,7 @@
 }
 
 .option-pick:hover {
-  color: #2a00b7;
+  color: #495aff;
 }
 
 .option-icon {
@@ -311,7 +311,7 @@
   width: 200px;
   margin-right: 0.1%;
   padding: 0.5%;
-  background-color: #2a00b7;
+  background-color: #495aff;
   color: #fff;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;

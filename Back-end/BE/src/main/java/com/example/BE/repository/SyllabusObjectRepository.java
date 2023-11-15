@@ -12,4 +12,9 @@ public interface SyllabusObjectRepository extends JpaRepository<SyllabusObject,I
 	@Query(value="select * from syllabus_object where topic_code = :code",
 	nativeQuery = true)
 	List<SyllabusObject> getSyllabusObjectBySyllabusCode(int code);
+
+
+	@Query(value = "delete from syllabus_object where topic_code = :id",
+	nativeQuery = true)
+	void deleteSyllabusObjectByTopicCode(int id);
 }
