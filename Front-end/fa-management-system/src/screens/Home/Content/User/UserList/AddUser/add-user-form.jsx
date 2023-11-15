@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./add-user-form.css";
 import { MdClose } from "react-icons/md";
 import apiUserInstance from "../../../../../../service/api-user";
@@ -6,19 +6,37 @@ import { Formik, Field, Form } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import * as Yup from "yup";
 
-const SignupSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  phone: Yup.string().min(9).max(15).required("Required"),
-  password: Yup.string()
-    .min(3, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-});
-
 const AddUserForm = ({ showForm, closeForm, updateForm }) => {
+  const [list, setList] = useState([]);
+  const [tmp, setTmp] = useState("");
+
+  useEffect(() => {
+    apiUserInstance
+      .get("/all")
+      .then(async (response) => {
+        await response.data.userResponseList.map((item, index) => {
+          list.push(item.email);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Required"),
+    phone: Yup.string().min(9).max(15).required("Required"),
+    email: Yup.string().required("Required").notOneOf(list, "Duplicated Email"),
+    password: Yup.string()
+      .min(3, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Required")
+      .oneOf([tmp], "Unmatched !!!"),
+  });
+
   const handleCloseForm = (e) => {
     e.preventDefault();
     closeForm();
@@ -29,18 +47,19 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
     }
   };
 
-  let Gender = "true";
+  const [Gender, setGender] = useState("true");
   const changeGender = (e) => {
-    Gender = e.target.value;
-    console.log(Gender);
+    setGender(e.target.value);
+
+    console.log(list);
   };
 
-  let Status = "IN_ACTIVE";
+  const [Status, setStatus] = useState("IN_ACTIVE");
   const changeStatus = (e) => {
     if (Status === "ACTIVE") {
-      Status = "IN_ACTIVE";
+      setStatus("IN_ACTIVE");
     } else {
-      Status = "ACTIVE";
+      setStatus("ACTIVE");
     }
   };
 
@@ -60,10 +79,10 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
         const tmp = values;
         tmp.status = Status;
         tmp.genderTrueMale = Gender;
-
+        console.log(tmp);
+        console.log(list);
         if (values != null) {
           await apiUserInstance.post("/create-sp-admin", tmp);
-
           updateForm();
         }
       }}
@@ -121,13 +140,27 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                     </div>
                   </div>
                 </div>
-                <div className="user-email">
-                  <label htmlFor="email">Password</label>
-                  <div className="input-form input-email">
-                    <Field name="password" />
-                    {errors.password && touched.password ? (
-                      <div style={{ color: "red" }}>{errors.password}</div>
-                    ) : null}
+                <div className="ip ip-phone-doba">
+                  <div className="user-email">
+                    <label htmlFor="email">Password</label>
+                    <div className="input-form input-email">
+                      <Field name="password" type="password" />
+                      {errors.password && touched.password ? (
+                        <div style={{ color: "red" }}>{errors.password}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="user-email">
+                    <label htmlFor="email">Confirm Password</label>
+                    <div className="input-form input-email">
+                      <input
+                        type="password"
+                        required
+                        onChange={(e) => {
+                          setTmp(e.target.value);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
