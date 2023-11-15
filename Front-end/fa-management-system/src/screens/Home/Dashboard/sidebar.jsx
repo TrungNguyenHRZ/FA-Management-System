@@ -9,6 +9,7 @@ import {
   FaUserGroup,
   FaGraduationCap,
 } from "react-icons/fa6";
+import { AiFillSchedule } from "react-icons/ai";
 import Header from "./Header/header";
 import Footer from "./Footer/footer";
 import jwtDecode from "jwt-decode";
@@ -59,6 +60,10 @@ const Sidebar = () => {
   };
   const changeCreateTrainingProgram = () => {
     setPage(10);
+  };
+
+  const changeCreateSchedules = () => {
+    setPage(11);
   };
   const toggleSubMenuSyllabus = () => {
     setSubMenuSyllabus(!isSubMenuSyllabus);
@@ -168,6 +173,15 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
+            <li
+              className={isPage === 11 ? "sidebar-page" : ""}
+              onClick={changeCreateSchedules}
+            >
+              <AiFillSchedule className="icon-sidebar" />
+              <Link to={"/create-schedules"} className="home-link">
+                Create Candidate
+              </Link>
+            </li>
             {info[0] === "Supper_Admin" ? (
               <>
                 <li onClick={toggleSubMenuUser}>

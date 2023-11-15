@@ -9,6 +9,8 @@ import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
+import Authorization from "../../../../Authentication/Auth";
+
 
 const UserList = () => {
   const [list, setList] = useState([]);
@@ -18,10 +20,9 @@ const UserList = () => {
   const itemPerPage = 9;
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    apiUserInstance.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${token}`;
+
+    Authorization();
+
   });
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const UserList = () => {
       .catch((error) => {
         console.error(error);
       });
+    console.log(list);
   }, []);
 
   const openForm = () => {
@@ -99,6 +101,7 @@ const UserList = () => {
         setList(response.data.userResponseList);
         setTotalPage(
           Math.ceil(response.data.userResponseList.length / itemPerPage)
+
         );
         console.log(response.data.userResponseList);
       })
@@ -201,30 +204,29 @@ const UserList = () => {
                 </td>
               </tr>
             )}
-
-            <div className="view-class-pagination">
-              <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={2}
-                //marginPagesDisplayed={3}
-                pageCount={TotalPage}
-                previousLabel="<"
-                containerClassName={"pagination"}
-                pageClassName={"page-item"}
-                pageLinkClassName={"page-link"}
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                activeClassName="active"
-              />
-            </div>
           </tbody>
         </table>
+        <div className="view-user-pagination">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            //marginPagesDisplayed={3}
+            pageCount={TotalPage}
+            previousLabel="<"
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+          />
+        </div>
       </div>
     </div>
   );

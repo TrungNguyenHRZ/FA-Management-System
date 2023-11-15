@@ -42,8 +42,11 @@ const CreateClass = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
+      console.log(userInfo);
     }
   }, []);
+
+  // console.log(userInfo.id);
 
   return (
     <Formik

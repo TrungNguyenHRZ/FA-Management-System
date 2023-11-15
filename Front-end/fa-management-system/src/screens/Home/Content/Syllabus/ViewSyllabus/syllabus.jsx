@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
-
 import { Link } from "react-router-dom";
 
 const Syllabus = () => {
@@ -79,7 +78,9 @@ const Syllabus = () => {
           <td className="td-syllabus-status">
             <div
               className={
+
                 item && item.publish_status === "active"
+
                   ? "td-status-active"
                   : item.publish_status === "inactive"
                   ? "td-status-inactive"

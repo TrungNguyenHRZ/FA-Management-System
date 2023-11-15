@@ -31,6 +31,7 @@ public interface SyllabusMapper {
 	// @Mapping(source = "user_syllabus",target = "user")
 	@Mapping(source = "user_syllabus.userId",target = "userId")
 	@Mapping(source = "user_syllabus.name",target = "userName")
+	// @Mapping(source = "syllabus.data", target = "data")
 	@Mapping(source = "syllabus_unit",target = "unitList")
 	@Mapping(source = "syllabus_object" ,target = "learningList")
 	// @Mapping(source = "syllabus_unit.training_content",target = "unitList.contentList")

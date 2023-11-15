@@ -32,11 +32,18 @@ const Login = () => {
       });
       if (response.status === 200) {
         const data = response.data;
-        Cookies.set("token", data.accessToken, { expires: 7 });
-        apiUserInstance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${data.accessToken}`;
-        navigate("/overview");
+        if (data.status === "ACTIVE") {
+          console.log(response);
+          Cookies.set("token", data.accessToken, { expires: 7 });
+          apiUserInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${data.accessToken}`;
+          navigate("/overview");
+        } else {
+          setError(
+            "Account has not been activated. Please contact your admin !!!"
+          );
+        }
       }
     } catch (error) {
       setError("Invalid email or password. Try again !!!");
@@ -87,7 +94,6 @@ const Login = () => {
         </div>
       </div>
       <div className="error-message">{error}</div>
-
       <div className="forgot-password">
         If you forget your password. Please contact your administrator for
         support.

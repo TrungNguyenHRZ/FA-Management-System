@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./user-permission.css";
 import { FaCirclePlus, FaEye } from "react-icons/fa6";
 import { BsFillStarFill } from "react-icons/bs";
+import Authorization from "../../../../Authentication/Auth";
 
 const UserPermission = () => {
+  useEffect(() => {
+    Authorization();
+  });
   const roles = [
     {
       roleName: "Super admin",

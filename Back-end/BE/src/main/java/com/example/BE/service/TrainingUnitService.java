@@ -17,4 +17,5 @@ public interface TrainingUnitService {
 	List<TrainingUnit> saveAllUnits(List<TrainingUnit> units);
 	List<TrainingUnit> updateUnit(List<TrainingUnit> unit);
 	void deleteUnit(int unitId);
+//	int findMaxDayNumberByTopicCode(int topic_code);
 }

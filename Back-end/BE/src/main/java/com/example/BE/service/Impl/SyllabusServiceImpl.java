@@ -1,12 +1,14 @@
 package com.example.BE.service.Impl;
 
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
 // import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,14 +28,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.BE.mapper.SyllabusMapper;
 import com.example.BE.mapper.TrainingContentMapper;
+import com.example.BE.model.dto.response.LearningObjectiveResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingContentResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
-
+import com.example.BE.model.entity.LearningObject;
 import com.example.BE.model.entity.Syllabus;
+import com.example.BE.model.entity.SyllabusObject;
 import com.example.BE.model.entity.TrainingContent;
 import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
+import com.example.BE.repository.LearningObjectRepository;
+import com.example.BE.repository.SyllabusObjectRepository;
 import com.example.BE.repository.SyllabusRepository;
 import com.example.BE.repository.TrainingContentRepository;
 import com.example.BE.repository.TrainingUnitRepository;
@@ -69,6 +75,12 @@ public class SyllabusServiceImpl implements SyllabusService {
 
 	@Autowired
 	TrainingUnitRepository unitRepo;
+
+	@Autowired
+	LearningObjectRepository loRepo;
+
+	@Autowired 
+	SyllabusObjectRepository sObjectRepository;
 
 	@Override
 	public List<Syllabus> getAllSyllabus() {
@@ -183,6 +195,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 	public Syllabus convertSyllabus(SyllabusResponse syResponse) {
 		// TODO Auto-generated method stub
 		Syllabus syllabus = new Syllabus();
+		Date now = new Date();
 		syllabus.setTopic_code(syResponse.getTopic_code());
 		syllabus.setTopic_name(syResponse.getTopic_name());
 		syllabus.setTechnical_group(syResponse.getTechnical_group());
@@ -195,9 +208,9 @@ public class SyllabusServiceImpl implements SyllabusService {
 		syllabus.setLevel(syResponse.getLevel());
 		syllabus.setPublish_status(syResponse.getPublish_status());
 		syllabus.setCreate_by(syResponse.getCreate_by());
-		syllabus.setCreatedDate(syResponse.getCreatedDate());
+		syllabus.setCreatedDate(now);
 		syllabus.setModified_by(syResponse.getModified_by());
-		syllabus.setModified_date(syResponse.getModified_date());
+		syllabus.setModified_date(now);
 		User user_syllabus = userRepo.getUserById(syResponse.getUserId());
 		syllabus.setUser_syllabus(user_syllabus);
 		List<TrainingUnitResponse> unitResponseList = syResponse.getUnitList();
@@ -510,8 +523,36 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return duration;
 	}
 
+
+	@Override
+	public void saveObjective(LearningObject object, int topic_code) {
+		// TODO Auto-generated method stub
+		LearningObject lo_a = loRepo.save(object);
+		SyllabusObject so = new SyllabusObject();
+		so.setLearning_code(lo_a);
+		so.setSyllabus_object_code(getSyllabusByTopic_Code(topic_code));
+		sObjectRepository.save(so);
+	}
+
+
+	@Override
+	public LearningObject convertObject(LearningObjectiveResponse lObjectiveResponse) {
+		// TODO Auto-generated method stub
+		LearningObject lo = new LearningObject();
+		lo.setCode(lObjectiveResponse.getLearning_code());
+		lo.setLearning_description(lObjectiveResponse.getLearning_description());
+		lo.setLearning_name(lObjectiveResponse.getLearning_name());
+		lo.setType(lObjectiveResponse.getType());
+		return lo;
+	}
+
 	
 
+	@Override
+	public int getAllDuration(int topicCode){
+		int maxDay = unitRepo.findMaxDayNumberByTopicCode(topicCode);
+		return maxDay != 0 ? maxDay * 1 : 0;
+	}
 	
 
 }

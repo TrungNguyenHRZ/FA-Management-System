@@ -3,6 +3,7 @@ package com.example.BE.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,9 +107,9 @@ public class TrainingUnitImpl implements TrainingUnitService{
 		repo.deleteById(unitId);
 	}
 
-
-
-
-
+//	@Override
+//	public int findMaxDayNumberByTopicCode (int topic_code){
+//		return repo.findMaxDayNumberByTopicCode(topic_code);
+//	}
 	
 }

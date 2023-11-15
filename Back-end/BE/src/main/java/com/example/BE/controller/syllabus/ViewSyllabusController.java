@@ -1,5 +1,6 @@
 package com.example.BE.controller.syllabus;
 
+import com.example.BE.mapper.LearningObjectiveMapper;
 import com.example.BE.mapper.SyllabusMapper;
 import com.example.BE.mapper.SyllabusObjectMapper;
 import com.example.BE.mapper.TrainingContentMapper;
@@ -9,6 +10,7 @@ import com.example.BE.model.dto.PageableDTO;
 import com.example.BE.model.dto.response.SyllabusObjectResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
+import com.example.BE.model.entity.LearningObject;
 import com.example.BE.model.entity.Syllabus;
 import com.example.BE.model.entity.SyllabusObject;
 import com.example.BE.model.entity.TrainingContent;
@@ -34,6 +36,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +97,9 @@ public class ViewSyllabusController {
 
 	@Autowired 
 	TrainingProgramSyllabusRepo tpsRepo;
+
+	@Autowired
+	LearningObjectiveMapper loMapper;
 
 
 	@GetMapping("/view")
@@ -163,20 +170,27 @@ public class ViewSyllabusController {
       	ApiResponse apiResponse = new ApiResponse();
 		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
         Syllabus result = repo.save(syllabus);
-		for(TrainingUnit tu : result.getSyllabus_unit()){
+		if(syllabusResponse.getUnitList() != null){
+			for(TrainingUnit tu : result.getSyllabus_unit()){
 			tu.setUnit_topic_code(result);
-		}
-		List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
-		for(TrainingUnit tun : unitList){
-			for(TrainingContent tc : tun.getTraining_content()){
-				tc.setUnitCode(tun);
 			}
-			contentService.saveAllTrainingContents(tun.getTraining_content());
+			List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
+			for(TrainingUnit tun : unitList){
+				for(TrainingContent tc : tun.getTraining_content()){
+				tc.setUnitCode(tun);
+				}
+				contentService.saveAllTrainingContents(tun.getTraining_content());
+			}
 		}
-		SyllabusResponse resultResponse = syllabusService.getSyllabusByTopicCode(result.getTopic_code());
-		apiResponse.ok(resultResponse);
-		// result.setUser_syllabus(null);
-		return ResponseEntity.ok(apiResponse);
+
+		if(syllabusResponse.getLearningList() != null){
+			for(SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()){
+				LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
+				syllabusService.saveObjective(lo,result.getTopic_code());
+			}
+		}
+
+		return getSyllabusByTopicCode(result.getTopic_code());
     }
 
 	@PostMapping("/saveUnit")
@@ -477,8 +491,9 @@ public class ViewSyllabusController {
 		int duration = syllabusService.getAllContentDuration(id);
 		apiResponse.ok(duration);
 		return ResponseEntity.ok(apiResponse);
-
 	}
+
+
 
 	
 	

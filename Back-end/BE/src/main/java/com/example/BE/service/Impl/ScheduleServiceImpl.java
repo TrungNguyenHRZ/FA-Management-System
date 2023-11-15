@@ -8,6 +8,8 @@ import com.example.BE.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -35,5 +37,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setDay(s.getDay());
         schedule.setClazz(classService.findById(s.getClass_id()));
         return schedule;
+    }
+
+    @Override
+    public List<Schedule> findScheduleByClassId(int id) {
+        return scheduleRepository.findScheduleByClassId(id);
+    }
+
+    @Override
+    public void deleteScheduleById(int sid) {
+        scheduleRepository.deleteScheduleById(sid);
+    }
+    @Override
+    public List<ScheduleResponse> sortScheduleByDate(List<ScheduleResponse> scheduleList) {
+        // Sắp xếp lại danh sách lịch học theo ngày
+        Collections.sort(scheduleList, Comparator.comparing(ScheduleResponse::getDay));
+
+        // Trả về danh sách lịch học đã được sắp xếp
+        return scheduleList;
     }
 }

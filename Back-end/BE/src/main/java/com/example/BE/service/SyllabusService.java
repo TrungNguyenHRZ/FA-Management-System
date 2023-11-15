@@ -1,6 +1,7 @@
 package com.example.BE.service;
 
 
+import com.example.BE.model.entity.LearningObject;
 import com.example.BE.model.entity.Syllabus;
 import com.example.BE.model.entity.TrainingContent;
 import com.example.BE.model.entity.TrainingUnit;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
+import com.example.BE.model.dto.response.LearningObjectiveResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.Syllabus;
@@ -68,4 +71,10 @@ public interface SyllabusService {
 	public Resource downloadFile(String fileCode) throws IOException;
 
 	public int getAllContentDuration(int code);
+
+	public void saveObjective(LearningObject object, int topic_code);
+
+	LearningObject convertObject(LearningObjectiveResponse lObjectiveResponse);
+
+	public int getAllDuration(int code);
 }

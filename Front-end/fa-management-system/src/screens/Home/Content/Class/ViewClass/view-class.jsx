@@ -8,7 +8,8 @@ import {
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
-import { BiEdit } from "react-icons/bi";
+
+import { RiFileEditFill } from "react-icons/ri";
 import "./view-class.css";
 //import { Await } from "react-router";
 

@@ -39,3 +39,8 @@
   color: white;
   transition: 0.2s ease;
 }
+
+.create-general {
+  display: flex;
+  flex-direction: column;
+}

@@ -140,6 +140,7 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                     </div>
                   </div>
                 </div>
+
                 <div className="ip ip-phone-doba">
                   <div className="user-email">
                     <label htmlFor="email">Password</label>
@@ -161,6 +162,7 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                         }}
                       />
                     </div>
+
                   </div>
                 </div>
 

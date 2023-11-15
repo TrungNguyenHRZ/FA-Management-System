@@ -25,7 +25,9 @@ const Header = () => {
     Cookies.remove("token");
     navigate("/login");
   };
-
+  const handleViewInfo = () => {
+    navigate("/view-info");
+  };
   return (
     <div className="header-container">
       <div className="header-title">
@@ -54,7 +56,9 @@ const Header = () => {
             {userInfo ? userInfo.userInfo : "null"}
           </div>
 
-          <div className="name-user">{userInfo ? userInfo.name : "null"}</div>
+          <div className="name-user" onClick={handleViewInfo}>
+            {userInfo ? userInfo.name : "null"}
+          </div>
         </div>
         <div className="logout-user" onClick={handleLogout}>
           <BiLogOut />
