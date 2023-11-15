@@ -10,6 +10,8 @@ const Info = () => {
   const [info, setInfo] = useState({});
   const [infoId, setInfoId] = useState(0);
   const [listInfoUser, setListInfoUser] = useState([]);
+  const [enableEdit, setEnableEdit] = useState(false);
+
   useEffect(() => {
     Authorization();
     const token = Cookies.get("token");
@@ -30,6 +32,9 @@ const Info = () => {
     }
   }, [infoId]);
 
+  const handleEdit = () => {
+    setEnableEdit((prevEnableEdit) => !prevEnableEdit);
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -42,14 +47,59 @@ const Info = () => {
       <h1 className="info-title">Your information</h1>
       <div className="info-content">
         <div className="info-form-container">
-          <label htmlFor="">Email:</label>
-          <input type="email" value={listInfoUser.email || ""} readOnly />
-          <label htmlFor="">Name:</label>
-          <input type="text" value={listInfoUser.name || ""} readOnly />
-          <label htmlFor="">Phone:</label>
-          <input type="number" value={listInfoUser.phone || ""} readOnly />
-          <label htmlFor="">Date of birth:</label>
-          <input type="text" value={listInfoUser.dob || ""} readOnly />
+          <div className="info-form-show">
+            <label htmlFor="">Email:</label>
+            <input
+              type="email"
+              value={listInfoUser.email || ""}
+              readOnly
+              disabled
+            />
+            <label htmlFor="">Name:</label>
+            <input
+              type="text"
+              value={listInfoUser.name || ""}
+              readOnly={!enableEdit}
+              disabled={!enableEdit}
+              onChange={(e) =>
+                setListInfoUser({ ...listInfoUser, name: e.target.value })
+              }
+            />
+            <label htmlFor="">Phone:</label>
+            <input
+              type="number"
+              value={listInfoUser.phone || ""}
+              readOnly={!enableEdit}
+              disabled={!enableEdit}
+              onChange={(e) =>
+                setListInfoUser({ ...listInfoUser, phone: e.target.value })
+              }
+            />
+            <label htmlFor="">Date of birth:</label>
+            <input
+              type="text"
+              value={listInfoUser.dob || ""}
+              readOnly={!enableEdit}
+              disabled={!enableEdit}
+              onChange={(e) =>
+                setListInfoUser({ ...listInfoUser, dob: e.target.value })
+              }
+            />
+          </div>
+          <div className="info-form-action">
+            {enableEdit ? (
+              <React.Fragment className="info-form-save">
+                <button className="info-form-cancel" onClick={handleEdit}>
+                  Cancel
+                </button>
+                <button className="info-form-save">Save</button>
+              </React.Fragment>
+            ) : (
+              <button className="info-form-edit" onClick={handleEdit}>
+                Edit
+              </button>
+            )}
+          </div>
         </div>
         <div className="info-form-other">
           <div className="info-avatar">
