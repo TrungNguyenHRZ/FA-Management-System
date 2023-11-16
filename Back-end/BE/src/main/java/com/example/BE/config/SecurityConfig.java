@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 
 //@EnableWebSecurity
@@ -20,6 +22,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+
+        http.headers(headers ->
+            headers.xssProtection(
+                xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+            ).contentSecurityPolicy(
+                cps -> cps.policyDirectives("script-src 'self'")
+            ));
+
+
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authz) -> authz
@@ -43,6 +55,9 @@ public class SecurityConfig {
             )
             .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
         ;
+
+
+
         return http.build();
     }
 }
