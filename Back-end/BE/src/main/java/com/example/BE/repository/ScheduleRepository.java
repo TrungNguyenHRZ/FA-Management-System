@@ -14,6 +14,6 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Query("SELECT s FROM Schedule s WHERE s.clazz.classId = ?1")
     List<Schedule> findScheduleByClassId(@Param("classId") int classId);
-    @Query("DELETE FROM Schedule s WHERE s.schedule_id = ?1")
-    void deleteScheduleById(@Param("scheduleId") int scheduleId);
+//    @Query("DELETE FROM Schedule s WHERE s.schedule_id = ?1")
+//    void deleteScheduleById(@Param("scheduleId") int scheduleId);
 }
