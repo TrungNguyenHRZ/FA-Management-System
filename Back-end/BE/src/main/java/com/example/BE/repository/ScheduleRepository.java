@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Query("SELECT s FROM Schedule s WHERE s.clazz.classId = ?1")
-    List<Schedule> findScheduleByClassId(@Param("classId") int classId);
+    List<ScheduleResponse> findScheduleByClassId(@Param("classId") int classId);
 //    @Query("DELETE FROM Schedule s WHERE s.schedule_id = ?1")
 //    void deleteScheduleById(@Param("scheduleId") int scheduleId);
 }
