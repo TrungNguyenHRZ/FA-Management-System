@@ -45,7 +45,7 @@
   flex-direction: column;
 }
 
-.outline{
+.outline {
   overflow-y: scroll;
   height: 380px;
 }
@@ -55,10 +55,9 @@
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  transition:0.3s ease-out;
+  transition: 0.3s ease-out;
   /* background-color: #454545;; */
 }
-
 
 .syllabus-day-number {
   width: 100%;
@@ -74,7 +73,6 @@
   font-size: 25px;
   cursor: pointer;
   color: white;
-
 }
 
 .syllabus-content-container-c {
@@ -97,20 +95,20 @@
   justify-content: space-between;
 }
 
-.day-panel-title{
+.day-panel-title {
   display: flex;
   align-items: center;
 }
 
-.minus-icon{
-  margin-left:20px;
+.minus-icon {
+  margin-left: 20px;
   font-size: 25px;
   cursor: pointer;
   color: rgb(238, 29, 29);
 }
 
-.edit-icon{
-  margin-left:20px;
+.edit-icon {
+  margin-left: 20px;
   font-size: 25px;
   cursor: pointer;
 }
@@ -134,7 +132,7 @@
   justify-content: space-between;
   width: 70%;
   align-items: center;
-  margin-left:0.5em
+  margin-left: 0.5em;
 }
 .syllabus-content-format-c {
   width: 140px;
@@ -147,19 +145,17 @@
   height: 25px;
   font-size: 14px;
   text-align: center;
-
 }
 
-.syllabus-content-format-c::placeholder{
+.syllabus-content-format-c::placeholder {
   color: white;
 }
 
-.syllabus-content-name-c::placeholder{
+.syllabus-content-name-c::placeholder {
   text-align: center;
-
 }
 
-.syllabus-content-name-c{
+.syllabus-content-name-c {
   background: rgb(192, 192, 192);
   /* width:30%; */
   font-size: 14px;
@@ -172,11 +168,11 @@
   text-align: center;
 }
 
-.modal-box{
-  background:blue;
+.modal-box {
+  background: blue;
 }
 
-.modal-box-container{
+.modal-box-container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -186,3 +182,73 @@
   background-color: red;
 }
 
+.save-create-generals {
+  border: none;
+  width: 100px;
+  padding: 5px 10px;
+  background-color: #495aff;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.save-create-generals:hover {
+  opacity: 0.8;
+}
+
+.form-create-syllabus-action {
+  display: flex;
+  margin-top: 10px;
+}
+
+.form-create-syllabus-action > .form-create-syllabus-submit {
+  background-color: #495aff;
+  color: #fff;
+  border-radius: 10px 0px 0px 10px;
+}
+.form-create-syllabus-action > .form-create-syllabus-draft {
+  background-color: #495aff;
+  color: #fff;
+  border-radius: 0px 10px 10px 0px;
+}
+.form-create-syllabus-action > .form-create-syllabus-submit:hover,
+.form-create-syllabus-action > .form-create-syllabus-draft:hover {
+  opacity: 0.8;
+  /* color: #495aff; */
+  background-color: #6d7cff;
+}
+#panel1a-header {
+  background-color: #6d7cff;
+}
+
+.btn-action-outline-syllabus {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+}
+.btn-save-ouline-syllabus,
+.btn-previous-ouline-syllabus,
+.btn-addnew-ouline-syllabus {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  width: 100px;
+  color: #fff;
+}
+
+.btn-save-ouline-syllabus {
+  background-color: #b4b700;
+}
+.btn-previous-ouline-syllabus {
+  background-color: #ff0000;
+}
+
+.btn-addnew-ouline-syllabus {
+  background-color: #00c600;
+}
+
+.btn-save-ouline-syllabus:hover,
+.btn-previous-ouline-syllabus:hover,
+.btn-addnew-ouline-syllabus:hover {
+  opacity: 0.8;
+}

@@ -188,7 +188,7 @@ const CreateSyllabus = () => {
     "&:before": {
       display: "none",
     },
-    transition: '0.3s'
+    transition: "0.3s",
   }));
   const AccordionSummary = styled((props) => (
     <MuiAccordionSummary {...props} />
@@ -200,23 +200,23 @@ const CreateSyllabus = () => {
       marginLeft: theme.spacing(1),
     },
     color: "#ffff",
-    transition: '0.3s'
+    transition: "0.3s",
   }));
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: "1px solid rgba(0, 0, 0, .125)",
-    transition: '0.3s'
+    transition: "0.3s",
   }));
 
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
+    bgcolor: "background.paper",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -341,7 +341,12 @@ const CreateSyllabus = () => {
                         </>
                       )}
                     </FieldArray>
-                    <button onClick={() => setPage(page + 1)}>Save</button>
+                    <button
+                      className="save-create-generals"
+                      onClick={() => setPage(page + 1)}
+                    >
+                      Save
+                    </button>
                   </div>
                 ) : page === 2 ? (
                   //Outlie Screen
@@ -352,17 +357,21 @@ const CreateSyllabus = () => {
                           <div>
                             {values.unitsByDay.map((day, dayIndex) => (
                               <Accordion
-                              className={`create-outline-c ${expanded === `panel${dayIndex + 1}` ? 'expanded' : ''}`} 
-                               expanded = {expanded === `panel${dayIndex + 1}`}
+                                className={`create-outline-c ${
+                                  expanded === `panel${dayIndex + 1}`
+                                    ? "expanded"
+                                    : ""
+                                }`}
+                                expanded={expanded === `panel${dayIndex + 1}`}
                                 onChange={handleChange(`panel${dayIndex + 1}`)}
-                               TransitionProps={{
-                                appear: isModalVisible ? false : true ,
-                                // exit : isModalVisible ? false : true
-                                // mountOnEnter: isModalVisible
-                               }
-                              } 
+                                TransitionProps={{
+                                  appear: isModalVisible ? false : true,
+                                  // exit : isModalVisible ? false : true
+                                  // mountOnEnter: isModalVisible
+                                }}
                               >
                                 <AccordionSummary
+                                  className="item-create-outline-syllabus"
                                   expandIcon={
                                     <MdOutlineExpandCircleDown className="syllabus-expand-icon" />
                                   }
@@ -474,10 +483,9 @@ const CreateSyllabus = () => {
                                                                       contentIndex
                                                                     )
                                                                   }
-
                                                                   className="minus-icon"
                                                                 />
-                                                                  
+
                                                                 <MdOutlineEdit
                                                                   type="button"
                                                                   onClick={() =>
@@ -487,10 +495,9 @@ const CreateSyllabus = () => {
                                                                       contentIndex
                                                                     )
                                                                   }
-
                                                                   className="edit-icon"
                                                                 />
-                                                                
+
                                                                 <Modal
                                                                   title={`Edit Content - Day ${selectedContent.dayNumber}`}
                                                                   open={
@@ -503,26 +510,48 @@ const CreateSyllabus = () => {
                                                                   aria-describedby="modal-modal-description"
                                                                   className="modal-box"
                                                                 >
-                                                                  <Box className="modal-box-container" sx={style}>
-                                                                    <p>Edit Content - Day {selectedContent.dayNumber}</p>
+                                                                  <Box
+                                                                    className="modal-box-container"
+                                                                    sx={style}
+                                                                  >
+                                                                    <p>
+                                                                      Edit
+                                                                      Content -
+                                                                      Day{" "}
+                                                                      {
+                                                                        selectedContent.dayNumber
+                                                                      }
+                                                                    </p>
                                                                     <Field
                                                                       type="text"
-                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].content`}
+                                                                      name={`unitsByDay[${
+                                                                        selectedContent.dayNumber -
+                                                                        1
+                                                                      }].units[${unitIndex}].contentList[${contentIndex}].content`}
                                                                       placeholder="Content"
                                                                     />
                                                                     <Field
                                                                       type="text"
-                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
+                                                                      name={`unitsByDay[${
+                                                                        selectedContent.dayNumber -
+                                                                        1
+                                                                      }].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
                                                                       placeholder="TrainingFormat"
                                                                     />
                                                                     <Field
                                                                       type="number"
-                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].duration`}
+                                                                      name={`unitsByDay[${
+                                                                        selectedContent.dayNumber -
+                                                                        1
+                                                                      }].units[${unitIndex}].contentList[${contentIndex}].duration`}
                                                                       placeholder="Duration"
                                                                     />
                                                                     <Field
                                                                       type="text"
-                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                      name={`unitsByDay[${
+                                                                        selectedContent.dayNumber -
+                                                                        1
+                                                                      }].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
                                                                       placeholder="DeliveryType"
                                                                     />
                                                                     <Button
@@ -605,53 +634,68 @@ const CreateSyllabus = () => {
                         )}
                       </FieldArray>
                     </div>
-                    <button onClick={() => setPage(page + 1)}>Save</button>
-                    <button onClick={() => setPage(page - 1)}>Previous</button>
-                    <button
-                      onClick={() => {
-                        let lastDayNumber = Number(
-                          values.dayNumber[Number(values.dayNumber.length - 1)]
-                        );
+                    <div className="btn-action-outline-syllabus">
+                      <button
+                        className="btn-previous-ouline-syllabus"
+                        onClick={() => setPage(page - 1)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className="btn-save-ouline-syllabus"
+                        onClick={() => setPage(page + 1)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn-addnew-ouline-syllabus"
+                        onClick={() => {
+                          let lastDayNumber = Number(
+                            values.dayNumber[
+                              Number(values.dayNumber.length - 1)
+                            ]
+                          );
 
-                        // Calculate the new day number
-                        let newDayNumber = lastDayNumber + 1;
-                        // console.log(Number(newDayNumber));
-                        console.log(values.dayNumber[2]);
-                        console.log(values.dayNumber.length);
-                        console.log(
-                          values.dayNumber[values.dayNumber.length - 1]
-                        );
-                        console.log(values.dayNumber);
-                        // Use setValues to immediately update the state
-                        setValues((prevValues) => ({
-                          ...prevValues,
-                          dayNumber: [...prevValues.dayNumber, newDayNumber],
-                        }));
-                        const updatedUnitsByDay = values.dayNumber.map(
-                          (day) => ({
-                            day_number: day,
-                            units: [
-                              {
-                                unit_name: "",
-                                contentList: [
-                                  {
-                                    content: "",
-                                    deliveryType: "",
-                                    duration: 0,
-                                    learningObjective: "",
-                                    note: "",
-                                    trainingFormat: "",
-                                  },
-                                ],
-                              },
-                            ],
-                          })
-                        );
-                        setFieldValue("unitsByDay", updatedUnitsByDay);
-                      }}
-                    >
-                      Add day
-                    </button>
+                          // Calculate the new day number
+                          let newDayNumber = lastDayNumber + 1;
+                          // console.log(Number(newDayNumber));
+                          console.log(values.dayNumber[2]);
+                          console.log(values.dayNumber.length);
+                          console.log(
+                            values.dayNumber[values.dayNumber.length - 1]
+                          );
+                          console.log(values.dayNumber);
+                          // Use setValues to immediately update the state
+                          setValues((prevValues) => ({
+                            ...prevValues,
+                            dayNumber: [...prevValues.dayNumber, newDayNumber],
+                          }));
+                          const updatedUnitsByDay = values.dayNumber.map(
+                            (day) => ({
+                              day_number: day,
+                              units: [
+                                {
+                                  unit_name: "",
+                                  contentList: [
+                                    {
+                                      content: "",
+                                      deliveryType: "",
+                                      duration: 0,
+                                      learningObjective: "",
+                                      note: "",
+                                      trainingFormat: "",
+                                    },
+                                  ],
+                                },
+                              ],
+                            })
+                          );
+                          setFieldValue("unitsByDay", updatedUnitsByDay);
+                        }}
+                      >
+                        Add day
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   //END OUTLINE
@@ -663,25 +707,29 @@ const CreateSyllabus = () => {
                     />
                   </div>
                 )}
-                <Button
-                  type="submit"
-                  onClick={() => {
-                    setFieldValue("publish_status", "Active");
-                    console.log(values.publish_status);
-                  }}
-                >
-                  Submit
-                </Button>
+                <div className="form-create-syllabus-action">
+                  <Button
+                    className="form-create-syllabus-submit"
+                    type="submit"
+                    onClick={() => {
+                      setFieldValue("publish_status", "Active");
+                      console.log(values.publish_status);
+                    }}
+                  >
+                    Submit
+                  </Button>
 
-                <Button
-                  type="submit"
-                  onClick={() => {
-                    setFieldValue("publish_status", "Draft");
-                    console.log(values.publish_status);
-                  }}
-                >
-                  Save as Draft
-                </Button>
+                  <Button
+                    className="form-create-syllabus-draft"
+                    type="submit"
+                    onClick={() => {
+                      setFieldValue("publish_status", "Draft");
+                      console.log(values.publish_status);
+                    }}
+                  >
+                    Save as Draft
+                  </Button>
+                </div>
               </Form>
             )}
           </Formik>
