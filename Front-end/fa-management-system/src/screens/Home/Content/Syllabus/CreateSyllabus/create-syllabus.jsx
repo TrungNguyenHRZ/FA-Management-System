@@ -20,6 +20,8 @@ import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
+
+import { MdOutlineEdit } from "react-icons/md";
 // import Button from "@mui/material/Button";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
@@ -31,6 +33,11 @@ const CreateSyllabus = () => {
   const [units, setUnits] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [groupedUnits, setGroupedUnits] = useState([]);
+  const [expanded, setExpanded] = useState("panel1");
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   // useEffect(() => {
   //   const token = Cookies.get("token");
   //   if (token) {
@@ -60,7 +67,6 @@ const CreateSyllabus = () => {
   let levels = ["fresher", "junior", "senior"];
 
   const convertToUnitList = (values) => {
-    const a = [];
     const unitList = values.unitsByDay.flatMap((day) =>
       day.units.map((unit) => ({
         unit_name: unit.unit_name,
@@ -182,22 +188,38 @@ const CreateSyllabus = () => {
     "&:before": {
       display: "none",
     },
+    transition: '0.3s'
   }));
   const AccordionSummary = styled((props) => (
     <MuiAccordionSummary {...props} />
   ))(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#454545" : "#454545",
     flexDirection: "row",
+
     "& .MuiAccordionSummary-content": {
       marginLeft: theme.spacing(1),
     },
     color: "#ffff",
+    transition: '0.3s'
   }));
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: "1px solid rgba(0, 0, 0, .125)",
+    transition: '0.3s'
   }));
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <div className="create-syllabus-container">
@@ -324,237 +346,266 @@ const CreateSyllabus = () => {
                 ) : page === 2 ? (
                   //Outlie Screen
                   <div>
-                  <div className="outline">
-                    <FieldArray name="unitsByDay">
-                      {({ push, remove }) => (
-                        <div>
-                          {values.unitsByDay.map((day, dayIndex) => (
-                            <Accordion className="create-outline">
-                              <AccordionSummary
-                                expandIcon={
-                                  <MdOutlineExpandCircleDown className="syllabus-expand-icon" />
-                                }
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
+                    <div className="outline">
+                      <FieldArray name="unitsByDay">
+                        {({ push, remove }) => (
+                          <div>
+                            {values.unitsByDay.map((day, dayIndex) => (
+                              <Accordion
+                              className={`create-outline-c ${expanded === `panel${dayIndex + 1}` ? 'expanded' : ''}`} 
+                               expanded = {expanded === `panel${dayIndex + 1}`}
+                                onChange={handleChange(`panel${dayIndex + 1}`)}
+                               TransitionProps={{
+                                appear: isModalVisible ? false : true ,
+                                // exit : isModalVisible ? false : true
+                                // mountOnEnter: isModalVisible
+                               }
+                              } 
                               >
-                                <div className="day-panel-title">
-                                <Typography key={dayIndex}>
-                                  Day {day.day_number}
-                                </Typography>
-                                <CiCircleMinus 
-                                  onClick={() => removeDay(dayIndex, setValues)}
-                                  className = "minus-icon"
-                                />
-                                </div>
-                                
-                                  
-                              </AccordionSummary>
+                                <AccordionSummary
+                                  expandIcon={
+                                    <MdOutlineExpandCircleDown className="syllabus-expand-icon" />
+                                  }
+                                  aria-controls="panel1a-content"
+                                  id="panel1a-header"
+                                >
+                                  <div className="day-panel-title">
+                                    <Typography key={dayIndex}>
+                                      Day {day.day_number}
+                                    </Typography>
+                                    <CiCircleMinus
+                                      onClick={() =>
+                                        removeDay(dayIndex, setValues)
+                                      }
+                                      className="minus-icon"
+                                    />
+                                  </div>
+                                </AccordionSummary>
 
-                              <AccordionDetails>
-                                <Typography>
-                                  <div className="syllabus-content-container-c">
-                                    <FieldArray
-                                      name={`unitsByDay[${dayIndex}].units`}
-                                    >
-                                      {({ push, remove }) => (
-                                        <>
-                                          {day.units.map((unit, unitIndex) => (
-                                            <div key={unitIndex} id={unitIndex} className="content-container-right">
-                                              <>
-                                              <label
-                                                htmlFor={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
-                                              >
-                                                Unit Name:
-                                              </label>
-                                              <Field
-                                                type="text"
-                                                id={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
-                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
-                                              />
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  remove(unitIndex)
-                                                }
-                                              >
-                                                -
-                                              </button>
-
-                                              <FieldArray
-                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList`}
-                                              >
-                                                {({ push, remove }) => (
-                                                  <div className="unit-content-container">
-                                                    {unit.contentList.map(
-                                                      (
-                                                        content,
-                                                        contentIndex
-                                                      ) => (
-                                                        <div
-                                                          key={contentIndex}
-                                                          id={`${unitIndex}-${contentIndex}`}
-                                                          className="syllabus-content-box"
-                                                        >
-                                                          <label>Content</label>
-                                                          <Field
-                                                            type="text"
-                                                            name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
-                                                            placeholder="Content"
-                                                            readOnly
-                                                          />
-                                                          <Field
-                                                            type="text"
-                                                            name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
-                                                            placeholder="TrainingFormat"
-                                                            readOnly
-                                                          />
-                                                          <Field
-                                                            type="number"
-                                                            name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
-                                                            placeholder="Duration"
-                                                            readOnly
-                                                          />
-                                                          <Field
-                                                            type="text"
-                                                            name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
-                                                            placeholder="DeliveryType"
-                                                            readOnly
-                                                          />
-                                                          <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                              remove(
-                                                                contentIndex
-                                                              )
-                                                            }
-                                                          >
-                                                            -
-                                                          </button>
-                                                          <Button
-                                                            type="button"
-                                                            onClick={() =>
-                                                              showModal(
-                                                                day.day_number,
-                                                                unitIndex,
-                                                                contentIndex
-                                                              )
-                                                            }
-                                                          >
-                                                            Edit Content
-                                                          </Button>
-                                                          <Modal
-                                                            // title={`Edit Content - Day ${selectedContent.dayNumber}`}
-                                                            open={
-                                                              isModalVisible
-                                                            }
-                                                            onClose={
-                                                              handleCancel
-                                                            }
-                                                            aria-labelledby="modal-modal-title"
-                                                            aria-describedby="modal-modal-description"
-                                                          >
-                                                            <Box>
-                                                              <Field
-                                                                type="text"
-                                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
-                                                                placeholder="Content"
-                                                              />
-                                                              <Field
-                                                                type="text"
-                                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
-                                                                placeholder="TrainingFormat"
-                                                              />
-                                                              <Field
-                                                                type="number"
-                                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
-                                                                placeholder="Duration"
-                                                              />
-                                                              <Field
-                                                                type="text"
-                                                                name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
-                                                                placeholder="DeliveryType"
-                                                              />
-                                                              <Button
-                                                                key="cancel"
-                                                                onClick={
-                                                                  handleCancel
-                                                                }
-                                                              >
-                                                                Cancel
-                                                              </Button>
-
-                                                              <Button
-                                                                key="submit"
-                                                                type="primary"
-                                                                onClick={
-                                                                  handleModalSubmit
-                                                                }
-                                                              >
-                                                                Submit
-                                                              </Button>
-                                                            </Box>
-                                                          </Modal>
-                                                        </div>
-                                                      )
-                                                    )}
+                                <AccordionDetails>
+                                  <Typography>
+                                    <div className="syllabus-content-container-c">
+                                      <FieldArray
+                                        name={`unitsByDay[${dayIndex}].units`}
+                                      >
+                                        {({ push, remove }) => (
+                                          <>
+                                            {day.units.map(
+                                              (unit, unitIndex) => (
+                                                <div
+                                                  key={unitIndex}
+                                                  id={unitIndex}
+                                                  className="content-container-right"
+                                                >
+                                                  <>
+                                                    <label
+                                                      htmlFor={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
+                                                    >
+                                                      Unit Name:
+                                                    </label>
+                                                    <Field
+                                                      type="text"
+                                                      id={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
+                                                      name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
+                                                    />
                                                     <button
                                                       type="button"
                                                       onClick={() =>
-                                                        push({
-                                                          content: "",
-                                                          deliveryType: "",
-                                                          duration: 0,
-                                                          learningObjective: "",
-                                                          note: "",
-                                                          trainingFormat: "",
-                                                        })
+                                                        remove(unitIndex)
                                                       }
                                                     >
-                                                      Add Content
+                                                      -
                                                     </button>
-                                                  </div>
-                                                )}
-                                              </FieldArray>
-                                              </>
-                                              
-                                              
-                                            </div>
-                                          ))}
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              push({
-                                                unit_name: "",
-                                                contentList: [
-                                                  {
-                                                    content: "",
-                                                    deliveryType: "",
-                                                    duration: 0,
-                                                    learningObjective: "",
-                                                    note: "",
-                                                    trainingFormat: "",
-                                                  },
-                                                ],
-                                              })
-                                            }
-                                          >
-                                            Create
-                                          </button>
-                                        </>
-                                      )}
-                                    </FieldArray>
-                                  </div>
-                                </Typography>
-                              </AccordionDetails>
-                            </Accordion>
-                          ))}
-                        </div>
-                      )}
-                    </FieldArray>
 
-                    
-                  </div>
-                  <button onClick={() => setPage(page + 1)}>Save</button>
+                                                    <FieldArray
+                                                      name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList`}
+                                                    >
+                                                      {({ push, remove }) => (
+                                                        <div className="unit-content-container">
+                                                          {unit.contentList.map(
+                                                            (
+                                                              content,
+                                                              contentIndex
+                                                            ) => (
+                                                              <div
+                                                                key={
+                                                                  contentIndex
+                                                                }
+                                                                id={`${unitIndex}-${contentIndex}`}
+                                                                className="syllabus-content-box"
+                                                              >
+                                                                <div className="syllabus-content-name">
+                                                                  <Field
+                                                                    type="text"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
+                                                                    placeholder="Content"
+                                                                    readOnly
+                                                                    className="syllabus-content-name-c"
+                                                                  />
+                                                                </div>
+
+                                                                <div className="syllabus-content-box-right-c">
+                                                                  <Field
+                                                                    type="text"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
+                                                                    placeholder="TrainingFormat"
+                                                                    readOnly
+                                                                    className="syllabus-content-format-c"
+                                                                  />
+                                                                  <Field
+                                                                    type="number"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
+                                                                    placeholder="Duration"
+                                                                    readOnly
+                                                                    className="syllabus-content-name-c"
+                                                                  />
+                                                                  <Field
+                                                                    type="text"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                    placeholder="DeliveryType"
+                                                                    readOnly
+                                                                    className="syllabus-content-format-c"
+                                                                  />
+                                                                </div>
+
+                                                                <CiCircleMinus
+                                                                  onClick={() =>
+                                                                    remove(
+                                                                      contentIndex
+                                                                    )
+                                                                  }
+
+                                                                  className="minus-icon"
+                                                                />
+                                                                  
+                                                                <MdOutlineEdit
+                                                                  type="button"
+                                                                  onClick={() =>
+                                                                    showModal(
+                                                                      day.day_number,
+                                                                      unitIndex,
+                                                                      contentIndex
+                                                                    )
+                                                                  }
+
+                                                                  className="edit-icon"
+                                                                />
+                                                                
+                                                                <Modal
+                                                                  title={`Edit Content - Day ${selectedContent.dayNumber}`}
+                                                                  open={
+                                                                    isModalVisible
+                                                                  }
+                                                                  onClose={
+                                                                    handleCancel
+                                                                  }
+                                                                  aria-labelledby="modal-modal-title"
+                                                                  aria-describedby="modal-modal-description"
+                                                                  className="modal-box"
+                                                                >
+                                                                  <Box className="modal-box-container" sx={style}>
+                                                                    <p>Edit Content - Day {selectedContent.dayNumber}</p>
+                                                                    <Field
+                                                                      type="text"
+                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].content`}
+                                                                      placeholder="Content"
+                                                                    />
+                                                                    <Field
+                                                                      type="text"
+                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
+                                                                      placeholder="TrainingFormat"
+                                                                    />
+                                                                    <Field
+                                                                      type="number"
+                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].duration`}
+                                                                      placeholder="Duration"
+                                                                    />
+                                                                    <Field
+                                                                      type="text"
+                                                                      name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                      placeholder="DeliveryType"
+                                                                    />
+                                                                    <Button
+                                                                      key="cancel"
+                                                                      onClick={
+                                                                        handleCancel
+                                                                      }
+                                                                    >
+                                                                      Cancel
+                                                                    </Button>
+
+                                                                    <Button
+                                                                      key="submit"
+                                                                      type="primary"
+                                                                      onClick={
+                                                                        handleModalSubmit
+                                                                      }
+                                                                    >
+                                                                      Submit
+                                                                    </Button>
+                                                                  </Box>
+                                                                </Modal>
+                                                              </div>
+                                                            )
+                                                          )}
+                                                          <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                              push({
+                                                                content: "",
+                                                                deliveryType:
+                                                                  "",
+                                                                duration: 0,
+                                                                learningObjective:
+                                                                  "",
+                                                                note: "",
+                                                                trainingFormat:
+                                                                  "",
+                                                              })
+                                                            }
+                                                          >
+                                                            Add Content
+                                                          </button>
+                                                        </div>
+                                                      )}
+                                                    </FieldArray>
+                                                  </>
+                                                </div>
+                                              )
+                                            )}
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                push({
+                                                  unit_name: "",
+                                                  contentList: [
+                                                    {
+                                                      content: "",
+                                                      deliveryType: "",
+                                                      duration: 0,
+                                                      learningObjective: "",
+                                                      note: "",
+                                                      trainingFormat: "",
+                                                    },
+                                                  ],
+                                                })
+                                              }
+                                            >
+                                              Create
+                                            </button>
+                                          </>
+                                        )}
+                                      </FieldArray>
+                                    </div>
+                                  </Typography>
+                                </AccordionDetails>
+                              </Accordion>
+                            ))}
+                          </div>
+                        )}
+                      </FieldArray>
+                    </div>
+                    <button onClick={() => setPage(page + 1)}>Save</button>
                     <button onClick={() => setPage(page - 1)}>Previous</button>
                     <button
                       onClick={() => {
