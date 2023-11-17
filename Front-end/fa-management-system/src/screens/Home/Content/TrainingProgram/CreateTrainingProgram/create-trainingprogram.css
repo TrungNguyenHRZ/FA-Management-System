@@ -1,0 +1,43 @@
+.choose-syllabus-container {
+  display: flex;
+  gap: 50px;
+  height: 600px;
+}
+.training-program-content {
+  display: flex;
+  flex: 5;
+  flex-direction: column;
+  border: 1px solid black;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 10px;
+  width: 500px;
+}
+/* .training-program-main {
+} */
+.training-program-content-main {
+  height: 600px;
+  overflow-y: scroll;
+}
+
+/* .training-program-content-main-2 {
+} */
+.training-program-content-title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.training-program-choose {
+  /* display: flex; */
+  flex-direction: column;
+  flex: 1;
+  border-left: 1px solid grey;
+  padding: 20px;
+}
+.training-program-choice {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  width: 500px;
+}

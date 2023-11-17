@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
+import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import { ToastContainer, toast } from "react-toastify";
-
 import * as Yup from "yup";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
+import "./create-trainingprogram.css";
 
 const SignupSchema = Yup.object().shape({
   training_name: Yup.string()
@@ -13,6 +14,145 @@ const SignupSchema = Yup.object().shape({
     .max(50, "Too Long!")
     .required("Required"),
 });
+
+const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
+  const [allSyllabus, setAllSyllabus] = useState([]);
+  const [addNewSyllabus, setAddNewSyllabus] = useState([]);
+
+  useEffect(() => {
+    apiSyllabusInstance
+      .get("/view")
+      .then((response) => {
+        console.log(response.data);
+        setAllSyllabus(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const addToList = (e, item1) => {
+    console.log(item1);
+    setAddNewSyllabus([...addNewSyllabus, item1]);
+
+    const new_arr = allSyllabus.filter((item) => item !== item1);
+    setAllSyllabus(new_arr);
+  };
+
+  const addToList2 = (e, item2) => {
+    console.log(item2);
+    setAllSyllabus([...allSyllabus, item2]);
+    const new_arr = addNewSyllabus.filter((item) => item !== item2);
+    setAddNewSyllabus(new_arr);
+  };
+
+  const closePick = (e) => {
+    closeForm3();
+  };
+
+  const saveAll = (e) => {
+    for (const item of addNewSyllabus) {
+      apiTrainingProgramInstance
+        .post("/create-training-program-syllabus", {
+          syllabus: item.topic_code,
+          trainingProgram: trainingProgramID,
+          sequence: "",
+        })
+        .then((response) => {
+          console.log(response.data.payload);
+        });
+    }
+    toast.success("Add All Syllabus successfully !!!");
+    closeForm3();
+  };
+
+  let renderData = () => {
+    return (
+      // if (allSyllabus && allSyllabus.length > 0) {
+      // allSyllabus.map(
+
+      <div className="choose-syllabus-container">
+        <div className="training-program-content-main">
+          <div>Content</div>
+          <br />
+          {allSyllabus?.map((item, index) => (
+            <div className="training-program-content">
+              <button onClick={(e) => addToList(e, item)}>
+                <div className="training-program-content-title">
+                  <div>
+                    <h2>{item.topic_name}</h2>
+                  </div>
+                  <div>{item.publish_status}</div>
+                </div>
+                <div className="training-program-detail">
+                  <div>
+                    132 | {item.programDuration} days | Modified on{" "}
+                    {item.modified_date} by {item.modified_by}
+                  </div>
+                </div>
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="training-program-main">
+          <div className="training-program-content-main">
+            <div>Pick em</div>
+            <br />
+            {addNewSyllabus.map((item2, index) => (
+              <div className="training-program-content">
+                <div className="training-program-content-title">
+                  <div>
+                    <h2>{item2.topic_name}</h2>
+                  </div>
+                  <div>{item2.publish_status}</div>
+                </div>
+
+                <div className="training-program-detail">
+                  <div>
+                    132 | {item2.programDuration} days | Modified on{" "}
+                    {item2.modified_date} by {item2.modified_by}
+                  </div>
+                </div>
+                <button onClick={(e) => addToList2(e, item2)}>X</button>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="training-program-main">
+          <div className="training-program-content-main-2">
+            <button onClick={(e) => closePick(e)}>X</button>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <button onClick={(e) => saveAll(e)}>Save</button>
+          </div>
+        </div>
+      </div>
+
+      // );
+      // }
+    );
+  };
+
+  return (
+    <div
+      className="user-form-popup-container"
+      // onClick={handleOverlayClick}
+    >
+      <div className="user-form">
+        <div className="btn-close-form"></div>
+        <div>Choose Syllabus</div>
+
+        <div className="create-training-action"></div>
+        <div>{renderData()}</div>
+      </div>
+    </div>
+  );
+};
+
+///////=======================================================================================
 
 const Confirm = ({ saveTrainingProgram, closeForm }) => {
   const handleOverlayClick = (e) => {
@@ -44,10 +184,14 @@ const Confirm = ({ saveTrainingProgram, closeForm }) => {
   );
 };
 
+//=============================================================================================================
+
 const CreateTrainingProgram = () => {
   const [userInfo, setUserInfo] = useState();
   const [showFormAddUser, setShowFormAddUser] = useState(false);
   const [TrainingProgram, setTrainingProgram] = useState({});
+  const [showFormChooseSyllabus, setShowFormChooseSyllabus] = useState(false);
+  const [trainingProgramID, setTrainingProgramID] = useState(0);
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -61,18 +205,31 @@ const CreateTrainingProgram = () => {
     setShowFormAddUser(true);
   };
 
+  const openForm2 = (e) => {
+    setShowFormChooseSyllabus(true);
+  };
+
   const closeForm = () => {
     setShowFormAddUser(false);
   };
 
+  const closeForm2 = () => {
+    setShowFormChooseSyllabus(false);
+  };
+
   const saveTrainingProgram = () => {
-    apiTrainingProgramInstance.post(
-      "/create-training-program",
-      TrainingProgram
-    );
+    apiTrainingProgramInstance
+      .post("/create-training-program", TrainingProgram)
+      .then((response) => {
+        console.log(response.data.payload.training_code);
+        setTrainingProgramID(response.data.payload.training_code);
+      });
     toast.success("Add training program successfully !!!");
     closeForm();
+    openForm2();
   };
+
+  const saveSyllabus = () => {};
 
   let Status = "Active";
   const changeStatus = (e) => {
@@ -106,6 +263,7 @@ const CreateTrainingProgram = () => {
           tmp.status = Status;
           tmp.create_by = userInfo.name;
           tmp.createdDate = formattedDate;
+          tmp.modified_by = userInfo.name;
           console.log(tmp);
           setTrainingProgram(tmp);
 
@@ -134,6 +292,20 @@ const CreateTrainingProgram = () => {
                   </div>
                 </div>
               )}
+
+              {showFormChooseSyllabus && (
+                <div className="user-form-popup-container">
+                  <div className="user-form">
+                    <ChooseSyllabus
+                      openForm={openForm2}
+                      closeForm3={closeForm2}
+                      trainingProgramID={trainingProgramID}
+                      saveSyllabus={saveSyllabus}
+                    />
+                  </div>
+                </div>
+              )}
+
               <Form>
                 <div className="table-class-container">
                   <div className="table-class-left">
@@ -153,10 +325,7 @@ const CreateTrainingProgram = () => {
                     </div>
                     <div className="input-class input-status">
                       <label>Modified by</label>
-                      <Field name="modified_by" />
-                      {errors.modified_by && touched.modified_by ? (
-                        <div style={{ color: "red" }}>{errors.modified_by}</div>
-                      ) : null}
+                      <input type="text" value={userInfo?.name} readOnly />
                     </div>
                     <div className="input-class input-location">
                       <label>Info</label>
@@ -170,7 +339,7 @@ const CreateTrainingProgram = () => {
                     <div className="input-class-date input-start-end">
                       <div className=" input-start-date">
                         <label>Start date</label>
-                        <Field name="start_time" type="date" />
+                        <Field name="start_time" type="date" required />
                         {errors.start_time && touched.start_time ? (
                           <div style={{ color: "red" }}>
                             {errors.start_time}
@@ -179,7 +348,7 @@ const CreateTrainingProgram = () => {
                       </div>
                       <div className=" input-end-date">
                         <label>Modified date</label>
-                        <Field name="modified_date" type="date" />
+                        <Field name="modified_date" type="date" required />
                         {errors.modified_date && touched.modified_date ? (
                           <div style={{ color: "red" }}>
                             {errors.modified_date}
