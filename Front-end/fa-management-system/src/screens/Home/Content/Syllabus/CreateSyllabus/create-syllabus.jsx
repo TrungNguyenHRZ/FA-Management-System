@@ -122,14 +122,6 @@ const CreateSyllabus = () => {
     }
   };
 
-  const addDay = () => {
-    const newDayNumber = dayNumber[dayNumber.length - 1] + 1;
-
-    // Use setDayNumber to update the state
-    setDayNumber([...dayNumber, newDayNumber]);
-    console.log(dayNumber);
-  };
-
   const removeDay = (indexToRemove, setValues) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -310,13 +302,13 @@ const CreateSyllabus = () => {
                 {page === 1 ? (
                   <div className="create-general">
                     <label>Syllabus Name: </label>
-                    <Field type="text" name="topic_name" />
+                    <Field type="text" name="topic_name" required/>
                     <label>Version: </label>
-                    <Field type="text" name="version" />
+                    <Field type="text" name="version" required/>
                     <label>Training audience: </label>
-                    <Field type="number" name="training_audience" />
+                    <Field type="number" name="training_audience" required/>
                     <label>Technical requirements:</label>
-                    <Field name="technical_group" as="textarea" />
+                    <Field name="technical_group" as="textarea" required/>
                     <label>Level</label>
                     <Field name="level" as="select">
                       {levels.map((level) => (
@@ -335,7 +327,7 @@ const CreateSyllabus = () => {
                                   handleKeyPress(e, push, lIndex, remove)
                                 }
                                 type="text"
-                              />
+                                required/>
                             </div>
                           ))}
                         </>
@@ -509,21 +501,25 @@ const CreateSyllabus = () => {
                                                                       type="text"
                                                                       name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].content`}
                                                                       placeholder="Content"
+                                                                      required
                                                                     />
                                                                     <Field
                                                                       type="text"
                                                                       name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
                                                                       placeholder="TrainingFormat"
+                                                                      required
                                                                     />
                                                                     <Field
                                                                       type="number"
                                                                       name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].duration`}
                                                                       placeholder="Duration"
+                                                                      required
                                                                     />
                                                                     <Field
                                                                       type="text"
                                                                       name={`unitsByDay[${selectedContent.dayNumber -1}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
                                                                       placeholder="DeliveryType"
+                                                                      required
                                                                     />
                                                                     <Button
                                                                       key="cancel"
