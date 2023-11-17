@@ -72,60 +72,67 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
       // allSyllabus.map(
 
       <div className="choose-syllabus-container">
-        <div className="training-program-content-main">
-          <div>Content</div>
-          <br />
-          {allSyllabus?.map((item, index) => (
-            <div className="training-program-content">
-              <button onClick={(e) => addToList(e, item)}>
-                <div className="training-program-content-title">
-                  <div>
-                    <h2>{item.topic_name}</h2>
-                  </div>
-                  <div>{item.publish_status}</div>
-                </div>
-                <div className="training-program-detail">
-                  <div>
-                    132 | {item.programDuration} days | Modified on{" "}
-                    {item.modified_date} by {item.modified_by}
-                  </div>
-                </div>
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="training-program-main">
+        <div className="form-choose-syllabus-training">
           <div className="training-program-content-main">
-            <div>Pick em</div>
-            <br />
-            {addNewSyllabus.map((item2, index) => (
-              <div className="training-program-content">
-                <div className="training-program-content-title">
-                  <div>
-                    <h2>{item2.topic_name}</h2>
+            {allSyllabus?.map((item, index) => (
+              <>
+                <div
+                  className="training-program-content"
+                  onClick={(e) => addToList(e, item)}
+                >
+                  <div className="training-program-content-title">
+                    <div>
+                      <h2>{item.topic_name}</h2>
+                    </div>
+                    <div>{item.publish_status}</div>
                   </div>
-                  <div>{item2.publish_status}</div>
-                </div>
-
-                <div className="training-program-detail">
-                  <div>
-                    132 | {item2.programDuration} days | Modified on{" "}
-                    {item2.modified_date} by {item2.modified_by}
+                  <div className="training-program-detail">
+                    <div>
+                      132 | {item.programDuration} days | Modified on{" "}
+                      {item.modified_date} by {item.modified_by}
+                    </div>
                   </div>
                 </div>
-                <button onClick={(e) => addToList2(e, item2)}>X</button>
-              </div>
+                <br />
+              </>
             ))}
+          </div>
+          <div className="training-program-main">
+            <div className="training-program-content-main">
+              {addNewSyllabus.map((item2, index) => (
+                <>
+                  <div className="training-program-content">
+                    <div className="training-program-content-title">
+                      <div>
+                        <h2>{item2.topic_name}</h2>
+                      </div>
+                      <div>{item2.publish_status}</div>
+                    </div>
+
+                    <div className="training-program-detail">
+                      <div>
+                        132 | {item2.programDuration} days | Modified on{" "}
+                        {item2.modified_date} by {item2.modified_by}
+                      </div>
+                    </div>
+                    <div className="btn-delete-choosed-container">
+                      <button
+                        className="btn-delete-choosed-syllabus"
+                        onClick={(e) => addToList2(e, item2)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                </>
+              ))}
+            </div>
           </div>
         </div>
         <div className="training-program-main">
           <div className="training-program-content-main-2">
-            <button onClick={(e) => closePick(e)}>X</button>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+            <button onClick={(e) => closePick(e)}>Cancel</button>
             <button onClick={(e) => saveAll(e)}>Save</button>
           </div>
         </div>
@@ -141,10 +148,11 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
       className="user-form-popup-container"
       // onClick={handleOverlayClick}
     >
-      <div className="user-form">
+      <div className="choose-syllabus-training-form">
         <div className="btn-close-form"></div>
-        <div>Choose Syllabus</div>
-
+        <div className="choose-syllabus-training-title">
+          Choose one or more syllabus on the left !!!
+        </div>
         <div className="create-training-action"></div>
         <div>{renderData()}</div>
       </div>
