@@ -10,7 +10,7 @@ public interface ScheduleService {
     List<Schedule> findAllSchedule();
     Schedule Create(Schedule s);
     Schedule convert(ScheduleResponse s);
-    List<Schedule> findScheduleByClassId(int id);
+    List<ScheduleResponse> findScheduleByClassId(int id);
     void deleteScheduleById(int sid);
     List<ScheduleResponse> sortScheduleByDate(List<ScheduleResponse> scheduleList);
 }

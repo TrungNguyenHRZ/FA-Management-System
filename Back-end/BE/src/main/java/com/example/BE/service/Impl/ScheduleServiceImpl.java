@@ -40,7 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<Schedule> findScheduleByClassId(int id) {
+    public List<ScheduleResponse> findScheduleByClassId(int id) {
         return scheduleRepository.findScheduleByClassId(id);
     }
 

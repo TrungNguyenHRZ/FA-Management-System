@@ -53,19 +53,15 @@ public class scheduleController {
     @GetMapping(value = {"/getScheduleByClassId"})
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getScheduleByClassId(@RequestParam int id) {
         ApiResponse apiResponse = new ApiResponse();
-        List<Schedule> ScheList = scheduleService.findScheduleByClassId(id);
-        List<ScheduleResponse> result = new ArrayList<>();
-        for (Schedule s :ScheList) {
-            result.add(new ScheduleResponse(s));
-        }
-        apiResponse.ok(result);
+        List<ScheduleResponse> ScheList = scheduleService.findScheduleByClassId(id);
+        apiResponse.ok(ScheList);
         return ResponseEntity.ok(apiResponse);
     }
     @PostMapping(value = {"/autoGenarateSchedule"})
     public ResponseEntity<ApiResponse<ScheduleResponse>> test1(@RequestBody ScheduleResponse schedule,@RequestParam int classid) {
         ApiResponse apiResponse = new ApiResponse();
         Class c = classService.findById(classid);
-        List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+        List<ScheduleResponse> ScheList = scheduleService.findScheduleByClassId(classid);
         if(ScheList.size() < c.getDuration()){
             Date currentDate = schedule.getDay();
             // Using Calendar to extract the day
@@ -97,7 +93,7 @@ public class scheduleController {
         if(duration%slotPerWeek==0){
             int n = duration/slotPerWeek;
             //
-            List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+            List<ScheduleResponse> ScheList = scheduleService.findScheduleByClassId(classid);
             for(int i = 0; i < n; i++)
             {
                 Date currentDate = schedule.getDay();
@@ -117,10 +113,11 @@ public class scheduleController {
             }
             apiResponse.ok(scheduleResponseList);
         }
-        else{
-            duration = duration+duration%slotPerWeek;
+        else if(duration%slotPerWeek!=0)
+        {
+            int maxDuration = duration;
+            duration = duration+(slotPerWeek-(duration%slotPerWeek));
             int n = duration/slotPerWeek;
-
             for(int i = 0; i < n; i++)
             {
                 Date currentDate = schedule.getDay();
@@ -135,20 +132,24 @@ public class scheduleController {
                 schedule.setDay(calendar.getTime());
                 schedule.setClass_id(classid);
                 Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
-                List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
-                scheduleResponseList.clear();
-                for (Schedule s: ScheList) {
-                    scheduleResponseList.add(new ScheduleResponse(s));
-                }
-                for(int j = 0; j<duration; j++){
-                    if (scheduleResponseList.size()>duration) {
-                        if (scheduleResponseList.get(j).getDay().after(scheduleResponseList.get(duration - 1).getDay())) {
-                            scheduleService.deleteScheduleById(scheduleResponseList.get(j).getSchedule_id());
-                            scheduleResponseList.remove(j);
-                            apiResponse.error("dddddd");
-                        }else{
-                            apiResponse.error("Sai");
-                        }
+                ScheduleResponse response = new ScheduleResponse(savedSchedule);
+                List<ScheduleResponse> schedules = scheduleService.findScheduleByClassId(classid);
+                scheduleResponseList = scheduleService.sortScheduleByDate(schedules);
+//                for(int j = 0; j<duration; j++){
+//                    if (scheduleList.size()>duration) {
+//                        if (scheduleList.get(j).getDay().after(scheduleList.get(duration - 1).getDay())) {
+//                            scheduleService.deleteScheduleById(scheduleList.get(j).getSchedule_id());
+//                            scheduleResponseList.remove(j);
+//                            apiResponse.error("dddddd");
+//                        }else{
+//                            apiResponse.error("Sai");
+//                        }
+//                    }
+//                }
+                for (int j = scheduleResponseList.size() - 1; j >= 0; j--) {
+                    if (j >= maxDuration) {
+                        scheduleService.deleteScheduleById(scheduleResponseList.get(j).getSchedule_id());
+                        scheduleResponseList.remove(j);
                     }
                 }
             }
