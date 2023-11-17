@@ -20,6 +20,7 @@ const UserList = () => {
 
   useEffect(() => {
     Authorization();
+    console.log(Authorization());
   });
 
   useEffect(() => {

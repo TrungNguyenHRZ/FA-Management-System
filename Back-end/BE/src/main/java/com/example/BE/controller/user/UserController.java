@@ -56,7 +56,7 @@ public class UserController {
 
     @PutMapping("/update/{id}")
     @SecurityRequirement(name = OpenApiConfig.SERCURITY_BEARER)
-    public ResponseEntity<UserResponse> updateUSer(@PathVariable(name = "id") int id, UpdateUserRequest request) {
+    public ResponseEntity<UserResponse> updateUSer(@PathVariable(name = "id") int id, @RequestBody UpdateUserRequest request) {
         request.setId(id);
         UserResponse userResponse = userService.updateInfoUser(request);
         return ResponseEntity.ok(userResponse);

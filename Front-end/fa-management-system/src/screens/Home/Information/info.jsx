@@ -17,7 +17,8 @@ const Info = () => {
 
   useEffect(() => {
     Authorization();
-  }, []);
+    console.log(Authorization());
+  });
 
   useEffect(() => {
     setInfo(decodedToken);
@@ -31,20 +32,22 @@ const Info = () => {
       });
   }, [decodedToken.id]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // console.log("User edited: ", listInfoUser);
     const afterValue = {
-      ...listInfoUser,
-      email: null,
-      id: null,
-      userType: null,
-      createdAt: null,
-      pass: null,
+      name: listInfoUser.name,
+      phone: listInfoUser.phone,
+      dob: listInfoUser.dob,
+      genderTrueMale: listInfoUser.gender === "Male" ? true : false,
+      status: listInfoUser.status
     };
+    console.log(listInfoUser)
     console.log(afterValue);
-    apiUserInstance
-      .put("/update/" + decodedToken.id, afterValue)
+    console.log(`/update/${decodedToken.id}`, afterValue);
+    await apiUserInstance
+      .put(`/update/${decodedToken.id}`,afterValue)
       .then((response) => {
+      
         console.log(response.data);
       })
       .catch((error) => {
