@@ -120,7 +120,7 @@ public class scheduleController {
         else{
             duration = duration+duration%slotPerWeek;
             int n = duration/slotPerWeek;
-            List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+
             for(int i = 0; i < n; i++)
             {
                 Date currentDate = schedule.getDay();
@@ -135,20 +135,32 @@ public class scheduleController {
                 schedule.setDay(calendar.getTime());
                 schedule.setClass_id(classid);
                 Schedule savedSchedule = scheduleService.Create(scheduleService.convert(schedule));
-                ScheduleResponse response = new ScheduleResponse(savedSchedule);
-                scheduleResponseList.add(response);
-                List<ScheduleResponse> result = scheduleService.sortScheduleByDate(scheduleResponseList);
+                List<Schedule> ScheList = scheduleService.findScheduleByClassId(classid);
+                scheduleResponseList.clear();
+                for (Schedule s: ScheList) {
+                    scheduleResponseList.add(new ScheduleResponse(s));
+                }
                 for(int j = 0; j<duration; j++){
-                    if (result.get(duration-1) != null) {
-                        if (result.get(j).getDay().after(result.get(duration - 1).getDay())) {
-                            scheduleService.deleteScheduleById(result.get(j).getSchedule_id());
+                    if (scheduleResponseList.size()>duration) {
+                        if (scheduleResponseList.get(j).getDay().after(scheduleResponseList.get(duration - 1).getDay())) {
+                            scheduleService.deleteScheduleById(scheduleResponseList.get(j).getSchedule_id());
                             scheduleResponseList.remove(j);
+                            apiResponse.error("dddddd");
+                        }else{
+                            apiResponse.error("Sai");
                         }
                     }
                 }
             }
             apiResponse.ok(scheduleResponseList);
         }
+        return ResponseEntity.ok(apiResponse);
+    }
+    @DeleteMapping(value = {"/delete"})
+    public ResponseEntity<ApiResponse<ScheduleResponse>> delete(@RequestParam int scheduleid) {
+        ApiResponse apiResponse = new ApiResponse();
+        scheduleService.deleteScheduleById(scheduleid);
+                apiResponse.error("Xoa r");
         return ResponseEntity.ok(apiResponse);
     }
 }

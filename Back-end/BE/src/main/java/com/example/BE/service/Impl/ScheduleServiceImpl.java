@@ -46,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void deleteScheduleById(int sid) {
-        scheduleRepository.deleteScheduleById(sid);
+        scheduleRepository.deleteById(sid);
     }
     @Override
     public List<ScheduleResponse> sortScheduleByDate(List<ScheduleResponse> scheduleList) {
