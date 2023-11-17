@@ -459,9 +459,9 @@ public class SyllabusServiceImpl implements SyllabusService {
 						}
 						contentList.add(content);
 					}
-				}				
-			}
+				}	
 			unit.setTraining_content(contentList);
+			}
 			unitList.add(unit);
 		}
 		List<TrainingUnit> trainingUnitList = updateUnit(unitList);

@@ -1,5 +1,6 @@
 .info-container {
   padding: 10px;
+  font-size: 20px;
 }
 .info-content {
   display: flex;
@@ -7,12 +8,20 @@
 
 .info-form-container {
   display: flex;
+  align-items: center;
   flex: 5;
-  gap: 5px;
+  gap: 20px;
   flex-direction: column;
   padding: 20px;
 }
+.info-form-show {
+  display: flex;
+  flex-direction: column;
+}
 
+.info-form-show > input {
+  width: 500px;
+}
 .info-form-other {
   display: flex;
   gap: 10px;
@@ -21,7 +30,6 @@
   flex: 1;
   border-left: 1px solid rgb(184, 184, 184);
   padding: 20px;
-  height: 630px;
 }
 
 .info-form-other > .info-avatar > svg {
@@ -52,4 +60,33 @@
 }
 .status-inactive {
   background-color: #ff0000;
+}
+
+.info-form-edit,
+.info-form-save {
+  padding: 10px;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+}
+
+.info-form-edit {
+  background-color: #f2721e;
+}
+
+.info-form-save {
+  background-color: #024fa0;
+}
+.info-form-cancel {
+  padding: 10px;
+  border: none;
+  color: black;
+  background: none;
+}
+.info-form-edit:hover,
+.info-form-save:hover {
+  opacity: 0.8;
+}
+.info-form-cancel:hover {
+  text-decoration: underline;
 }

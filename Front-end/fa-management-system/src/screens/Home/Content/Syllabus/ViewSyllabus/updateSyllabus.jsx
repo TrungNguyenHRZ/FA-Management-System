@@ -30,7 +30,7 @@ const UpdateSyllabus = () => {
           },
           []
         );
-		const unitsByDay = groupedUnits.filter((day) => day !== undefined);
+        const unitsByDay = groupedUnits.filter((day) => day !== undefined);
 
         setGroupedUnits(unitsByDay);
       })
@@ -43,6 +43,8 @@ const UpdateSyllabus = () => {
     ...syllabus,
     groupedUnits,
   };
+
+  console.log(initialValues);
 
   const formikRef = React.useRef(null);
 
@@ -78,31 +80,51 @@ const UpdateSyllabus = () => {
   };
 
   const convertToUnitList = (values) => {
-    const a = [];
     const unitList = values.groupedUnits.flatMap((day) =>
       day.units.map((unit) => ({
+        unit_code: unit.unit_code,
         unit_name: unit.unit_name,
         day_number: day.day_number,
-        contentList: unit.contentList
+        contentList: unit.contentList,
       }))
     );
 
-    return unitList;
+    const updatedUnitList = unitList.filter(unit => unit.unit_code !== undefined)
+    return updatedUnitList;
   };
 
-//   console.log(syllabus);
-  
+  const convertToNewUnitList = (values) => {
+    const unitList = values.groupedUnits.flatMap((day) =>
+      day.units.map((unit) => ({
+        unit_code: unit.unit_code,
+        unit_name: unit.unit_name,
+        day_number: day.day_number,
+        contentList: unit.contentList,
+      }))
+    );
 
-  
+    const updatedUnitList = unitList.filter(unit => unit.unit_code === undefined)
+    return updatedUnitList;
+  };
+
+  //   console.log(syllabus);
+
   const handleSubmit = (values) => {
     // apiSyllabusInstance.put(`/updateSyllabus/${syllabus.topic_code}`,values);
     const afterValue = convertToUnitList(values);
+    const newUnits = convertToNewUnitList(values);
+
     const updatedValue = {
       ...values,
       unitList: afterValue,
-      groupedUnits: null
-    }
-	console.log(updatedValue);
+      groupedUnits: null,
+    };
+    apiSyllabusInstance.put(
+      `/updateSyllabus/${syllabus.topic_code}`,
+      updatedValue
+    );
+    apiSyllabusInstance.post(`/saveUnit/${values.topic_code}`,newUnits)
+    console.log(newUnits);
   };
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -139,6 +161,36 @@ const UpdateSyllabus = () => {
       ...prevShowDayFields,
       [dayIndex]: !prevShowDayFields[dayIndex] || false,
     }));
+  };
+
+  const deleteUnit = async (unit_code) => {
+    try {
+      const response = await apiSyllabusInstance.delete(
+        `/deleteUnit/${unit_code}`
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleKeyPress = (event, push, index, remove) => {
+    // Kiểm tra xem người dùng có nhấn phím Enter không
+    if (event.key === "Enter") {
+      // Thêm một trường mới sử dụng hàm push từ FieldArray
+      push({
+        learningObjectList: {
+          learning_name: "",
+          learning_description: "",
+          type: "",
+        },
+      });
+      // Ngăn chặn sự kiện mặc định (ví dụ: ngăn chặn việc submit form)
+      event.preventDefault();
+    } else if (event.key === "Backspace" && event.target.value === "") {
+      // Remove the field when Backspace is pressed and the field is empty
+      remove(index);
+      event.preventDefault();
+    }
   };
 
   return (
@@ -182,6 +234,25 @@ const UpdateSyllabus = () => {
                   <Field type="number" name="training_audience" />
                   <label>Technical requirements:</label>
                   <Field name="technical_group" as="textarea" />
+                  <label>Course Objective(s)</label>
+                  <FieldArray name="learningList">
+                    {({ push, remove }) => (
+                      <>
+                        {values.learningList &&
+                          values.learningList.map((a, lIndex) => (
+                            <div key={lIndex}>
+                              <Field
+                                name={`learningList[${lIndex}].learningObjectList.learning_description`}
+                                onKeyDown={(e) =>
+                                  handleKeyPress(e, push, lIndex, remove)
+                                }
+                                type="text"
+                              />
+                            </div>
+                          ))}
+                      </>
+                    )}
+                  </FieldArray>
                   <label
                     htmlFor="fileInput"
                     className="custom-file-input-label"
@@ -208,34 +279,40 @@ const UpdateSyllabus = () => {
                       <div key={dayIndex}>
                         <button
                           type="button"
-                        //   onClick={() => handleToggleDayFields(dayIndex)}
+                          onClick={() => handleToggleDayFields(dayIndex)}
                         >
-                          Day 
+                          Day {day.day_number}
                         </button>
-                        {true && (
+                        {showDayFields[dayIndex] && (
                           <FieldArray name={`groupedUnits[${dayIndex}].units`}>
                             {({ push, remove }) => (
                               <div>
                                 {day.units.map((unit, unitIndex) => (
                                   <div key={unitIndex} id={unitIndex}>
+                                    <div>Unit {unit.unit_code}: </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        deleteUnit(unit.unit_code);
+                                        remove(unitIndex);
+                                      }}
+                                    >
+                                      -
+                                    </button>
                                     <Field
                                       type="text"
                                       id={`groupedUnits[${dayIndex}].units[${unitIndex}].unit_name`}
                                       name={`groupedUnits[${dayIndex}].units[${unitIndex}].unit_name`}
                                     />
-                                    <button
-                                      type="button"
-                                      onClick={() => remove(unitIndex)}
-                                    >
-                                      -
-                                    </button>
+
                                     <FieldArray
                                       name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList`}
                                     >
                                       <div>
+                                        <div>Content:</div>
                                         {unit.contentList.map(
                                           (content, contentIndex) => (
-                                            <div key = {contentIndex}>
+                                            <div key={contentIndex}>
                                               <Field
                                                 type="text"
                                                 name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
@@ -244,17 +321,17 @@ const UpdateSyllabus = () => {
                                               <Field
                                                 type="text"
                                                 name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
-                                                placeholder="Content"
+                                                placeholder="TrainingFormet"
                                               />
                                               <Field
                                                 type="text"
                                                 name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
-                                                placeholder="Content"
+                                                placeholder="Duration"
                                               />
                                               <Field
                                                 type="text"
                                                 name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
-                                                placeholder="Content"
+                                                placeholder="DeliveryType"
                                               />
                                             </div>
                                           )
@@ -263,6 +340,26 @@ const UpdateSyllabus = () => {
                                     </FieldArray>
                                   </div>
                                 ))}
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    push({
+                                      unit_name: "",
+                                      contentList: [
+                                        {
+                                          content: "",
+                                          deliveryType: "",
+                                          duration: 0,
+                                          learningObjective: "",
+                                          note: "",
+                                          trainingFormat: "",
+                                        },
+                                      ],
+                                    })
+                                  }
+                                >
+                                  Create
+                                </button>
                               </div>
                             )}
                           </FieldArray>
