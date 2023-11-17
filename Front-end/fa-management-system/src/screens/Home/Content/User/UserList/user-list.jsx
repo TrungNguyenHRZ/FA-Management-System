@@ -11,7 +11,6 @@ import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import Authorization from "../../../../Authentication/Auth";
 
-
 const UserList = () => {
   const [list, setList] = useState([]);
   const [showFormAddUser, setShowFormAddUser] = useState(false);
@@ -20,9 +19,7 @@ const UserList = () => {
   const itemPerPage = 9;
 
   useEffect(() => {
-
     Authorization();
-
   });
 
   useEffect(() => {
@@ -101,7 +98,6 @@ const UserList = () => {
         setList(response.data.userResponseList);
         setTotalPage(
           Math.ceil(response.data.userResponseList.length / itemPerPage)
-
         );
         console.log(response.data.userResponseList);
       })
