@@ -8,6 +8,7 @@ import CountTrainingProgram from "./Specification/traning-proram-count";
 import LineChart from "./Chart/LineChart";
 import Cookies from "js-cookie";
 import Authorization from "../../../Authentication/Auth";
+import { Link } from "react-router-dom";
 const Overview = () => {
   useEffect(() => {
     Authorization();
@@ -15,10 +16,18 @@ const Overview = () => {
   return (
     <div className="overview-container">
       <div className="specification-container">
-        <CountSyllabus />
-        <CountClass />
-        <CountUser />
-        <CountTrainingProgram />
+        <Link to={"/view-syllabus"}>
+          <CountSyllabus />
+        </Link>
+        <Link to={"/view-class"}>
+          <CountClass />
+        </Link>
+        <Link to={"/user-list"}>
+          <CountUser />
+        </Link>
+        <Link to={"/view-trainingprogram"}>
+          <CountTrainingProgram />
+        </Link>
       </div>
       <div className="chart-container">
         <div className="dc-chart">

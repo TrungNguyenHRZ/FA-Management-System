@@ -6,6 +6,7 @@ import { RxAvatar } from "react-icons/rx";
 import apiUserInstance from "../../../service/api-user";
 import Authorization from "../../Authentication/Auth";
 import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
 
 const Info = () => {
   const [info, setInfo] = useState({});
@@ -39,19 +40,20 @@ const Info = () => {
       phone: listInfoUser.phone,
       dob: listInfoUser.dob,
       genderTrueMale: listInfoUser.gender === "Male" ? true : false,
-      status: listInfoUser.status
+      status: listInfoUser.status,
     };
-    console.log(listInfoUser)
+    console.log(listInfoUser);
     console.log(afterValue);
     console.log(`/update/${decodedToken.id}`, afterValue);
     await apiUserInstance
-      .put(`/update/${decodedToken.id}`,afterValue)
+      .put(`/update/${decodedToken.id}`, afterValue)
       .then((response) => {
-      
         console.log(response.data);
+        toast.success("Update information successfully !!!");
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Update information failed !!!");
       });
     setEnableEdit(false);
   };
@@ -152,6 +154,20 @@ const Info = () => {
             Create at: {formatDate(listInfoUser.createdAt) || "null"}
           </div>
         </div>
+      </div>
+      <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </div>
   );
