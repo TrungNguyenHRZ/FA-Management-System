@@ -68,6 +68,12 @@ public class TrainingProgram implements Serializable {
     @Column(name = "generalInfo", columnDefinition = "TEXT")
     private String generalInfo;
 
+    @Column(name = "Download_url")
+    private String download_url;
+
+//    @Column(name = "Toggle")
+//    private boolean toggle;
+
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user_training;

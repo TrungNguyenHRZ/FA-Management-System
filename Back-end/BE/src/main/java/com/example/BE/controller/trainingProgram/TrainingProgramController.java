@@ -15,16 +15,24 @@ import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
 import com.example.BE.service.TrainingProgramSyllabusService;
+import jakarta.validation.Path;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/TrainingProgram")
@@ -106,23 +114,31 @@ public class TrainingProgramController {
     }
 
     @PostMapping(value = {"/create-training-program-syllabus"})
-    public ResponseEntity<ApiResponse> createTrainingProgramSyllabus(@Valid @RequestBody TrainingProgramSyllabusResponse tpsRes){
+    public ResponseEntity<ApiResponse> createTrainingProgramSyllabus(@Valid @RequestBody List<TrainingProgramSyllabusResponse> tpsResList){
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgramSyllabus tps = new TrainingProgramSyllabus();
-        tps.setId(new TrainingProgramSyllabusId(tpsRes.getTrainingProgram(), tpsRes.getSyllabus()));
-        tps.setSequence(tpsRes.getSequence());
 
-        TrainingProgram trainingProgram = trainingProgramService.findById(tpsRes.getTrainingProgram());
-        int totalDuration = trainingProgram.getDuration();
-        Syllabus syllabus = syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus());
+        for (TrainingProgramSyllabusResponse tpsRes : tpsResList) {
+            TrainingProgramSyllabus tps = new TrainingProgramSyllabus();
+            tps.setId(new TrainingProgramSyllabusId(tpsRes.getTrainingProgram(), tpsRes.getSyllabus()));
+            tps.setSequence(tpsRes.getSequence());
 
-        totalDuration += syllabusService.getAllDuration(tpsRes.getSyllabus());
-        trainingProgram.setDuration(totalDuration);
+            TrainingProgram trainingProgram = trainingProgramService.findById(tpsRes.getTrainingProgram());
 
-        tps.setProgram(trainingProgram);
-        tps.setProgram_topic(syllabus);
-        TrainingProgramSyllabus createdTps = trainingProgramSyllabusService.saveTPS(tps);
-        apiResponse.ok(createdTps);
+            if (trainingProgram != null) {
+                int totalDuration = trainingProgram.getDuration();
+                Syllabus syllabus = syllabusService.getSyllabusByTopic_Code(tpsRes.getSyllabus());
+
+                totalDuration += syllabusService.getAllDuration(tpsRes.getSyllabus());
+                trainingProgram.setDuration(totalDuration);
+
+                tps.setProgram(trainingProgram);
+                tps.setProgram_topic(syllabus);
+                TrainingProgramSyllabus createdTps = trainingProgramSyllabusService.saveTPS(tps);
+                apiResponse.ok(createdTps);
+            } else {
+                apiResponse.error("Training Program not found for ID: " + tpsRes.getTrainingProgram());
+            }
+        }
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -313,6 +329,49 @@ public class TrainingProgramController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/upload-training-programs/{id}")
+    public ResponseEntity<ApiResponse> uploadFiles(@RequestParam("file") MultipartFile file,
+                                                       @PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        TrainingProgram existedTP = trainingProgramService.findById(id);
+        if (existedTP != null){
+            String fileName = file.getOriginalFilename();
+            String filePath = trainingProgramService.uploading(fileName, file);
+            existedTP.setDownload_url(filePath);
+            existedTP.setTraining_name(fileName);
+            TrainingProgram afterTP = trainingProgramService.updateTrainingProgram(existedTP);
+            apiResponse.ok(afterTP.getDownload_url());
+            return ResponseEntity.ok(apiResponse);
+        } else {
+            apiResponse.error("Training Program Not Found!");
+            return  ResponseEntity.ok(apiResponse);
+        }
+    }
+
+    Path foundFile = null;
+    @GetMapping(value = "/download-training-programs/{id}")
+    public ResponseEntity<?> downloadFiles(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        TrainingProgram existedTP = trainingProgramService.findById(id);
+        Resource resource = null;
+        String filePath = existedTP.getDownload_url();
+        try {
+            resource = new UrlResource(Paths.get(filePath).toUri());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment;fileName=\"" + resource.getFilename() + "\"";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + existedTP.getTraining_name() + "\"");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
+
 }
 
 
