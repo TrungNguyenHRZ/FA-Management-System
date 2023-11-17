@@ -5,35 +5,61 @@ import "./info.css";
 import { RxAvatar } from "react-icons/rx";
 import apiUserInstance from "../../../service/api-user";
 import Authorization from "../../Authentication/Auth";
+import { useNavigate } from "react-router";
 
 const Info = () => {
   const [info, setInfo] = useState({});
-  const [infoId, setInfoId] = useState(0);
-  const [listInfoUser, setListInfoUser] = useState([]);
+  const [listInfoUser, setListInfoUser] = useState({});
   const [enableEdit, setEnableEdit] = useState(false);
+
+  const decodedToken = jwtDecode(Cookies.get("token"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     Authorization();
-    const token = Cookies.get("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setInfo(decodedToken);
-      setInfoId(info.id);
-      console.log(infoId);
-      apiUserInstance
-        .get("/info/" + infoId)
-        .then((response) => {
-          setListInfoUser(response.data);
-          console.log(typeof listInfoUser.userType);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [infoId]);
+  }, []);
 
+  useEffect(() => {
+    setInfo(decodedToken);
+    apiUserInstance
+      .get("/info/" + decodedToken.id)
+      .then((response) => {
+        setListInfoUser(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [decodedToken.id]);
+
+  const handleSave = () => {
+    // console.log("User edited: ", listInfoUser);
+    const afterValue = {
+      ...listInfoUser,
+      email: null,
+      id: null,
+      userType: null,
+      createdAt: null,
+      pass: null,
+    };
+    console.log(afterValue);
+    apiUserInstance
+      .put("/update/" + decodedToken.id, afterValue)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    setEnableEdit(false);
+  };
   const handleEdit = () => {
     setEnableEdit((prevEnableEdit) => !prevEnableEdit);
+  };
+  const handleInputChange = (e) => {
+    setListInfoUser((prevInfo) => ({
+      ...prevInfo,
+      [e.target.name]: e.target.value,
+    }));
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -58,42 +84,41 @@ const Info = () => {
             <label htmlFor="">Name:</label>
             <input
               type="text"
+              name="name"
               value={listInfoUser.name || ""}
               readOnly={!enableEdit}
               disabled={!enableEdit}
-              onChange={(e) =>
-                setListInfoUser({ ...listInfoUser, name: e.target.value })
-              }
+              onChange={handleInputChange}
             />
             <label htmlFor="">Phone:</label>
             <input
               type="number"
+              name="phone"
               value={listInfoUser.phone || ""}
               readOnly={!enableEdit}
               disabled={!enableEdit}
-              onChange={(e) =>
-                setListInfoUser({ ...listInfoUser, phone: e.target.value })
-              }
+              onChange={handleInputChange}
             />
             <label htmlFor="">Date of birth:</label>
             <input
               type="text"
+              name="dob"
               value={listInfoUser.dob || ""}
               readOnly={!enableEdit}
               disabled={!enableEdit}
-              onChange={(e) =>
-                setListInfoUser({ ...listInfoUser, dob: e.target.value })
-              }
+              onChange={handleInputChange}
             />
           </div>
           <div className="info-form-action">
             {enableEdit ? (
-              <React.Fragment className="info-form-save">
+              <>
                 <button className="info-form-cancel" onClick={handleEdit}>
                   Cancel
                 </button>
-                <button className="info-form-save">Save</button>
-              </React.Fragment>
+                <button className="info-form-save" onClick={handleSave}>
+                  Save
+                </button>
+              </>
             ) : (
               <button className="info-form-edit" onClick={handleEdit}>
                 Edit
