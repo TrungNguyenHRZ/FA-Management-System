@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import { SyncLoader } from "react-spinners";
-import { Formik, Field, Form, FieldArray } from "formik";
+import {
+  Formik,
+  Field,
+  Form,
+  FieldArray,
+  ErrorMessage,
+  useFormikContext,
+} from "formik";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import {
   MdOutlineExpandCircleDown,
@@ -25,29 +32,40 @@ import { MdOutlineEdit } from "react-icons/md";
 // import Button from "@mui/material/Button";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
-import { CiCircleMinus } from "react-icons/ci";
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import "./create-syllabus.css";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import * as Yup from "yup";
 
 const CreateSyllabus = () => {
   const [page, setPage] = useState(1);
-  const [units, setUnits] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [groupedUnits, setGroupedUnits] = useState([]);
   const [expanded, setExpanded] = useState("panel1");
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  // useEffect(() => {
-  //   const token = Cookies.get("token");
-  //   if (token) {
-  //     const decodedToken = jwtDecode(token);
-  //     setUserInfo(decodedToken);
-  //   }
-  // }, []);
-  // if (userInfo) {
-  //   console.log(userInfo.id);
-  // }
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+    }
+  }, []);
+  if (userInfo) {
+    console.log(userInfo);
+  }
 
   let changeGeneral = () => {
     setPage(1);
@@ -63,6 +81,7 @@ const CreateSyllabus = () => {
     setPage(3);
     console.log(page);
   };
+
 
   let levels = ["fresher", "junior", "senior"];
 
@@ -162,13 +181,7 @@ const CreateSyllabus = () => {
     setIsModalVisible(false);
   };
 
-  // Hàm xử lý khi modal được submit
-  const handleModalSubmit = () => {
-    // Đóng modal
-    setIsModalVisible(false);
-  };
-
-  const steps = ["General", "Outline", "Others"];
+  const steps = ["General", "Outline", "Others", "Completed"];
 
   const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -213,6 +226,73 @@ const CreateSyllabus = () => {
     p: 4,
   };
 
+  const style1 = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+
+  const switchPage = () => {
+    if (page === 3) {
+      handleOpen();
+    } else {
+      setPage(page + 1);
+    }
+  };
+
+  const delivery = [
+    "Assignment/Lab",
+    "Concept/Lecture",
+    "Guide/Review",
+    "Test/Quiz",
+    "Exam",
+    "Seminar/Workshop",
+  ];
+
+  let validateContent = (value) => {
+    let error;
+    if (value === "") error = "Required";
+    return error;
+  };
+
+  const validationSchema = Yup.object().shape({
+    topic_name: Yup.string().required("Syllabus Name is required"),
+    training_audience: Yup.number()
+      .positive("Number must be greater than 0")
+      .required("Number is required"),
+    unitsByDay: Yup.array().of(
+      Yup.object().shape({
+        units: Yup.array().of(
+          Yup.object().shape({
+            contentList: Yup.array().of(
+              Yup.object().shape({
+                content: Yup.string().required("Content is required"),
+                // Thêm các quy tắc khác nếu cần
+                deliveryType: Yup.string()
+                  .required("Delivery type is required")
+                  .oneOf(
+                    delivery, // Các giá trị cho phép
+                    "Invalid delivery type"
+                  ),
+                duration: Yup.number()
+                  .positive("Number must be greater than 0")
+                  .required("Number is required"),
+              })
+            ),
+          })
+        ),
+      })
+    ),
+  });
+
   return (
     <div className="create-syllabus-container">
       <div className="detail-header">
@@ -252,6 +332,7 @@ const CreateSyllabus = () => {
       <div>
         <div>
           <Formik
+            validationSchema={validationSchema}
             initialValues={{
               topic_name: "",
               technical_group: "",
@@ -297,18 +378,26 @@ const CreateSyllabus = () => {
             }}
             onSubmit={handleSubmit}
           >
-            {({ values, setFieldValue, errors, touched, setValues }) => (
+            {({
+              values,
+              setFieldValue,
+              errors,
+              touched,
+              setValues,
+              isValidating,
+              validateForm,
+            }) => (
               <Form>
                 {page === 1 ? (
                   <div className="create-general">
-                    <label>Syllabus Name: </label>
-                    <Field type="text" name="topic_name" required/>
+                    <label>Syllabus Name:</label>
+                    <Field type="text" name="topic_name" />
                     <label>Version: </label>
-                    <Field type="text" name="version" required/>
+                    <Field type="text" name="version" />
                     <label>Training audience: </label>
-                    <Field type="number" name="training_audience" required/>
+                    <Field type="number" name="training_audience" />
                     <label>Technical requirements:</label>
-                    <Field name="technical_group" as="textarea" required/>
+                    <Field name="technical_group" as="textarea" />
                     <label>Level</label>
                     <Field name="level" as="select">
                       {levels.map((level) => (
@@ -318,27 +407,22 @@ const CreateSyllabus = () => {
                     <label>Course Objective(s)</label>
                     <FieldArray name="learningList">
                       {({ push, remove }) => (
-                        <>
+                        <div className="objective-wrapper">
                           {values.learningList.map((a, lIndex) => (
                             <div key={lIndex}>
                               <Field
+                                className="objective-field"
                                 name={`learningList[${lIndex}].learningObjectList.learning_description`}
                                 onKeyDown={(e) =>
                                   handleKeyPress(e, push, lIndex, remove)
                                 }
                                 type="text"
-                                required/>
+                              />
                             </div>
                           ))}
-                        </>
+                        </div>
                       )}
                     </FieldArray>
-                    <button
-                      className="save-create-generals"
-                      onClick={() => setPage(page + 1)}
-                    >
-                      Save
-                    </button>
                   </div>
                 ) : page === 2 ? (
                   //Outlie Screen
@@ -399,24 +483,20 @@ const CreateSyllabus = () => {
                                                   className="content-container-right"
                                                 >
                                                   <>
-                                                    <label
-                                                      htmlFor={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
-                                                    >
-                                                      Unit Name:
-                                                    </label>
                                                     <Field
+                                                      className="sy-name"
                                                       type="text"
+                                                      placeholder="Unit Name:"
                                                       id={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
                                                       name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
                                                     />
-                                                    <button
+                                                    <CiCircleMinus
+                                                      className="minus-icon"
                                                       type="button"
                                                       onClick={() =>
                                                         remove(unitIndex)
                                                       }
-                                                    >
-                                                      -
-                                                    </button>
+                                                    />
 
                                                     <FieldArray
                                                       name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList`}
@@ -448,8 +528,8 @@ const CreateSyllabus = () => {
                                                                 <div className="syllabus-content-box-right-c">
                                                                   <Field
                                                                     type="text"
-                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
-                                                                    placeholder="TrainingFormat"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                    placeholder="DeliveryType"
                                                                     readOnly
                                                                     className="syllabus-content-format-c"
                                                                   />
@@ -462,8 +542,8 @@ const CreateSyllabus = () => {
                                                                   />
                                                                   <Field
                                                                     type="text"
-                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
-                                                                    placeholder="DeliveryType"
+                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
+                                                                    placeholder="TrainingFormat"
                                                                     readOnly
                                                                     className="syllabus-content-format-c"
                                                                   />
@@ -498,6 +578,7 @@ const CreateSyllabus = () => {
                                                                   onClose={
                                                                     handleCancel
                                                                   }
+                                                                  name="modal-box"
                                                                   aria-labelledby="modal-modal-title"
                                                                   aria-describedby="modal-modal-description"
                                                                   className="modal-box"
@@ -514,67 +595,233 @@ const CreateSyllabus = () => {
                                                                         selectedContent.dayNumber
                                                                       }
                                                                     </p>
-                                                                    <Field
-                                                                      type="text"
-                                                                      name={`unitsByDay[${
-                                                                        selectedContent.dayNumber -
-                                                                        1
-                                                                      }].units[${unitIndex}].contentList[${contentIndex}].content`}
-                                                                      placeholder="Content"
-                                                                      required
-                                                                    />
-                                                                    <Field
-                                                                      type="text"
-                                                                      name={`unitsByDay[${
-                                                                        selectedContent.dayNumber -
-                                                                        1
-                                                                      }].units[${unitIndex}].contentList[${contentIndex}].trainingFormat`}
-                                                                      placeholder="TrainingFormat"
-                                                                      required
-                                                                    />
-                                                                    <Field
-                                                                      type="number"
-                                                                      name={`unitsByDay[${
-                                                                        selectedContent.dayNumber -
-                                                                        1
-                                                                      }].units[${unitIndex}].contentList[${contentIndex}].duration`}
-                                                                      placeholder="Duration"
-                                                                      required
-                                                                    />
-                                                                    <Field
-                                                                      type="text"
-                                                                      name={`unitsByDay[${
-                                                                        selectedContent.dayNumber -
-                                                                        1
-                                                                      }].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
-                                                                      placeholder="DeliveryType"
-                                                                      required
-                                                                    />
-                                                                    <Button
-                                                                      key="cancel"
-                                                                      onClick={
-                                                                        handleCancel
-                                                                      }
-                                                                    >
-                                                                      Cancel
-                                                                    </Button>
+                                                                    <Form className="form-modal">
+                                                                      <Field
+                                                                        type="text"
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].content`}
+                                                                        placeholder="Content"
+                                                                        className="modal-item"
+                                                                      />
+                                                                      <ErrorMessage
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].content`}
+                                                                      />
 
-                                                                    <Button
-                                                                      key="submit"
-                                                                      type="primary"
-                                                                      onClick={
-                                                                        handleModalSubmit
-                                                                      }
-                                                                    >
-                                                                      Submit
-                                                                    </Button>
+                                                                      <Field
+                                                                        type="number"
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].duration`}
+                                                                        className="modal-item"
+                                                                        placeholder="Duration"
+                                                                      />
+
+                                                                      <Field
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].deliveryType`}
+                                                                        placeholder="DeliveryType"
+                                                                        as="select"
+                                                                        className="modal-item"
+                                                                      >
+                                                                        <option>
+                                                                          Select
+                                                                          one
+                                                                        </option>
+                                                                        {delivery.map(
+                                                                          (
+                                                                            a
+                                                                          ) => (
+                                                                            <option
+                                                                              value={
+                                                                                a
+                                                                              }
+                                                                            >
+                                                                              {
+                                                                                a
+                                                                              }
+                                                                            </option>
+                                                                          )
+                                                                        )}
+                                                                      </Field>
+                                                                      <ErrorMessage
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].deliveryType`}
+                                                                      />
+                                                                      <Field
+                                                                        type="checkbox"
+                                                                        className="modal-item"
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].trainingFormat`}
+                                                                        render={({
+                                                                          field,
+                                                                          form,
+                                                                        }) => (
+                                                                          <FormControlLabel
+                                                                            control={
+                                                                              <Switch
+                                                                                {...field}
+                                                                                checked={
+                                                                                  field.value ===
+                                                                                  "Online"
+                                                                                }
+                                                                                onChange={(
+                                                                                  e
+                                                                                ) => {
+                                                                                  form.setFieldValue(
+                                                                                    `unitsByDay[${
+                                                                                      selectedContent.dayNumber -
+                                                                                      1
+                                                                                    }].units[${
+                                                                                      selectedContent.unitIndex
+                                                                                    }].contentList[${
+                                                                                      selectedContent.contentIndex
+                                                                                    }].trainingFormat`,
+                                                                                    e
+                                                                                      .target
+                                                                                      .checked
+                                                                                      ? "Online"
+                                                                                      : "Offline"
+                                                                                  );
+                                                                                }}
+                                                                              />
+                                                                            }
+                                                                            label={
+                                                                              field.value ===
+                                                                              "Online"
+                                                                                ? "Online"
+                                                                                : "Offline"
+                                                                            }
+                                                                          />
+                                                                        )}
+                                                                      />
+                                                                      <Button
+                                                                        key="submit"
+                                                                        type="primary"
+                                                                        onClick={() =>
+                                                                          validateForm().then(
+                                                                            (
+                                                                              error
+                                                                            ) => {
+                                                                              if(error.unitsByDay !== undefined) {
+                                                                                if (
+                                                                                  error
+                                                                                    .unitsByDay[
+                                                                                    selectedContent.dayNumber -
+                                                                                      1
+                                                                                  ] !==
+                                                                                  undefined
+                                                                                ) {
+                                                                                  console.log(
+                                                                                    error
+                                                                                  );
+                                                                                  if (error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                      .units[
+                                                                                      selectedContent
+                                                                                        .unitIndex
+                                                                                    ] !==
+                                                                                    undefined
+                                                                                  ) {
+                                                                                    if (error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                        .units[
+                                                                                        selectedContent
+                                                                                          .unitIndex
+                                                                                      ]
+                                                                                        .contentList[
+                                                                                        selectedContent
+                                                                                          .contentIndex
+                                                                                      ] !== undefined) {
+                                                                                    } else {
+                                                                                      handleCancel();
+                                                                                    }
+                                                                                    console.log(
+                                                                                      error
+                                                                                        .unitsByDay[
+                                                                                        selectedContent.dayNumber -
+                                                                                          1
+                                                                                      ]
+                                                                                        .units[
+                                                                                        selectedContent
+                                                                                          .unitIndex
+                                                                                      ]
+                                                                                    );
+                                                                                  } else {
+                                                                                    console.log(
+                                                                                      error
+                                                                                        .unitsByDay[
+                                                                                        selectedContent.dayNumber -
+                                                                                          1
+                                                                                      ]
+                                                                                        .units[
+                                                                                        selectedContent
+                                                                                          .unitIndex
+                                                                                      ]
+                                                                                    );
+                                                                                    handleCancel();
+                                                                                  }
+                                                                                } else {
+                                                                                  console.log(
+                                                                                    error
+                                                                                      .unitsByDay[
+                                                                                      selectedContent.dayNumber -
+                                                                                        1
+                                                                                    ]
+                                                                                  );
+                                                                                  handleCancel();
+                                                                                }
+                                                                              }else{
+                                                                                handleCancel()
+                                                                              }
+                                                                              
+                                                                            }
+                                                                          )
+                                                                        }
+                                                                      >
+                                                                        Submit
+                                                                      </Button>
+                                                                    </Form>
                                                                   </Box>
                                                                 </Modal>
                                                               </div>
                                                             )
                                                           )}
-                                                          <button
-                                                            type="button"
+                                                          <CiCirclePlus
+                                                            className="plus-icon"
                                                             onClick={() =>
                                                               push({
                                                                 content: "",
@@ -588,9 +835,7 @@ const CreateSyllabus = () => {
                                                                   "",
                                                               })
                                                             }
-                                                          >
-                                                            Add Content
-                                                          </button>
+                                                          />
                                                         </div>
                                                       )}
                                                     </FieldArray>
@@ -598,8 +843,9 @@ const CreateSyllabus = () => {
                                                 </div>
                                               )
                                             )}
-                                            <button
+                                            <Button
                                               type="button"
+                                              className="unit-add"
                                               onClick={() =>
                                                 push({
                                                   unit_name: "",
@@ -616,8 +862,9 @@ const CreateSyllabus = () => {
                                                 })
                                               }
                                             >
+                                              <CiCirclePlus className="add-icon-unit" />
                                               Create
-                                            </button>
+                                            </Button>
                                           </>
                                         )}
                                       </FieldArray>
@@ -696,25 +943,16 @@ const CreateSyllabus = () => {
                 ) : (
                   //END OUTLINE
                   <div>
+                    <label>Training Principles: </label>
                     <Field
                       as="textarea"
                       name="training_principles"
                       type="text"
+                      className="principles"
                     />
                   </div>
                 )}
                 <div className="form-create-syllabus-action">
-                  <Button
-                    className="form-create-syllabus-submit"
-                    type="submit"
-                    onClick={() => {
-                      setFieldValue("publish_status", "Active");
-                      console.log(values.publish_status);
-                    }}
-                  >
-                    Submit
-                  </Button>
-
                   <Button
                     className="form-create-syllabus-draft"
                     type="submit"
@@ -725,7 +963,45 @@ const CreateSyllabus = () => {
                   >
                     Save as Draft
                   </Button>
+
+                  <Button
+                    className="form-create-syllabus-submit"
+                    type="submit"
+                    onClick={() => {
+                      switchPage()
+                      setFieldValue("publish_status", "Active");
+                    }
+                      
+                    }
+                  >
+                    Save
+                  </Button>
                 </div>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="child-modal-title"
+                  aria-describedby="child-modal-description"
+                >
+                  <Box sx={{ ...style1, width: 400 }}>
+                    <h4 id="child-modal-title">
+                      Are you sure you want to create this Syllabus ?
+                    </h4>
+
+                    <Button type="button" onClick={handleClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      onClick={() => {
+                        console.log(values.publish_status);
+                        handleClose()
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </Modal>
               </Form>
             )}
           </Formik>

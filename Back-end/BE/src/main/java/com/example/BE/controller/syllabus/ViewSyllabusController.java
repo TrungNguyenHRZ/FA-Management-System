@@ -10,6 +10,7 @@ import com.example.BE.model.dto.PageableDTO;
 import com.example.BE.model.dto.response.LearningObjectiveResponse;
 import com.example.BE.model.dto.response.SyllabusObjectResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
+import com.example.BE.model.dto.response.TrainingContentResponse;
 import com.example.BE.model.dto.response.TrainingUnitResponse;
 import com.example.BE.model.entity.LearningObject;
 import com.example.BE.model.entity.Syllabus;
@@ -108,9 +109,15 @@ public class ViewSyllabusController {
 		for (SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-			duration = tpsService.getSyllabusDuration(syr.getTopic_code());
+			for (TrainingUnitResponse tur : syr.getUnitList()) {
+				for (TrainingContentResponse tcr : tur.getContentList()) {
+					duration += tcr.getDuration();
+				}
+			}
 			if (duration != 0) {
 				syr.setProgramDuration(duration);
+			} else {
+				syr.setProgramDuration(0);
 			}
 			syr.setLearningList(syObjsResult);
 		}
@@ -144,12 +151,18 @@ public class ViewSyllabusController {
 			if (existedSyllabus != null) {
 				int duration = 0;
 				SyllabusResponse syllabus = syllabusService.getSyllabusByTopicCode(code);
-				List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
-				List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-				duration = tpsService.getSyllabusDuration(code);
+				for (TrainingUnitResponse tur : syllabus.getUnitList()) {
+					for (TrainingContentResponse tcr : tur.getContentList()) {
+						duration += tcr.getDuration();
+					}
+				}
 				if (duration != 0) {
 					syllabus.setProgramDuration(duration);
+				} else {
+					syllabus.setProgramDuration(0);
 				}
+				List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syllabus.getTopic_code());
+				List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
 				syllabus.setLearningList(syObjsResult);
 				apiResponse.ok(syllabus);
 				return ResponseEntity.ok(apiResponse);
@@ -170,6 +183,9 @@ public class ViewSyllabusController {
 		ApiResponse apiResponse = new ApiResponse();
 		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
 		Syllabus result = repo.save(syllabus);
+		result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+		result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+
 		if (syllabusResponse.getUnitList() != null) {
 			for (TrainingUnit tu : result.getSyllabus_unit()) {
 				tu.setUnit_topic_code(result);

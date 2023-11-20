@@ -87,6 +87,7 @@
   margin-left: 5%;
   margin-top: -10px;
   width: 90%;
+  margin-bottom: 1em;
 }
 
 .detail-header {
@@ -133,6 +134,7 @@
   width: 70%;
   align-items: center;
   margin-left: 0.5em;
+
 }
 .syllabus-content-format-c {
   width: 140px;
@@ -169,7 +171,7 @@
 }
 
 .modal-box {
-  background: blue;
+  background: inherit;
 }
 
 .modal-box-container {
@@ -179,7 +181,9 @@
   transform: translate(-50%, -50%);
   width: 400;
   border: 2px solid #000;
-  background-color: red;
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .save-create-generals {
@@ -199,17 +203,19 @@
 .form-create-syllabus-action {
   display: flex;
   margin-top: 10px;
+
 }
 
 .form-create-syllabus-action > .form-create-syllabus-submit {
   background-color: #495aff;
   color: #fff;
-  border-radius: 10px 0px 0px 10px;
+  border-radius: 8px;
+  margin-left: 10px;
 }
 .form-create-syllabus-action > .form-create-syllabus-draft {
   background-color: #495aff;
   color: #fff;
-  border-radius: 0px 10px 10px 0px;
+  border-radius:8px;
 }
 .form-create-syllabus-action > .form-create-syllabus-submit:hover,
 .form-create-syllabus-action > .form-create-syllabus-draft:hover {
@@ -252,3 +258,63 @@
 .btn-addnew-ouline-syllabus:hover {
   opacity: 0.8;
 }
+
+.modal-item{
+  margin-bottom: 10px;
+}
+
+.form-modal{
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.plus-icon{
+  /* margin-left: 20px; */
+  font-size: 35px;
+  cursor: pointer;
+  color: #6d7cff;
+  margin-top:10px
+}
+
+.sy-name{
+  border:none;
+  border-bottom: 2px solid #292121;
+  border-radius: 8px;
+}
+
+.unit-add {
+  border:1px solid #6d7cff !important;
+  border-radius : 8px !important;
+  color:white !important;
+  background-color:#6d7cff !important;
+}
+
+.objective-field{
+  /* border:none; */
+  padding: 5px;
+  width:100%;
+}
+
+.objective-wrapper{
+  overflow-y: scroll;
+  height:100px;
+}
+
+.add-icon-unit{
+  margin-right:0.3em;
+  font-size: 20px;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 25px;
+}
+
+.principles{
+  height:250px;
+  width:100%;
+}
+
+
+
+
