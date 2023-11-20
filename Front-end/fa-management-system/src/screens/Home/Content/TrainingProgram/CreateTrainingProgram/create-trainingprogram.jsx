@@ -51,19 +51,26 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
   };
 
   const saveAll = (e) => {
-    for (const item of addNewSyllabus) {
-      apiTrainingProgramInstance
-        .post("/create-training-program-syllabus", {
+    if (addNewSyllabus != "") {
+      let tmp = [];
+      for (const item of addNewSyllabus) {
+        tmp.push({
           syllabus: item.topic_code,
           trainingProgram: trainingProgramID,
           sequence: "",
-        })
+        });
+      }
+      apiTrainingProgramInstance
+        .post("/create-training-program-syllabus", tmp)
         .then((response) => {
           console.log(response.data.payload);
         });
+
+      toast.success("Add All Syllabus successfully !!!");
+      closeForm3();
+    } else {
+      toast.success("please pick syllabus !!!");
     }
-    toast.success("Add All Syllabus successfully !!!");
-    closeForm3();
   };
 
   let renderData = () => {
