@@ -1,5 +1,6 @@
 package com.example.BE.model.dto.response;
 
+import com.example.BE.model.entity.Syllabus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,4 +42,26 @@ public class SyllabusResponse {
 	// private User user;
 	private List<SyllabusObjectResponse> learningList;
 	List<TrainingUnitResponse> unitList;
+
+	public SyllabusResponse(Syllabus syllabus){
+		this.topic_code = syllabus.getTopic_code();
+		this.topic_name = syllabus.getTopic_name();
+		this.technical_group = syllabus.getTechnical_group();
+		this.version = syllabus.getVersion();
+		this.training_audience = syllabus.getTraining_audience();
+		this.topic_outline = syllabus.getTopic_outline();
+		this.training_materials = syllabus.getTraining_materials();
+		this.training_principles = syllabus.getTraining_principles();
+		this.priority = syllabus.getPriority();
+		this.level = syllabus.getLevel();
+		this.publish_status = syllabus.getPublish_status();
+		this.create_by = syllabus.getCreate_by();
+		this.createdDate = syllabus.getCreatedDate();
+		this.modified_date = syllabus.getModified_date();
+		this.modified_by = syllabus.getModified_by();
+	}
+
+	public SyllabusResponse() {
+
+	}
 }

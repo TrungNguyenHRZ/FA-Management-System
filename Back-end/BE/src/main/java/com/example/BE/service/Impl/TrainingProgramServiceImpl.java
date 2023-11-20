@@ -1,5 +1,7 @@
 package com.example.BE.service.Impl;
 
+import com.example.BE.model.dto.response.ClassResponse;
+import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
 import com.example.BE.model.entity.Class;
@@ -29,6 +31,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainingProgramServiceImpl implements TrainingProgramService {
@@ -159,7 +162,16 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     public TrainingProgramDetailResponse getTrainingProgramDetail(int trainingProgramCode) {
         TrainingProgram trainingProgram = findById(trainingProgramCode);
         if (trainingProgram != null) {
-            return new TrainingProgramDetailResponse(trainingProgram);
+            List<SyllabusResponse> syllabuses = trainingProgram.getSyllabus()
+                    .stream()
+                    .map(s -> new SyllabusResponse(s.getProgram_topic()))
+                    .collect(Collectors.toList());
+
+            List<ClassResponse> classes = trainingProgram.getTraining_class()
+                    .stream()
+                    .map(c -> new ClassResponse(c))
+                    .collect(Collectors.toList());
+            return new TrainingProgramDetailResponse(trainingProgram, syllabuses, classes);
         }
         return null;
     }
