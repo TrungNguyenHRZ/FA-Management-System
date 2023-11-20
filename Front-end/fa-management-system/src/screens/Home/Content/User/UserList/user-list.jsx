@@ -16,12 +16,23 @@ const UserList = () => {
   const [showFormAddUser, setShowFormAddUser] = useState(false);
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
+  const [checkboxStates, setCheckboxStates] = useState([]);
+  const navigate = useNavigate();
   const itemPerPage = 9;
 
   useEffect(() => {
     Authorization();
-    console.log(Authorization());
+    // console.log(Authorization());
   });
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+
+    if (decodedToken.userInfo[0] !== "Supper_Admin") {
+      navigate("/overview");
+    }
+  }, []);
 
   useEffect(() => {
     apiUserInstance
@@ -31,11 +42,15 @@ const UserList = () => {
         setTotalPage(
           Math.ceil(response.data.userResponseList.length / itemPerPage)
         );
+        const initialState = response.data.userResponseList.map((item) => ({
+          id: item.id,
+          checked: item.status === "ACTIVE", // Sử dụng giá trị từ API
+        }));
+        setCheckboxStates(initialState);
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log(list);
   }, []);
 
   const openForm = () => {
@@ -69,14 +84,23 @@ const UserList = () => {
   };
 
   const handleCheckBoxChange = async (item) => {
-    let flag = "ACTIVE";
-    // if (item.status == "ACTIVE") {
-    //   flag = "";
-    // } else {
-    //   flag = "ACTIVE";
-    // }
+    const updatedCheckboxStates = checkboxStates.map((state) => {
+      if (state.id === item.id) {
+        return {
+          ...state,
+          checked: !state.checked,
+        };
+      }
+      return state;
+    });
 
-    console.log(item);
+    setCheckboxStates(updatedCheckboxStates);
+    let flag = updatedCheckboxStates.find((state) => state.id === item.id)
+      .checked
+      ? "ACTIVE"
+      : "IN_ACTIVE";
+
+    // console.log(flag);
 
     await apiUserInstance
       .put(`/update/${item.id}`, {
@@ -87,7 +111,28 @@ const UserList = () => {
         status: flag,
       })
       .then(function (response) {
-        console.log(response);
+        // console.log("role updated: " + response);
+        if (flag === "ACTIVE") {
+          toast.success(
+            <div>
+              <strong style={{ fontWeight: "bold", color: "green" }}>
+                ACTIVATE
+              </strong>{" "}
+              <br />
+              {item.email} successfully !!!
+            </div>
+          );
+        } else {
+          toast.success(
+            <div>
+              <strong style={{ fontWeight: "bold", color: "red" }}>
+                DE_ACTIVATE
+              </strong>{" "}
+              <br />
+              {item.email} successfully !!!
+            </div>
+          );
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -100,7 +145,7 @@ const UserList = () => {
         setTotalPage(
           Math.ceil(response.data.userResponseList.length / itemPerPage)
         );
-        console.log(response.data.userResponseList);
+        // console.log(response.data.userResponseList);
       })
       .catch((error) => {
         console.error(error);
@@ -136,7 +181,7 @@ const UserList = () => {
               <th>Date of birth</th>
               <th className="th-user-list-gender">Gender</th>
               <th className="th-user-list-type">Type</th>
-              <th className="th-user-list-status">Status</th>
+              <th className="th-user-list-status">Activate</th>
             </tr>
           </thead>
           <tbody>
@@ -174,13 +219,17 @@ const UserList = () => {
                     <td className="cb-user-list-status">
                       <input
                         type="checkbox"
-                        checked={item.status}
+                        checked={
+                          checkboxStates.find((state) => state.id === item.id)
+                            ?.checked || false
+                        }
                         onChange={() => handleCheckBoxChange(item)}
                       />
                     </td>
                     <div>
                       <ToastContainer
                         position="top-center"
+                        // position="top-right"
                         autoClose={5000}
                         hideProgressBar={false}
                         newestOnTop={false}
