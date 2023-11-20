@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./create-schedule.css";
+import { FaCheck } from "react-icons/fa6";
 
 const CreateMultipleSchedules = () => {
   const [numberOfSchedules, setNumberOfSchedules] = useState(0);
@@ -72,7 +73,9 @@ const CreateMultipleSchedules = () => {
           </form>
           {overlayStates[i] && (
             <div className="success-overlay">
-              <p>Form {i + 1} submitted successfully!</p>
+              <div>
+                <FaCheck />
+              </div>
             </div>
           )}
         </div>

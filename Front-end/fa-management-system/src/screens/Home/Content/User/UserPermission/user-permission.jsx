@@ -3,11 +3,24 @@ import "./user-permission.css";
 import { FaCirclePlus, FaEye } from "react-icons/fa6";
 import { BsFillStarFill } from "react-icons/bs";
 import Authorization from "../../../../Authentication/Auth";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router";
 
 const UserPermission = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     Authorization();
   });
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+    if (decodedToken.userInfo[0] !== "Supper_Admin") {
+      navigate("/overview");
+    }
+  }, []);
   const roles = [
     {
       roleName: "Super admin",

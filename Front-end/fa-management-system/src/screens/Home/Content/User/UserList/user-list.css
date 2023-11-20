@@ -70,13 +70,13 @@
 }
 
 .td-status-admin {
-  background-color: rgb(22, 186, 22);
+  background-color: #024fa0;
 }
 .td-status-trainer {
-  background-color: rgb(35, 35, 241);
+  background-color: #50b846;
 }
 .td-status-superAdmin {
-  background-color: rgb(235, 160, 20);
+  background-color: #f2721e;
 }
 
 .td-user-status {
@@ -87,4 +87,8 @@
   display: flex;
   margin-top: 15px;
   justify-content: center;
+}
+
+.Toastify__toast--custom-toast {
+  width: 10px;
 }
