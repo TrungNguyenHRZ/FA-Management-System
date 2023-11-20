@@ -61,21 +61,24 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 300px;
-  border: 1px solid #aeaeae;
-  border-radius: 6px;
+  height: 250px;
+  border-bottom: 1px solid #aeaeae;
+  /* border-radius: 6px; */
   padding: 10px;
   overflow-y: scroll;
   scrollbar-width: thin;
 }
-.trainingprogram-detail-item::-webkit-scrollbar {
+.trainingprogram-detail-item::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar {
   width: 8px;
 }
-.trainingprogram-detail-item::-webkit-scrollbar-thumb {
+.trainingprogram-detail-item::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb {
   background-color: #9c9c9c7a;
   border-radius: 4px;
 }
-.trainingprogram-detail-item::-webkit-scrollbar-track {
+.trainingprogram-detail-item::-webkit-scrollbar-track,
+.table-scroll::-webkit-scrollbar-track {
   background-color: #f5f5f5;
   border-radius: 20px;
 }
@@ -85,4 +88,14 @@
   border-radius: 10px;
   padding: 10px;
   box-shadow: 1px 2px 5px 2px #aeaeae;
+}
+.trainingprogram-detail-item-detail-title {
+  display: flex;
+  gap: 10px;
+}
+
+.table-scroll {
+  height: 200px;
+  overflow: auto;
+  margin-top: 20px;
 }

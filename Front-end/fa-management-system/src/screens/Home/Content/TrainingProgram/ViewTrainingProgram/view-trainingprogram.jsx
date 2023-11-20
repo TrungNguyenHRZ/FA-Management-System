@@ -47,13 +47,10 @@ const ViewTrainingProgram = () => {
         .map((item, index) => (
           <tr key={item.training_code}>
             <td>{index + 1 + thisPage * itemPerPage}</td>
-            <td
-              value={item.training_code}
-              onClick={(e) => {
-                OpenForm(e);
-              }}
-            >
-              {item.training_name}
+            <td>
+              <button value={item.training_code} onClick={OpenForm}>
+                {item.training_name}
+              </button>
             </td>
             <td>{item.createdDate}</td>
             <td>{item.create_by}</td>
@@ -139,24 +136,13 @@ const ViewTrainingProgram = () => {
             <TrainingProgramDetail
               openForm={openForm}
               closeForm={closeForm}
-              classId={Item}
+              trainingProgramId={Item}
               updateForm={updateForm}
             />
           </div>
         </div>
       )}
-      {/* {showFormAddUser && (
-        <div className="user-form-popup-container">
-          <div className="user-form">
-            <UpdateClass
-              openForm={openForm}
-              closeForm={closeForm}
-              classId={Item}
-              updateForm={updateForm}
-            />
-          </div>
-        </div>
-      )} */}
+
       <div className="search-text">
         <input
           type="text"
