@@ -74,7 +74,7 @@ const Syllabus = () => {
           <td>{item.createdDate}</td>
           <td>{item.create_by}</td>
           <td>NULL</td>
-          <td>NULL</td>
+          <td>{Math.ceil(item.programDuration / 24)} days</td>
           <td className="td-syllabus-status">
             <div
               className={
