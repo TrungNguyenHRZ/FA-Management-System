@@ -36,7 +36,7 @@ const ViewClass = () => {
       });
   }, []);
 
-  const openForm = async (e) => {
+  const openForm = (e) => {
     setItem(e.target.value);
     setShowFormAddUser(true);
     console.log(e.target.value);
