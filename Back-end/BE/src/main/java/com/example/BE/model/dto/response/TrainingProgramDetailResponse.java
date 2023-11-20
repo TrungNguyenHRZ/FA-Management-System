@@ -20,25 +20,19 @@ public class TrainingProgramDetailResponse {
     protected Date modified_date;
     protected String modified_by;
     protected String generalInfo;
-    private List<Integer> syllabuses;
-    private List<Integer> classes;
+    private List<SyllabusResponse> syllabuses;
+    private List<ClassResponse> classes;
 
-    public TrainingProgramDetailResponse(TrainingProgram trainingProgram){
+    public TrainingProgramDetailResponse(TrainingProgram trainingProgram, List<SyllabusResponse> syllabuses, List<ClassResponse> classes){
         this.training_name = trainingProgram.getTraining_name();
         this.duration = trainingProgram.getDuration();
         this.status = trainingProgram.getStatus();
         this.modified_date = trainingProgram.getModified_date();
         this.modified_by = trainingProgram.getModified_by();
         this.generalInfo = trainingProgram.getGeneralInfo();
-        this.syllabuses = trainingProgram.getSyllabus()
-                .stream()
-                .map(s -> s.getProgram_topic().getTopic_code())
-                .collect(Collectors.toList());
+        this.syllabuses = syllabuses;
 
-        this.classes = trainingProgram.getTraining_class()
-                .stream()
-                .map(c -> c.getClassId())
-                .collect(Collectors.toList());
+        this.classes = classes;
     }
 
     public TrainingProgramDetailResponse(){
