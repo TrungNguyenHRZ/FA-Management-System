@@ -11,7 +11,8 @@ public interface ScheduleService {
     Schedule Create(Schedule s);
     Schedule convert(ScheduleResponse s);
     List<ScheduleResponse> findScheduleByClassId(int id);
+    Schedule findById(int id);
     void deleteScheduleById(int sid);
     List<ScheduleResponse> sortScheduleByDate(List<ScheduleResponse> scheduleList);
-    Schedule Update(Schedule schedule);
+    Schedule update(Schedule schedule);
 }

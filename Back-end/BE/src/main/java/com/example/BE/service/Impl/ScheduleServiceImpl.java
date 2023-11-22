@@ -1,5 +1,6 @@
 package com.example.BE.service.Impl;
 
+import com.example.BE.exception.NotFoundException;
 import com.example.BE.model.dto.response.ScheduleResponse;
 import com.example.BE.model.entity.Schedule;
 import com.example.BE.repository.ScheduleRepository;
@@ -47,6 +48,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public Schedule findById(int id) {
+        return scheduleRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public void deleteScheduleById(int sid) {
         scheduleRepository.deleteById(sid);
     }
@@ -59,21 +65,27 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleList;
     }
     @Override
-    public Schedule Update(Schedule schedule) {
-        Optional<Schedule> optionalSchedule = scheduleRepository.findById(schedule.getSchedule_id());
-        if (!optionalSchedule.isPresent()) {
-            throw new EntityNotFoundException("Schedule with id " + schedule.getSchedule_id() + " not found");
+    public Schedule update(Schedule schedule) {
+        Schedule existingSchedule = scheduleRepository.findById(schedule.getSchedule_id()).orElse(null);
+        if (existingSchedule == null) {
+            throw new NotFoundException("Not Found!!!");
+        }
+        if(schedule.getStartTime()!=null){
+            existingSchedule.setStartTime(schedule.getStartTime());
+
+        }
+        if(schedule.getEndTime()!=null){
+            existingSchedule.setEndTime(schedule.getEndTime());
+
+        }
+        if(schedule.getDay()!=null){
+            existingSchedule.setDay(schedule.getDay());
+
+        }
+        if(schedule.getClazz()!=null){
+            existingSchedule.setClazz(schedule.getClazz());
         }
 
-        Schedule existingSchedule = optionalSchedule.get();
-
-        existingSchedule.setStartTime(schedule.getStartTime());
-        existingSchedule.setStartTime(schedule.getStartTime());
-        existingSchedule.setDay(schedule.getDay());
-        existingSchedule.setClazz(schedule.getClazz());
-
-        scheduleRepository.save(existingSchedule);
-
-        return existingSchedule;
+        return scheduleRepository.save(existingSchedule);
     }
 }

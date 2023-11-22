@@ -62,6 +62,9 @@ public class Class implements Serializable {
     @Column(name = "Modified_By")
     private String modified_by;
 
+    @Column(name = "Enable")
+    private boolean enable;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "class_object")
     private List<ClassUser> classUserList;

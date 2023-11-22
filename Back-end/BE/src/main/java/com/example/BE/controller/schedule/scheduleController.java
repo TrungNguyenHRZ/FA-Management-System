@@ -150,14 +150,15 @@ public class scheduleController {
     public ResponseEntity<ApiResponse<ScheduleResponse>> delete(@RequestParam int scheduleid) {
         ApiResponse apiResponse = new ApiResponse();
         scheduleService.deleteScheduleById(scheduleid);
-                apiResponse.error("Xoa r");
+                apiResponse.okv2("Xoa r");
         return ResponseEntity.ok(apiResponse);
     }
     @PatchMapping(value = {"/update"})
-    public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(@RequestBody Schedule schedule) {
+    public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(@RequestParam int scheduleId, @RequestBody Schedule schedule) {
         ApiResponse apiResponse = new ApiResponse();
-        Schedule savedSchedule = scheduleService.Update(schedule);
-        ScheduleResponse response = new ScheduleResponse(savedSchedule);
+        schedule.setSchedule_id(scheduleId);
+        Schedule updatedSchedule = scheduleService.update(schedule);
+        ScheduleResponse response = new ScheduleResponse(updatedSchedule);
         apiResponse.ok(response);
         return ResponseEntity.ok(apiResponse);
     }
