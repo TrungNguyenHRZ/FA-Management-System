@@ -1,0 +1,10 @@
+.pickTrainer-form-container {
+  width: 1000px;
+}
+.pickTrainer-form-Pick-container {
+  display: flex;
+}
+
+.pickTrainer-form-Pick-Trainer {
+  display: flex;
+}
