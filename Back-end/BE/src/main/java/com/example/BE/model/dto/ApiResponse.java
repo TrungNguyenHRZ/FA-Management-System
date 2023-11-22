@@ -23,6 +23,10 @@ public class ApiResponse<T> {
         this.status = StatusEnum.SUCCESS;
         this.payload = data;
     }
+    public void okv2(Object message) {
+        this.status = StatusEnum.SUCCESS;
+        this.message = message;
+    }
 
     public void ok(T data, HashMap<String, Object> metadata) {
         this.status = StatusEnum.SUCCESS;
