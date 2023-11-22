@@ -135,17 +135,6 @@ public class scheduleController {
                 ScheduleResponse response = new ScheduleResponse(savedSchedule);
                 List<ScheduleResponse> schedules = scheduleService.findScheduleByClassId(classid);
                 scheduleResponseList = scheduleService.sortScheduleByDate(schedules);
-//                for(int j = 0; j<duration; j++){
-//                    if (scheduleList.size()>duration) {
-//                        if (scheduleList.get(j).getDay().after(scheduleList.get(duration - 1).getDay())) {
-//                            scheduleService.deleteScheduleById(scheduleList.get(j).getSchedule_id());
-//                            scheduleResponseList.remove(j);
-//                            apiResponse.error("dddddd");
-//                        }else{
-//                            apiResponse.error("Sai");
-//                        }
-//                    }
-//                }
                 for (int j = scheduleResponseList.size() - 1; j >= 0; j--) {
                     if (j >= maxDuration) {
                         scheduleService.deleteScheduleById(scheduleResponseList.get(j).getSchedule_id());
@@ -162,6 +151,14 @@ public class scheduleController {
         ApiResponse apiResponse = new ApiResponse();
         scheduleService.deleteScheduleById(scheduleid);
                 apiResponse.error("Xoa r");
+        return ResponseEntity.ok(apiResponse);
+    }
+    @PatchMapping(value = {"/update"})
+    public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(@RequestBody Schedule schedule) {
+        ApiResponse apiResponse = new ApiResponse();
+        Schedule savedSchedule = scheduleService.Update(schedule);
+        ScheduleResponse response = new ScheduleResponse(savedSchedule);
+        apiResponse.ok(response);
         return ResponseEntity.ok(apiResponse);
     }
 }
