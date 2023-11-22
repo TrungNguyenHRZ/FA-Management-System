@@ -553,6 +553,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 		int maxDay = unitRepo.findMaxDayNumberByTopicCode(topicCode);
 		return maxDay != 0 ? maxDay * 1 : 0;
 	}
+
 	
 
 }
