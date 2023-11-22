@@ -39,6 +39,7 @@ public class SyllabusResponse {
 	private int userId;
 	private String userName;
 	private int programDuration;
+	private String downloadUrl;
 	// private User user;
 	private List<SyllabusObjectResponse> learningList;
 	List<TrainingUnitResponse> unitList;

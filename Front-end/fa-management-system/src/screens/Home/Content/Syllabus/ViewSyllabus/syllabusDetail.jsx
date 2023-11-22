@@ -25,6 +25,11 @@ import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import { Stepper, Step, StepLabel } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 
 const SyllabusDetail = () => {
   const paramName = useParams();
@@ -100,6 +105,7 @@ const SyllabusDetail = () => {
     padding: theme.spacing(2),
     borderTop: "1px solid rgba(0, 0, 0, .125)",
   }));
+  const steps = ["General", "Outline", "Others", "Completed"];
 
   let renderGeneral = () => {
     return (
@@ -149,11 +155,6 @@ const SyllabusDetail = () => {
               <div className="requirement">
                 <div>
                   <AiOutlineSetting />
-                </div>
-                <div>
-                  <Link to={`/update-syllabus/${syllabus.topic_code}`}>
-                    Update
-                  </Link>
                 </div>
                 <div>Technical Requirement(s)</div>
               </div>
@@ -256,56 +257,53 @@ const SyllabusDetail = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      {
-                        item.units.map((unit) => (
-                          <div className="syllabus-content-container">
-                            <div className="unit-content">
-                              Unit {unit.unit_code}
-                            </div>
-
-                            {/* <div>{a} hrs</div>  */}
-                            <div className="content-container-right">
-                              <div className="content-name">
-                                {unit.unit_name}
-                              </div>
-                              <div>{duration(unit)} hrs</div>
-                              {
-                                <div className="unit-content-container">
-                                  {unit.contentList
-                                    ? unit.contentList.map((content) => (
-                                        <div className="syllabus-content-box">
-                                          <div className="syllabus-content-name">
-                                            {capitalizeFirstLetter(
-                                              content.content
-                                            )}
-                                          </div>
-                                          <div className="syllabus-content-box-right">
-                                            <div className="syllabus-content-format">
-                                              {content.deliveryType}
-                                            </div>
-                                            <div className="syllabus-content-box-duration">
-                                              {content.duration} hrs
-                                            </div>
-                                            <div
-                                              className={
-                                                content.trainingFormat ===
-                                                "offline"
-                                                  ? "syllabus-content-format"
-                                                  : "syllabus-content-format-online"
-                                              }
-                                            >
-                                              {content.trainingFormat}
-                                            </div>
-                                            <MdOutlineSnippetFolder className="material-upload" />
-                                          </div>
-                                        </div>
-                                      ))
-                                    : null}
-                                </div>
-                              }
-                            </div>
+                      {item.units.map((unit) => (
+                        <div className="syllabus-content-container">
+                          <div className="unit-content">
+                            Unit {unit.unit_code}
                           </div>
-                        ))}
+
+                          {/* <div>{a} hrs</div>  */}
+                          <div className="content-container-right">
+                            <div className="content-name">{unit.unit_name}</div>
+                            <div>{duration(unit)} hrs</div>
+                            {
+                              <div className="unit-content-container">
+                                {unit.contentList
+                                  ? unit.contentList.map((content) => (
+                                      <div className="syllabus-content-box">
+                                        <div className="syllabus-content-name">
+                                          {capitalizeFirstLetter(
+                                            content.content
+                                          )}
+                                        </div>
+                                        <div className="syllabus-content-box-right">
+                                          <div className="syllabus-content-format">
+                                            {content.deliveryType}
+                                          </div>
+                                          <div className="syllabus-content-box-duration">
+                                            {content.duration} hrs
+                                          </div>
+                                          <div
+                                            className={
+                                              content.trainingFormat ===
+                                              "offline"
+                                                ? "syllabus-content-format"
+                                                : "syllabus-content-format-online"
+                                            }
+                                          >
+                                            {content.trainingFormat}
+                                          </div>
+                                          <MdOutlineSnippetFolder className="material-upload" />
+                                        </div>
+                                      </div>
+                                    ))
+                                  : null}
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      ))}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
@@ -398,25 +396,31 @@ const SyllabusDetail = () => {
     p: 4,
   };
 
-  // let downloadFile = () => {
-  //   // Thay đổi URL bằng URL của tệp bạn muốn tải xuống.
-  //   const fileUrl = 'http://localhost:8080/syllabus/downloadMaterials/180';
-
-  //   // Tạo một yêu cầu tải xuống tệp.
-  //   const link = document.createElement('a');
-  //   link.href = fileUrl;
-
-  //   // Lấy tên tệp từ URL hoặc đặt tên tùy ý.
-  //   const fileName = 'file.pdf';
-  //   link.download = fileName;
-
-  //   // Thêm liên kết tải xuống vào trang và kích hoạt nó.
-  //   document.body.appendChild(link);
-  //   link.click();
-
-  //   // Xóa liên kết sau khi tải xong.
-  //   document.body.removeChild(link);
-  // };
+  let downloadMaterial = async () => {
+    try {
+      // Gửi yêu cầu để lấy dữ liệu của tệp.
+      const response = await apiSyllabusInstance.get(`/downloadMaterials/${syllabus.topic_code}`, {
+        responseType: 'blob', // Yêu cầu kiểu dữ liệu là blob.
+      });
+  
+      // Tạo một đường link ẩn để tải xuống tệp.
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([response.data]));
+  
+      // Đặt tên tệp cho liên kết tải xuống.
+      const fileName = syllabus.training_materials;
+      link.download = fileName;
+  
+      // Thêm liên kết vào trang và kích hoạt nó.
+      document.body.appendChild(link);
+      link.click();
+  
+      // Xóa liên kết sau khi tải xong.
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
 
   return (
     <div className="detail-container">
@@ -440,6 +444,17 @@ const SyllabusDetail = () => {
           </div>
         </div>
         <div className="header-right">
+          <div className="progress-bar">
+            <Box sx={{ width: "100%" }}>
+              <Stepper activeStep={page} alternativeLabel>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
+          </div>
           <BsThreeDots
             className="three-dot-icon"
             onClick={() => handleOpen()}
@@ -448,9 +463,14 @@ const SyllabusDetail = () => {
             <div className="option-edit">
               <div className="option-header">Manage</div>
               <hr></hr>
-              <div className="option-pick">
-                <BsPencil className="option-icon" /> Edit
-              </div>
+              <Link
+                to={`/update-syllabus/${syllabus.topic_code}`}
+                className="link-update"
+              >
+                <div className="option-pick">
+                  <BsPencil className="option-icon" /> Edit
+                </div>
+              </Link>
               <div className="option-pick" onClick={handleOpened}>
                 <HiOutlineDuplicate className="option-icon" /> Duplicate
               </div>
@@ -504,9 +524,33 @@ const SyllabusDetail = () => {
         >
           Others
         </div>
+        {syllabus.downloadUrl && 
+        <div className="download-container">
+        <Tooltip title="Download Material(s)" >
+          <IconButton>
+            <FaCloudDownloadAlt className="download-icon" onClick={downloadMaterial}/>
+          </IconButton>
+        </Tooltip>
+        </div>
+        }
       </div>
 
-      {page === 1 ? renderGeneral() : page === 2 ? renderOutline() : null}
+      {page === 1 ? (
+        renderGeneral()
+      ) : page === 2 ? (
+        renderOutline()
+      ) : (
+        <div>
+          <label>Training Principles: </label>
+          <textarea
+            name="training_principles"
+            type="text"
+            className="principles"
+          >
+            {syllabus.training_principles}
+          </textarea>
+        </div>
+      )}
       <image src={`data:image/png;base64,${syllabus.data1}`} />
     </div>
   );
