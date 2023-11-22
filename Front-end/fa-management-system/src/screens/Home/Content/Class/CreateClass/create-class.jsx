@@ -8,13 +8,14 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
+import CreateMultipleSchedules from "../../Schedule/create-schedule";
+import PickTrainer from "./pick-trainer";
 
 const SignupSchema = Yup.object().shape({
   className: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
-  duration: Yup.number().min(1).required("Required"),
   location: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
@@ -24,10 +25,12 @@ const SignupSchema = Yup.object().shape({
 const CreateClass = () => {
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [TrainingProgram, setTrainingProgram] = useState(0);
+  const [addTrainingProgram, setAddTrainingProgram] = useState({});
   const [status, setStatus] = useState("Planning");
-
   const [userInfo, setUserInfo] = useState(null);
-
+  const [showFormAddSchedule, setShowFormAddSchedule] = useState(false);
+  const [showFormAddTrainer, setShowFormAddTrainer] = useState(false);
+  const [Item, setItem] = useState(0);
   useEffect(() => {
     apiTrainingProgramInstance
       .get("/all")
@@ -42,10 +45,28 @@ const CreateClass = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
-      console.log(userInfo);
+      console.log(decodedToken);
     }
   }, []);
+  const closeForm2 = () => {
+    setShowFormAddSchedule(false);
+  };
 
+  const closeForm1 = () => {
+    setShowFormAddTrainer(false);
+  };
+
+  const openForm2 = (e) => {
+    setShowFormAddSchedule(true);
+  };
+
+  const openForm1 = (e) => {
+    setShowFormAddTrainer(true);
+  };
+
+  const updateForm2 = () => {};
+
+  const updateForm1 = () => {};
   // console.log(userInfo.id);
 
   return (
@@ -71,10 +92,13 @@ const CreateClass = () => {
         tmp.trainingProgram_id = TrainingProgram;
         tmp.status = status;
         tmp.create_by = userInfo.name;
+        tmp.duration = addTrainingProgram.duration;
+        tmp.start_date = addTrainingProgram.start_time;
 
         if (values != null) {
           apiClassInstance.post("/CreateClass", tmp);
           toast.success("Add class successfully !!!");
+          openForm1();
         }
       }}
     >
@@ -85,6 +109,32 @@ const CreateClass = () => {
             <div className="title-class">
               <h1>Add new class</h1>
             </div>
+            {showFormAddSchedule && (
+              <div className="user-form-popup-container">
+                <div className="user-form">
+                  <CreateMultipleSchedules
+                    openForm={openForm2}
+                    closeForm={closeForm2}
+                    classId={Item}
+                    updateForm={updateForm2}
+                  />
+                </div>
+              </div>
+            )}
+
+            {showFormAddTrainer && (
+              <div className="user-form-popup-container">
+                <div className="user-form">
+                  <PickTrainer
+                    openForm={openForm1}
+                    closeForm={closeForm1}
+                    classId={Item}
+                    updateForm={updateForm1}
+                  />
+                </div>
+              </div>
+            )}
+
             <Form>
               <div className="table-class-container">
                 <div className="table-class-left">
@@ -95,13 +145,6 @@ const CreateClass = () => {
 
                     {errors.className && touched.className ? (
                       <div style={{ color: "red" }}>{errors.className}</div>
-                    ) : null}
-                  </div>
-                  <div className="input-class input-duration">
-                    <label>Duration</label>
-                    <Field type="number" name="duration" />
-                    {errors.duration && touched.duration ? (
-                      <div style={{ color: "red" }}>{errors.duration}</div>
                     ) : null}
                   </div>
                   <div className="input-class input-status">
@@ -132,16 +175,6 @@ const CreateClass = () => {
                   </div>
                 </div>
                 <div className="table-class-right">
-                  <div className="input-class-date input-start-end">
-                    <div className=" input-start-date">
-                      <label>Start date</label>
-                      <Field type="date" name="start_date" />
-                    </div>
-                    <div className=" input-end-date">
-                      <label>End date</label>
-                      <Field type="date" name="end_date" />
-                    </div>
-                  </div>
                   <div className="input-class input-create-by">
                     <label>Create by</label>
                     <Field
@@ -162,6 +195,11 @@ const CreateClass = () => {
                         onChange={(e) => {
                           console.log(e.target.value);
                           setTrainingProgram(e.target.value);
+                          setAddTrainingProgram(
+                            listTrainingProgram.filter(
+                              (item) => item.training_code == e.target.value
+                            )[0]
+                          );
                         }}
                       >
                         <option value="" key="">

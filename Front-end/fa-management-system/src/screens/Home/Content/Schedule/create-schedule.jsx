@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import "./create-schedule.css";
 import { FaCheck } from "react-icons/fa6";
 
-const CreateMultipleSchedules = () => {
+const CreateMultipleSchedules = ({
+  showForm2,
+  closeForm2,
+  classId,
+  updateForm2,
+}) => {
   const [numberOfSchedules, setNumberOfSchedules] = useState(0);
   const [overlayStates, setOverlayStates] = useState(Array(10).fill(false));
   const maxSchedules = 10;
