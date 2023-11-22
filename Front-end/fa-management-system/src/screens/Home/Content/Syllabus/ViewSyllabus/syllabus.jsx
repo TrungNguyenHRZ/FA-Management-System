@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
+import { Outlet, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const Syllabus = () => {
@@ -18,6 +19,7 @@ const Syllabus = () => {
   const [thisPage, setThisPage] = useState(0);
   const [keyword, setKeyword] = useState("");
   const itemPerPage = 9;
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiSyllabusInstance
@@ -78,11 +80,11 @@ const Syllabus = () => {
           <td className="td-syllabus-status">
             <div
               className={
-                item && item.publish_status === "active"
+                item && item.publish_status.toLowerCase() === "active"
                   ? "td-status-active"
-                  : item.publish_status === "inactive"
+                  : item.publish_status.toLowerCase() === "inactive"
                   ? "td-status-inactive"
-                  : item.publish_status === "draft"
+                  : item.publish_status.toLowerCase() === "draft"
                   ? "td-status-drafting"
                   : ""
               }
@@ -135,13 +137,7 @@ const Syllabus = () => {
           </div>
         </div>
         <div className="action-syllabus-container">
-          <div className="action-import">
-            <button className="button-import-syllabus">
-              <FaUpload />
-              Import
-            </button>
-          </div>
-          <div className="add-import">
+          <div className="add-import" onClick={() => navigate("/create-syllabus")}>
             <button className="button-add-syllabus">
               <FaPlusCircle />
               Add syllabus

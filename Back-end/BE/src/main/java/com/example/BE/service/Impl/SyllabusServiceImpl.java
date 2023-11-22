@@ -1,7 +1,5 @@
 package com.example.BE.service.Impl;
 
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -55,8 +53,8 @@ import java.util.List;
 @Service
 public class SyllabusServiceImpl implements SyllabusService {
 
-    @Autowired
-    SyllabusRepository syllabusRepository;
+	@Autowired
+	SyllabusRepository syllabusRepository;
 
 	// @Autowired
 	// TrainingUnitService unitService;
@@ -79,7 +77,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 	@Autowired
 	LearningObjectRepository loRepo;
 
-	@Autowired 
+	@Autowired
 	SyllabusObjectRepository sObjectRepository;
 
 	@Override
@@ -88,13 +86,13 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return syllabusRepository.getSyllabusDescDate();
 	}
 
-
-    @Override
-    public Syllabus createSyllabus(Syllabus syllabus) {
+	@Override
+	public Syllabus createSyllabus(Syllabus syllabus) {
 		// TODO Auto-generated method stub
 		return null;
 
 	}
+
 	@Override
 	public List<SyllabusResponse> getAllSyllabusByKey(String keyword) {
 		// TODO Auto-generated method stub
@@ -103,14 +101,14 @@ public class SyllabusServiceImpl implements SyllabusService {
 		result = mapper.toSyllabusResponseList(syList);
 		int b = 0;
 		List<TrainingUnitResponse> unitList;
-		List<TrainingContent> contentList; 
-		for(SyllabusResponse a : result) {
+		List<TrainingContent> contentList;
+		for (SyllabusResponse a : result) {
 			unitList = a.getUnitList();
-			for(TrainingUnitResponse s : unitList) {
-				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());				
+			for (TrainingUnitResponse s : unitList) {
+				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());
 				s.setContentList(contentMapper.toListTrainingContentList(contentList));
 			}
-			
+
 		}
 		return result;
 	}
@@ -123,18 +121,18 @@ public class SyllabusServiceImpl implements SyllabusService {
 		result = mapper.toSyllabusResponseList(syList);
 		int b = 0;
 		List<TrainingUnitResponse> unitList;
-		List<TrainingContent> contentList; 
-		for(SyllabusResponse a : result) {
+		List<TrainingContent> contentList;
+		for (SyllabusResponse a : result) {
 			unitList = a.getUnitList();
-			for(TrainingUnitResponse s : unitList) {
-				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());				
+			for (TrainingUnitResponse s : unitList) {
+				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());
 				s.setContentList(contentMapper.toListTrainingContentList(contentList));
 			}
-			
+
 		}
 		return result;
-	
-		}
+
+	}
 
 	@Override
 	public Syllabus findByUserId(int userid) {
@@ -147,11 +145,11 @@ public class SyllabusServiceImpl implements SyllabusService {
 		Syllabus syllabus = syllabusRepository.getSyllabusByTopicCode(topic_code);
 		SyllabusResponse result = mapper.toResponse(syllabus);
 		List<TrainingUnitResponse> unitList = result.getUnitList();
-		List<TrainingContent> contentList; 
-		for(TrainingUnitResponse s : unitList) {
-				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());				
-				s.setContentList(contentMapper.toListTrainingContentList(contentList));
-			}
+		List<TrainingContent> contentList;
+		for (TrainingUnitResponse s : unitList) {
+			contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());
+			s.setContentList(contentMapper.toListTrainingContentList(contentList));
+		}
 		return result;
 	}
 
@@ -163,33 +161,30 @@ public class SyllabusServiceImpl implements SyllabusService {
 		result = mapper.toSyllabusResponseList(syList);
 		int b = 0;
 		List<TrainingUnitResponse> unitList;
-		List<TrainingContent> contentList; 
-		for(SyllabusResponse a : result) {
+		List<TrainingContent> contentList;
+		for (SyllabusResponse a : result) {
 			unitList = a.getUnitList();
-			for(TrainingUnitResponse s : unitList) {
-				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());				
+			for (TrainingUnitResponse s : unitList) {
+				contentList = contentRepo.getTrainingContentByUnitCode(s.getUnit_code());
 				s.setContentList(contentMapper.toListTrainingContentList(contentList));
 			}
-			
+
 		}
 		return result;
 	}
 
-	
 	@Override
 	public Syllabus getSyllabusByTopic_Code(int topic_code) {
 		// TODO Auto-generated method stub
 		return syllabusRepository.getSyllabusByTopicCode(topic_code);
 	}
 
-	
 	@Override
 	public Page<Syllabus> getAllPagesSyllabus(int page, int size) {
 		// TODO Auto-generated method stub
 		PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
 		return syllabusRepository.findAll(pageable);
 	}
-
 
 	@Override
 	public Syllabus convertSyllabus(SyllabusResponse syResponse) {
@@ -215,7 +210,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 		syllabus.setUser_syllabus(user_syllabus);
 		List<TrainingUnitResponse> unitResponseList = syResponse.getUnitList();
 		List<TrainingUnit> unitList = new ArrayList<>();
-		for(TrainingUnitResponse tur : unitResponseList){
+		for (TrainingUnitResponse tur : unitResponseList) {
 			TrainingUnit u;
 			u = convert(tur);
 			unitList.add(u);
@@ -233,10 +228,10 @@ public class SyllabusServiceImpl implements SyllabusService {
 		u.setUnit_name(unitResponse.getUnit_name());
 		Syllabus s = getSyllabusByTopic_Code(unitResponse.getTopic_code());
 		List<TrainingContent> contentList = convertContent(
-			unitResponse.getContentList(), unitResponse.getUnit_code());
+				unitResponse.getContentList(), unitResponse.getUnit_code());
 		u.setTraining_content(contentList);
 		u.setUnit_topic_code(s);
-		
+
 		return u;
 	}
 
@@ -244,14 +239,14 @@ public class SyllabusServiceImpl implements SyllabusService {
 		// TODO Auto-generated method stub
 		List<TrainingContent> contentList = new ArrayList<TrainingContent>();
 		// TrainingUnit unit = unitService.getUnitByUnitCode(unitCode);
-		for(TrainingContentResponse tcr : tcrs){
+		for (TrainingContentResponse tcr : tcrs) {
 			TrainingContent content = new TrainingContent();
 			content.setContentId(tcr.getContentId());
 			content.setContent(tcr.getContent());
 			content.setLearningObjective(tcr.getLearningObjective());
 			content.setDeliveryType(tcr.getDeliveryType());
 			content.setDuration(tcr.getDuration());
-			content.setTrainingFormat(tcr.getTrainingFormat());		
+			content.setTrainingFormat(tcr.getTrainingFormat());
 			content.setNote(tcr.getNote());
 			// content.setUnitCode(unit);
 			contentList.add(content);
@@ -259,13 +254,27 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return contentList;
 	}
 
+	public TrainingContent convertAContent(TrainingContentResponse tcr) {
+		// TODO Auto-generated method stub
+
+		// TrainingUnit unit = unitService.getUnitByUnitCode(unitCode);
+
+		TrainingContent content = new TrainingContent();
+		content.setContentId(tcr.getContentId());
+		content.setContent(tcr.getContent());
+		content.setLearningObjective(tcr.getLearningObjective());
+		content.setDeliveryType(tcr.getDeliveryType());
+		content.setDuration(tcr.getDuration());
+		content.setTrainingFormat(tcr.getTrainingFormat());
+		content.setNote(tcr.getNote());
+		return content;
+	}
 
 	@Override
 	public Syllabus updateSyllabus(Syllabus syllabus) {
 		// TODO Auto-generated method stub
 		return syllabusRepository.saveAndFlush(syllabus);
 	}
-
 
 	@Override
 	public Syllabus duplicateSyllabus(int code) {
@@ -275,7 +284,7 @@ public class SyllabusServiceImpl implements SyllabusService {
 		int nextId = generateNextId();
 		Date now = new Date();
 
-		if(chosenSyllabus != null){
+		if (chosenSyllabus != null) {
 			duplicatedSyllabus.setTopic_code(nextId);
 			duplicatedSyllabus.setTopic_name(chosenSyllabus.getTopic_name());
 			duplicatedSyllabus.setTechnical_group(chosenSyllabus.getTechnical_group());
@@ -295,10 +304,11 @@ public class SyllabusServiceImpl implements SyllabusService {
 			// duplicatedSyllabus.setSyllabus_unit(chosenSyllabus.getSyllabus_unit());
 		}
 		// Syllabus newSyllabus = syllabusRepository.saveAndFlush(duplicatedSyllabus);
-		// List<TrainingUnit> duplicatedUnits = duplicateUnits(chosenSyllabus.getTopic_code(),nextId);
+		// List<TrainingUnit> duplicatedUnits =
+		// duplicateUnits(chosenSyllabus.getTopic_code(),nextId);
 		// duplicatedSyllabus.setSyllabus_unit(duplicatedUnits);
 		// for(TrainingUnit tu : duplicatedSyllabus.getSyllabus_unit()){
-		// 		tu.setUnit_topic_code(newSyllabus);
+		// tu.setUnit_topic_code(newSyllabus);
 		// }
 		// unitRepo.saveAllAndFlush(duplicatedSyllabus.getSyllabus_unit());
 		return duplicatedSyllabus;
@@ -310,15 +320,14 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return syllabusRepository.getLastSyllabus().getTopic_code() + 1;
 	}
 
-
 	@Override
 	public List<TrainingUnit> duplicateUnits(int code, Syllabus newSyllabus) {
 		// TODO Auto-generated method stub
 		List<TrainingUnit> duplicatedUnitList = new ArrayList<>();
 		List<TrainingUnit> unitList = getSyllabusByTopic_Code(code).getSyllabus_unit();
-		
+
 		int newId = genrateLastUnitCode() + 1;
-		for(int i = 0; i < unitList.size(); i++) {
+		for (int i = 0; i < unitList.size(); i++) {
 			TrainingUnit duplicatedUnit = new TrainingUnit();
 			duplicatedUnit.setUnit_code(newId);
 			duplicatedUnit.setUnit_name(unitList.get(i).getUnit_name());
@@ -335,32 +344,30 @@ public class SyllabusServiceImpl implements SyllabusService {
 		// return unitRepo.saveAll(duplicatedUnitList);
 	}
 
-
 	@Override
 	public void duplicateContents(List<TrainingContent> original, TrainingUnit tu) {
 		// TODO Auto-generated method stub
 		int newId = contentRepo.getLastContent().getContentId() + 1;
-		// List<TrainingUnit> unitList = getSyllabusByTopic_Code(code).getSyllabus_unit();;
-			List<TrainingContent> copiedContents = new ArrayList<>();
-			for(int i = 0;i<original.size();i++){
-				TrainingContent content = new TrainingContent();
-				content.setContentId(newId);
-				content.setContent(original.get(i).getContent());
-				content.setDeliveryType(original.get(i).getDeliveryType());
-				content.setDuration(original.get(i).getDuration());
-				content.setLearningObjective(original.get(i).getLearningObjective());
-				content.setNote(original.get(i).getNote());
-				content.setTrainingFormat(original.get(i).getTrainingFormat());
-				content.setUnitCode(tu);
-				copiedContents.add(content);
-				newId++;
-			}
+		// List<TrainingUnit> unitList =
+		// getSyllabusByTopic_Code(code).getSyllabus_unit();;
+		List<TrainingContent> copiedContents = new ArrayList<>();
+		for (int i = 0; i < original.size(); i++) {
+			TrainingContent content = new TrainingContent();
+			content.setContentId(newId);
+			content.setContent(original.get(i).getContent());
+			content.setDeliveryType(original.get(i).getDeliveryType());
+			content.setDuration(original.get(i).getDuration());
+			content.setLearningObjective(original.get(i).getLearningObjective());
+			content.setNote(original.get(i).getNote());
+			content.setTrainingFormat(original.get(i).getTrainingFormat());
+			content.setUnitCode(tu);
+			copiedContents.add(content);
+			newId++;
+		}
 		tu.setTraining_content(copiedContents);
 		// return contentList;
 		contentRepo.saveAll(copiedContents);
-		}
-
-
+	}
 
 	@Override
 	public int genrateLastUnitCode() {
@@ -369,7 +376,6 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return lastId;
 	}
 
-
 	@Override
 	public List<TrainingUnit> updateUnit(List<TrainingUnit> units) {
 		// TODO Auto-generated method stub
@@ -377,43 +383,39 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return unitRepo.saveAll(units);
 	}
 
-
 	@Override
 	public List<TrainingContent> updateContents(List<TrainingContent> contents) {
 		// TODO Auto-generated method stub
 		return contentRepo.saveAll(contents);
 	}
 
-
 	@Override
 	public void activateSyllabus(int code) {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
-			if(existedSyllabus != null){
+			if (existedSyllabus != null) {
 				existedSyllabus.setPublish_status("Active");
 				syllabusRepository.save(existedSyllabus);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void deactivateSyllabus(int code) {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			Syllabus existedSyllabus = getSyllabusByTopic_Code(code);
-			if(existedSyllabus != null){
+			if (existedSyllabus != null) {
 				existedSyllabus.setPublish_status("Inactive");
 				syllabusRepository.save(existedSyllabus);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public List<TrainingUnit> updateUnitResponse(List<TrainingUnitResponse> unitResponse) {
@@ -421,46 +423,52 @@ public class SyllabusServiceImpl implements SyllabusService {
 		List<TrainingUnit> unitList = new ArrayList<>();
 		List<TrainingContent> contentList = new ArrayList<>();
 		// for(TrainingUnitResponse response : unitResponse){
-		// 	TrainingUnit unit = convert(response);
-		// 	unitList.add(unit);
+		// TrainingUnit unit = convert(response);
+		// unitList.add(unit);
 		// }
-		for(TrainingUnitResponse response : unitResponse){
+		for (TrainingUnitResponse response : unitResponse) {
 			TrainingUnit unit = unitRepo.getTrainingUnitByUnitCode(response.getUnit_code());
-			if(unit != null){
-				if(response.getUnit_name() != null){
+			if (unit != null) {
+				if (response.getUnit_name() != null) {
 					unit.setUnit_name(response.getUnit_name());
 				}
-				if(response.getDay_number() != 0){
+				if (response.getDay_number() != 0) {
 					unit.setDay_number(response.getDay_number());
 				}
-				if(response.getContentList() != null){
-					for(TrainingContentResponse cResponse : response.getContentList()){
-						TrainingContent content = contentRepo.getContentById(cResponse.getContentId());
-						if(content != null){
-							if(cResponse.getContent() != null){
-								content.setContent(cResponse.getContent());
-							}
-							if(cResponse.getLearningObjective() != null){
-								content.setLearningObjective(cResponse.getLearningObjective());
-							}
-							if(cResponse.getDeliveryType() != null){
-								content.setDeliveryType(cResponse.getDeliveryType());
-							}
-							if(cResponse.getDuration() > 0){
-								content.setDuration(cResponse.getDuration());
-							}
-							if(cResponse.getNote() != null){
-								content.setNote(cResponse.getNote());
-							}
-							if(cResponse.getTrainingFormat() != null){
-								content.setTrainingFormat(cResponse.getTrainingFormat());
-							}
+				if (response.getContentList() != null) {
+					for (TrainingContentResponse cResponse : response.getContentList()) {
+						TrainingContent content;
+						if (cResponse.getContentId() == 0) {
+							content = convertAContent(cResponse);
 							content.setUnitCode(unit);
+						} else {
+							 content = contentRepo.getContentById(cResponse.getContentId());
+							if (content != null) {
+								if (cResponse.getContent() != null) {
+									content.setContent(cResponse.getContent());
+								}
+								if (cResponse.getLearningObjective() != null) {
+									content.setLearningObjective(cResponse.getLearningObjective());
+								}
+								if (cResponse.getDeliveryType() != null) {
+									content.setDeliveryType(cResponse.getDeliveryType());
+								}
+								if (cResponse.getDuration() > 0) {
+									content.setDuration(cResponse.getDuration());
+								}
+								if (cResponse.getNote() != null) {
+									content.setNote(cResponse.getNote());
+								}
+								if (cResponse.getTrainingFormat() != null) {
+									content.setTrainingFormat(cResponse.getTrainingFormat());
+								}
+								content.setUnitCode(unit);
+							}
 						}
 						contentList.add(content);
 					}
-				}	
-			unit.setTraining_content(contentList);
+				}
+				// unit.setTraining_content(contentList);
 			}
 			unitList.add(unit);
 		}
@@ -469,60 +477,58 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return trainingUnitList;
 	}
 
-
 	@Override
 	public String uploadFile(String fileName, MultipartFile file) {
 		// TODO Auto-generated method stub
 		Path uploadDirectory = Paths.get("File-upload");
 		Path filePath = null;
-		if(Files.isDirectory(uploadDirectory)){
+		if (Files.isDirectory(uploadDirectory)) {
 			String fileCode = RandomStringUtils.randomAlphanumeric(8);
-			try(InputStream inputStream = file.getInputStream()){
+			try (InputStream inputStream = file.getInputStream()) {
 				filePath = uploadDirectory.resolve(fileCode + "-" + fileName);
 				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-			}catch(IOException e){
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			return filePath.toString();
-		}else {
-			 return "Folder not found";
+		} else {
+			return "Folder not found";
 		}
 	}
 
 	private Path foundFile;
+
 	@Override
 	public Resource downloadFile(String fileCode) throws IOException {
-		
+
 		Path uploadDirectory = Paths.get("File-upload");
 
 		Files.list(uploadDirectory).forEach(file -> {
-			if(file.getFileName().toString().startsWith(fileCode)){
+			if (file.getFileName().toString().startsWith(fileCode)) {
 				foundFile = file;
 				return;
 			}
 		});
-		if(foundFile != null){
-			
+		if (foundFile != null) {
+
 			return new UrlResource(foundFile.toUri());
 		}
 		return null;
 	}
-
 
 	@Override
 	public int getAllContentDuration(int code) {
 		// TODO Auto-generated method stub
 		List<TrainingUnit> unitList = unitRepo.getTrainingUnitsByTopicCode(code);
 		int duration = 0;
-		for(TrainingUnit tu : unitList){
+		for (TrainingUnit tu : unitList) {
 			List<TrainingContent> contentList = contentRepo.getTrainingContentByUnitCode(tu.getUnit_code());
-			for(TrainingContent tc : contentList){
+			for (TrainingContent tc : contentList) {
 				duration += tc.getDuration();
 			}
 		}
 		return duration;
 	}
-
 
 	@Override
 	public void saveObjective(LearningObject object, int topic_code) {
@@ -533,7 +539,6 @@ public class SyllabusServiceImpl implements SyllabusService {
 		so.setSyllabus_object_code(getSyllabusByTopic_Code(topic_code));
 		sObjectRepository.save(so);
 	}
-
 
 	@Override
 	public LearningObject convertObject(LearningObjectiveResponse lObjectiveResponse) {
@@ -546,14 +551,11 @@ public class SyllabusServiceImpl implements SyllabusService {
 		return lo;
 	}
 
-	
-
 	@Override
-	public int getAllDuration(int topicCode){
+	public int getAllDuration(int topicCode) {
 		int maxDay = unitRepo.findMaxDayNumberByTopicCode(topicCode);
 		return maxDay != 0 ? maxDay * 1 : 0;
 	}
 
-	
 
 }

@@ -31,6 +31,11 @@ public class TrainingContentImpl implements TrainingContentService{
 		// TODO Auto-generated method stub
 		repo.deleteAll(trainingContentList);
 	}
+	@Override
+	public void deleteContent(int id) {
+		// TODO Auto-generated method stub
+		repo.deleteByContentId(id);
+	}
 
 	// @Autowired
 	// TrainingUnitService unitService;
