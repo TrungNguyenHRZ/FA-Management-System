@@ -5,12 +5,14 @@ import com.example.BE.model.entity.Schedule;
 import com.example.BE.repository.ScheduleRepository;
 import com.example.BE.service.ClassService;
 import com.example.BE.service.ScheduleService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -55,5 +57,23 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // Trả về danh sách lịch học đã được sắp xếp
         return scheduleList;
+    }
+    @Override
+    public Schedule Update(Schedule schedule) {
+        Optional<Schedule> optionalSchedule = scheduleRepository.findById(schedule.getSchedule_id());
+        if (!optionalSchedule.isPresent()) {
+            throw new EntityNotFoundException("Schedule with id " + schedule.getSchedule_id() + " not found");
+        }
+
+        Schedule existingSchedule = optionalSchedule.get();
+
+        existingSchedule.setStartTime(schedule.getStartTime());
+        existingSchedule.setStartTime(schedule.getStartTime());
+        existingSchedule.setDay(schedule.getDay());
+        existingSchedule.setClazz(schedule.getClazz());
+
+        scheduleRepository.save(existingSchedule);
+
+        return existingSchedule;
     }
 }

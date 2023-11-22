@@ -279,4 +279,23 @@ public class ClassController {
                 return ResponseEntity.badRequest().build();
             }
         }
+    @PostMapping(value = {"/CreateMultiClassUser"})
+    public ResponseEntity<List<ClassUser>> createMultiClassUser(@RequestBody List<ClassUserDTO> classUserDTOList) {
+        List<ClassUser> classUserList = new ArrayList<>();
+        for (ClassUserDTO classUserDTO : classUserDTOList) {
+            ClassUser classUser = new ClassUser();
+            classUser.setId(new ClassUserId(classUserDTO.getUserId(), classUserDTO.getClassId()));
+            classUser.setUserType(classUserDTO.getUserType());
+
+            Class classObject = classService.findById(classUserDTO.getClassId());
+            classUser.setClass_object(classObject);
+
+            User user = userService.getUserById2(classUserDTO.getUserId());
+            classUser.setUser(user);
+
+            ClassUser createdClassUser = classUserService.saveClassUser(classUser);
+            classUserList.add(createdClassUser);
+        }
+        return new ResponseEntity<>(classUserList, HttpStatus.CREATED);
+    }
 }
