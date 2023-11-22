@@ -37,6 +37,8 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import * as Yup from "yup";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
 import "./updateSyllabus.css";
 
 
@@ -46,6 +48,21 @@ const UpdateSyllabus = () => {
   const [page, setPage] = useState(1);
   const [groupedUnits, setGroupedUnits] = useState([]);
   const [expanded, setExpanded] = useState("panel1");
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const switchPage = () => {
+    if (page === 3) {
+      handleOpen();
+    } else {
+      setPage(page + 1);
+    }
+  };
   console.log(paramName.id);
   const steps = ["General", "Outline", "Others", "Completed"];
 
@@ -75,27 +92,78 @@ const UpdateSyllabus = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+      
+  }, [paramName.id]);
 
+  useEffect(() => {
+    // Đặt giá trị ban đầu cho Formik khi syllabus đã được cập nhật
+    if (Object.keys(syllabus).length > 0) {
+      const initialValues = {
+        ...syllabus,
+        groupedUnits,
+      };
+
+      // Kiểm tra xem formikRef đã được khởi tạo chưa
+      if (formikRef.current) {
+        // Sử dụng setValues để cập nhật giá trị của Formik
+        formikRef.current.setValues(initialValues);
+      }
+    }
+  }, [syllabus, groupedUnits]);
+
+ 
+
+  const formikRef = React.useRef(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const response = await apiSyllabusInstance.get(`/viewSyllabus/${paramName.id}`);
+//         console.log(response.data.payload);
+//         setSyllabus(response.data.payload);
+  
+//         const groupedUnits = response.data.payload.unitList.reduce(
+//           (acc, unit) => {
+//             const { day_number, ...rest } = unit;
+//             if (!acc[day_number]) {
+//               acc[day_number] = { day_number, units: [] };
+//             }
+//             acc[day_number].units.push(rest);
+//             return acc;
+//           },
+//           []
+//         );
+//         const unitsByDay = groupedUnits.filter((day) => day !== undefined);
+  
+//         setGroupedUnits(unitsByDay);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+  
+//     fetchData();
+//   }, [paramName.id, formikRef]);
+
+  
+// useEffect(() => {
+//   // Code trong useEffect thứ hai nếu cần
+// }, [syllabus, groupedUnits]);
   const initialValues = {
     ...syllabus,
     groupedUnits,
   };
-
-  console.log(initialValues);
-
-  const formikRef = React.useRef(null);
   
   const removeDay = (indexToRemove, setValues) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      dayNumber: prevValues.dayNumber.filter(
-        (_, index) => index !== indexToRemove
-      ),
-      unitsByDay: prevValues.unitsByDay.filter(
-        (_, index) => index !== indexToRemove
-      ),
-    }));
+
+    setValues((prevValues) => {
+      const updatedGroupedUnits = [...prevValues.groupedUnits];
+      updatedGroupedUnits.splice(indexToRemove, 1);
+      console.log(updatedGroupedUnits)
+      return {
+        ...prevValues,
+        groupedUnits: updatedGroupedUnits,
+      };
+    });
   };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -130,21 +198,7 @@ const UpdateSyllabus = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    // Đặt giá trị ban đầu cho Formik khi syllabus đã được cập nhật
-    if (Object.keys(syllabus).length > 0) {
-      const initialValues = {
-        ...syllabus,
-        groupedUnits,
-      };
 
-      // Kiểm tra xem formikRef đã được khởi tạo chưa
-      if (formikRef.current) {
-        // Sử dụng setValues để cập nhật giá trị của Formik
-        formikRef.current.setValues(initialValues);
-      }
-    }
-  }, [syllabus, groupedUnits]);
 
   let changeGeneral = () => {
     setPage(1);
@@ -167,11 +221,14 @@ const UpdateSyllabus = () => {
         unit_code: unit.unit_code,
         unit_name: unit.unit_name,
         day_number: day.day_number,
-        contentList: unit.contentList,
+        contentList: unit.contentList.map((content) => ({
+          contentId : content.contentId !== 0 ? content.contentId : 0,
+          ...content
+        })),
       }))
     );
 
-    const updatedUnitList = unitList.filter(unit => unit.unit_code !== undefined)
+    const updatedUnitList = unitList.filter(unit => unit.unit_code !== 0)
     return updatedUnitList;
   };
 
@@ -181,15 +238,18 @@ const UpdateSyllabus = () => {
         unit_code: unit.unit_code,
         unit_name: unit.unit_name,
         day_number: day.day_number,
-        contentList: unit.contentList,
+        contentList: unit.contentList.map((content) => ({
+          contentId : content.contentId !== 0 ||  content.contentId === undefined 
+          ? content.contentId : 0,
+          ...content
+        })),
       }))
     );
-
-    
-
-    const updatedUnitList = unitList.filter(unit => unit.unit_code === undefined)
+    const updatedUnitList = unitList.filter(unit => unit.unit_code === 0)
     return updatedUnitList;
   };
+
+
 
   const delivery = [
     "Assignment/Lab",
@@ -211,10 +271,12 @@ const UpdateSyllabus = () => {
       unitList: afterValue,
       groupedUnits: null,
     };
+    console.log(updatedValue);
     apiSyllabusInstance.put(
       `/updateSyllabus/${syllabus.topic_code}`,
       updatedValue
-    );
+    ).then(response => console.log(response.data));
+
     apiSyllabusInstance.post(`/saveUnit/${values.topic_code}`,newUnits)
     console.log(newUnits);
   };
@@ -223,8 +285,10 @@ const UpdateSyllabus = () => {
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
+    
   };
 
+  console.log(selectedFile)
   const handleUpload = async () => {
     try {
       const formData = new FormData();
@@ -247,10 +311,22 @@ const UpdateSyllabus = () => {
   };
 
 
-  const deleteUnit = async (unit_code) => {
+  const deleteUnit =  async (unit_code) => {
     try {
+      console.log(unit_code);
       const response = await apiSyllabusInstance.delete(
         `/deleteUnit/${unit_code}`
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deleteContent =  async (content_id) => {
+    try {
+      console.log(content_id);
+      const response = await apiSyllabusInstance.delete(
+        `/deleteContent/${content_id}`
       );
     } catch (e) {
       console.log(e);
@@ -333,6 +409,65 @@ const UpdateSyllabus = () => {
     pb: 3,
   };
 
+  const addDay = (setValues) => {
+    setValues((prevValues) => {
+      const maxDayNumber = prevValues.groupedUnits.reduce(
+        (max, day) => Math.max(max, day.day_number),
+        0
+      );
+  
+      const newDayNumber = maxDayNumber + 1;
+      const newDay = { day_number: newDayNumber, units: [] };
+  
+      return {
+        ...prevValues,
+        groupedUnits: [...prevValues.groupedUnits, newDay],
+      };
+    });
+  };
+
+  let levels = ["fresher", "junior", "senior"];
+
+  const validationSchema = Yup.object().shape({
+    topic_name: Yup.string().required("Syllabus Name is required"),
+    training_audience: Yup.number()
+      .positive("Number must be greater than 0")
+      .required("Number is required"),
+    technical_group:Yup.string().required("Technical Requirement is required"),
+    level:Yup.string()
+    .required("Level is required")
+    .oneOf(
+      levels, // Các giá trị cho phép
+      "Invalid level"
+    ),
+    training_principles:Yup.string().required("Training principles is required")
+    .max(255, "Maximum 255 characters"),
+    learningList:Yup.array().min(1, "Course Objective(s) is required"),
+    groupedUnits: Yup.array().of(
+      Yup.object().shape({
+        units: Yup.array().of(
+          Yup.object().shape({
+            unit_name : Yup.string().required("Unit name is required"),
+            contentList: Yup.array().of(
+              Yup.object().shape({
+                content: Yup.string().required("Content is required"),
+                // Thêm các quy tắc khác nếu cần
+                deliveryType: Yup.string()
+                  .required("Delivery type is required")
+                  .oneOf(
+                    delivery, // Các giá trị cho phép
+                    "Invalid delivery type"
+                  ),
+                duration: Yup.number()
+                  .positive("Number must be greater than 0")
+                  .required("Number is required"),
+              })
+            ),
+          })
+        ),
+      })
+    ),
+  });
 
 
   return (
@@ -373,6 +508,7 @@ const UpdateSyllabus = () => {
       </div>
       <div>
         <Formik
+          validationSchema={validationSchema}
           initialValues={initialValues}
           onSubmit={handleSubmit}
           innerRef={formikRef}
@@ -385,17 +521,29 @@ const UpdateSyllabus = () => {
               isValidating,
               validateForm, }) => (
             <Form>
-              {console.log(values)}
+              {/* {console.log(values)} */}
               {page === 1 ? (
                 <div className="update-general">
                   <label>Syllabus Name: </label>
                   <Field type="text" name="topic_name" />
+                  <ErrorMessage name="topic_name" component="div" className="error-mess"/>
                   <label>Version: </label>
                   <Field type="text" name="version" />
+                  <ErrorMessage name="version" component="div" className="error-mess"/>
                   <label>Training audience: </label>
                   <Field type="number" name="training_audience" />
+                  <ErrorMessage name="training_audience" component="div" className="error-mess"/>
                   <label>Technical requirements:</label>
                   <Field name="technical_group" as="textarea" />
+                  <ErrorMessage name="technical_group" component="div" className="error-mess"/>
+                  <label>Level</label>
+                  <Field name="level" as="select">
+                      <option>Select one</option>
+                      {levels.map((level) => (
+                        <option value={level}>{level}</option>
+                      ))}
+                    </Field>
+                  <ErrorMessage name="level" component="div" className="error-mess"/>
                   <label>Course Objective(s)</label>
                   <FieldArray name="learningList">
                     {({ push, remove }) => (
@@ -404,6 +552,7 @@ const UpdateSyllabus = () => {
                           values.learningList.map((a, lIndex) => (
                             <div key={lIndex}>
                               <Field
+                              className="objective-field"
                                 name={`learningList[${lIndex}].learningObjectList.learning_description`}
                                 onKeyDown={(e) =>
                                   handleKeyPress(e, push, lIndex, remove)
@@ -415,6 +564,8 @@ const UpdateSyllabus = () => {
                       </>
                     )}
                   </FieldArray>
+                  <ErrorMessage name="learningList" component="div" className="error-mess"/>
+                  <div className="file-upload">
                   <label
                     htmlFor="fileInput"
                     className="custom-file-input-label"
@@ -425,6 +576,7 @@ const UpdateSyllabus = () => {
                     type="file"
                     id="fileInput"
                     className="custom-file-input"
+                    accept=".zip"
                     onChange={handleFileChange}
                   />
                   <div>
@@ -432,7 +584,11 @@ const UpdateSyllabus = () => {
                       ? selectedFile.name
                       : syllabus.training_materials}
                   </div>
-                  <button onClick={handleUpload}>Upload</button>
+                  <FaCloudUploadAlt 
+                  onClick={handleUpload} 
+                  className="upload-button"/>               
+                  </div>
+                  
                 </div>
               ) : page === 2 ? (
                 <div>
@@ -499,11 +655,22 @@ const UpdateSyllabus = () => {
                                                       id={`groupedUnits[${dayIndex}].units[${unitIndex}].unit_name`}
                                                       name={`groupedUnits[${dayIndex}].units[${unitIndex}].unit_name`}
                                                     />
+                                                    <ErrorMessage
+                                                    name={`groupedUnits[${dayIndex}].units[${unitIndex}].unit_name`}
+                                                    className="error-mess"
+                                                    />
                                                     <CiCircleMinus
                                                       className="minus-icon"
                                                       type="button"
-                                                      onClick={() =>
-                                                        remove(unitIndex)
+                                                      onClick={() =>{
+                                                        if(values.groupedUnits[dayIndex].units[unitIndex].unit_code !== 0) {
+                                                          deleteUnit(values.groupedUnits[dayIndex].units[unitIndex].unit_code)
+                                                          remove(unitIndex);
+                                                        } else {
+                                                          remove(unitIndex)
+                                                        }
+                                                        console.log(values.groupedUnits[dayIndex].units[unitIndex].unit_code)
+                                                      }                                                      
                                                       }
                                                     />
 
@@ -559,10 +726,18 @@ const UpdateSyllabus = () => {
                                                                 </div>
 
                                                                 <CiCircleMinus
-                                                                  onClick={() =>
-                                                                    remove(
-                                                                      contentIndex
-                                                                    )
+                                                                  onClick={() =>{
+                                                                    if(values.groupedUnits[dayIndex].units[unitIndex].contentList[contentIndex].contentId !== 0){
+                                                                      deleteContent(values.groupedUnits[dayIndex].units[unitIndex].contentList[contentIndex].contentId)
+                                                                      remove(
+                                                                        contentIndex
+                                                                      )
+                                                                    }else{
+                                                                      remove(
+                                                                        contentIndex
+                                                                      )
+                                                                    }                                                      
+                                                                  }
                                                                   }
                                                                   className="minus-icon"
                                                                 />
@@ -627,6 +802,8 @@ const UpdateSyllabus = () => {
                                                                         }].contentList[${
                                                                           selectedContent.contentIndex
                                                                         }].content`}
+                                                                        className="error-mess"
+                                                                        component="div"
                                                                       />
 
                                                                       <Field
@@ -642,6 +819,18 @@ const UpdateSyllabus = () => {
                                                                         className="modal-item"
                                                                         placeholder="Duration"
                                                                       />
+                                                                      <ErrorMessage
+                                                                        name={`groupedUnits[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].duration`} 
+                                                                       className="error-mess"
+                                                                       component="div"
+                                                                       />
 
                                                                       <Field
                                                                         name={`groupedUnits[${
@@ -685,6 +874,8 @@ const UpdateSyllabus = () => {
                                                                         }].contentList[${
                                                                           selectedContent.contentIndex
                                                                         }].deliveryType`}
+                                                                        className="error-mess"
+                                                                        component="div"
                                                                       />
                                                                       <Field
                                                                         type="checkbox"
@@ -740,9 +931,8 @@ const UpdateSyllabus = () => {
                                                                         )}
                                                                       />
                                                                       <Button
-                                                                        key="submit"
-                                                                        type="primary"
-                                                                        onClick={() =>
+                                                                        type="button"
+                                                                        onClick={() =>{
                                                                           validateForm().then(
                                                                             (
                                                                               error
@@ -812,14 +1002,16 @@ const UpdateSyllabus = () => {
                                                                                     ]
                                                                                   );
                                                                                   handleCancel();
+                                                                                  console.log(values.groupedUnits)
                                                                                 }
                                                                               }else{
-                                                                                handleCancel()
+                                                                                handleCancel();
+                                                                                console.log(values.groupedUnits)
                                                                               }
                                                                               
                                                                             }
                                                                           )
-                                                                        }
+                                                                        }  } 
                                                                       >
                                                                         Submit
                                                                       </Button>
@@ -833,6 +1025,7 @@ const UpdateSyllabus = () => {
                                                             className="plus-icon"
                                                             onClick={() =>
                                                               push({
+                                                                contentId:0,
                                                                 content: "",
                                                                 deliveryType:
                                                                   "",
@@ -855,8 +1048,9 @@ const UpdateSyllabus = () => {
                                             <Button
                                               type="button"
                                               className="unit-add"
-                                              onClick={() =>
+                                              onClick={() => {
                                                 push({
+                                                  unit_code : 0,
                                                   unit_name: "",
                                                   contentList: [
                                                     {
@@ -869,6 +1063,9 @@ const UpdateSyllabus = () => {
                                                     },
                                                   ],
                                                 })
+                                                console.log(values.groupedUnits)
+                                              }
+
                                               }
                                             >
                                               <CiCirclePlus className="add-icon-unit" />
@@ -894,63 +1091,159 @@ const UpdateSyllabus = () => {
                         Previous
                       </button>
                       <button
-                        className="btn-save-ouline-syllabus"
-                        onClick={() => setPage(page + 1)}
-                      >
-                        Save
-                      </button>
-                      <button
                         className="btn-addnew-ouline-syllabus"
                         onClick={() => {
-                          let lastDayNumber = Number(
-                            values.dayNumber[
-                              Number(values.dayNumber.length - 1)
-                            ]
-                          );
-
-                          // Calculate the new day number
-                          let newDayNumber = lastDayNumber + 1;
-                          // console.log(Number(newDayNumber));
-                          console.log(values.dayNumber[2]);
-                          console.log(values.dayNumber.length);
-                          console.log(
-                            values.dayNumber[values.dayNumber.length - 1]
-                          );
-                          console.log(values.dayNumber);
-                          // Use setValues to immediately update the state
-                          setValues((prevValues) => ({
-                            ...prevValues,
-                            dayNumber: [...prevValues.dayNumber, newDayNumber],
-                          }));
-                          const updatedUnitsByDay = values.dayNumber.map(
-                            (day) => ({
-                              day_number: day,
-                              units: [
-                                {
-                                  unit_name: "",
-                                  contentList: [
-                                    {
-                                      content: "",
-                                      deliveryType: "",
-                                      duration: 0,
-                                      learningObjective: "",
-                                      note: "",
-                                      trainingFormat: "",
-                                    },
-                                  ],
-                                },
-                              ],
-                            })
-                          );
-                          setFieldValue("unitsByDay", updatedUnitsByDay);
+                          addDay(setValues)
                         }}
                       >
                         Add day
                       </button>
                     </div>
                   </div>
-              ) : null}
-              <button type="submit">Update</button>
+              ) : (
+                //END OUTLINE
+                <div>
+                  <label>Training Principles: </label>
+                  <Field
+                    as="textarea"
+                    name="training_principles"
+                    type="text"
+                    className="principles"
+                  />
+                  <div className="btn-action-outline-syllabus">
+                  <button
+                        className="btn-previous-ouline-syllabus"
+                        onClick={() => setPage(page - 1)}
+                      >
+                        Previous
+                  </button>
+                  </div>
+                  
+                </div>
+              )}
+             <div className="form-create-syllabus-action">
+                  <Button
+                    className="form-create-syllabus-draft"
+                    type="submit"
+                    onClick={() => {
+                      setFieldValue("publish_status", "Draft");
+                      console.log(values.publish_status);
+                    }}
+                  >
+                    Save as Draft
+                  </Button>
+                  <Button
+                    className="form-create-syllabus-submit"
+                    type="submit"
+                    onClick={() => {
+                      handleOpen();
+                    }
+                      
+                    }
+                  >
+                    Save
+                  </Button>
+                  <ToastContainer
+                    position="top-center"
+                    autoClose={2000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                  />
+
+                </div>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="child-modal-title"
+                  aria-describedby="child-modal-description"
+                >
+                  <Box sx={{ ...style1, width: 400 }}>
+                    <h4 id="child-modal-title">
+                      Are you sure you want to create this Syllabus ?
+                    </h4>
+
+                    <Button type="button" onClick={handleClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      onClick={() => {
+                        validateForm().then((errors) => {
+                          if(
+                            errors.topic_name !== undefined || 
+                            errors.version !== undefined ||
+                            errors.training_audience !== undefined ||
+                            errors.level !== undefined ||
+                            errors.technical_group !== undefined||
+                            errors.learningList !== undefined 
+                            )
+                          {
+                            toast.error( errors.topic_name || 
+                              errors.version ||
+                              errors.training_audience ||
+                              errors.technical_group ||
+                              errors.level ||
+                              errors.learningList  , {
+                              position: "top-center",
+                              autoClose: 2000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              });
+                              console.log(errors)
+                          } else if(errors.groupedUnits !== undefined) {
+                            toast.error( "Check your Outline Screen !", {
+                              position: "top-center",
+                              autoClose: 2000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              });
+                          } else if(errors.training_principles !== undefined) {
+                            toast.error( errors.training_principles, {
+                              position: "top-center",
+                              autoClose: 2000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              });
+                          } else{
+                            toast.success('Update Successfully!', {
+                              position: "top-center",
+                              autoClose: 2000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "light",
+                              });
+                              console.log(errors)
+                          }
+                        })
+                        console.log(values.publish_status);
+                        handleClose()
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </Modal>
             </Form>
           )}
         </Formik>

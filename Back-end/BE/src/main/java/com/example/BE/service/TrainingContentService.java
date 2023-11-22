@@ -12,5 +12,5 @@ public interface TrainingContentService {
 	// public TrainingContent convert(TrainingContentResponse tcr, int unitCode);
 	public void saveAllTrainingContents(List<TrainingContent> trainingContentList);
 	void deleteAllContentsByUnit(List<TrainingContent> trainingContentList);
-
+	void deleteContent(int id);
 }

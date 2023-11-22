@@ -20,6 +20,7 @@ import com.example.BE.model.entity.TrainingUnit;
 import com.example.BE.model.entity.User;
 import com.example.BE.repository.SyllabusObjectRepository;
 import com.example.BE.repository.SyllabusRepository;
+import com.example.BE.repository.TrainingContentRepository;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.repository.TrainingUnitRepository;
 import com.example.BE.repository.UserRepository;
@@ -102,6 +103,9 @@ public class ViewSyllabusController {
 	@Autowired
 	LearningObjectiveMapper loMapper;
 
+	@Autowired
+	TrainingContentRepository contentRepository;
+
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus() {
 		List<SyllabusResponse> syList = syllabusService.getAll();
@@ -179,7 +183,8 @@ public class ViewSyllabusController {
 	}
 
 	@PostMapping("/saveSyllabus")
-	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse) {
+	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse,
+			@RequestBody MultipartFile file) {
 		ApiResponse apiResponse = new ApiResponse();
 		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
 		Syllabus result = repo.save(syllabus);
@@ -204,6 +209,13 @@ public class ViewSyllabusController {
 				LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
 				syllabusService.saveObjective(lo, result.getTopic_code());
 			}
+		}
+
+		if (file != null) {
+			String fileName = file.getOriginalFilename();
+			String filePath = syllabusService.uploadFile(fileName, file);
+			result.setDownload_url(filePath);
+			result.setTraining_materials(fileName);
 		}
 
 		return getSyllabusByTopicCode(result.getTopic_code());
@@ -402,7 +414,23 @@ public class ViewSyllabusController {
 			}
 		} catch (Exception e) {
 			apiResponse.error("Server failed");
-			;
+
+			return ResponseEntity.ok(apiResponse);
+		}
+
+	}
+
+	@DeleteMapping("/deleteContent/{id}")
+	public ResponseEntity<ApiResponse> deleteContent(@PathVariable int id) {
+		ApiResponse apiResponse = new ApiResponse();
+		try {
+			contentService.deleteContent(id);
+			apiResponse.ok(id);
+			return ResponseEntity.ok(apiResponse);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			apiResponse.ok("Delete failed");
 			return ResponseEntity.ok(apiResponse);
 		}
 
@@ -504,20 +532,24 @@ public class ViewSyllabusController {
 		Resource resource = null;
 		String filePath = existedSyllabus.getDownload_url();
 		try {
-			resource = new UrlResource(Paths.get(filePath).toUri());
+			if (filePath != null) {
+				resource = new UrlResource(Paths.get(filePath).toUri());
+				String contentType = "application/octet-stream";
+				String headerValue = "attachment;fileName=\"" + resource.getFilename() + "\"";
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_DISPOSITION,
+						"attachment; filename=\"" + existedSyllabus.getTraining_materials() + "\"");
+				return ResponseEntity.ok()
+						.headers(headers)
+						.contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.body(resource);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			apiResponse.ok("No file");
+			return ResponseEntity.ok(apiResponse);
 		}
-
-		String contentType = "application/octet-stream";
-		String headerValue = "attachment;fileName=\"" + resource.getFilename() + "\"";
-		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.CONTENT_DISPOSITION,
-				"attachment; filename=\"" + existedSyllabus.getTraining_materials() + "\"");
-		return ResponseEntity.ok()
-				.headers(headers)
-				.contentType(MediaType.APPLICATION_OCTET_STREAM)
-				.body(resource);
+		return ResponseEntity.ok(apiResponse);
 	}
 
 	@GetMapping("/testGetDuration/{id}")

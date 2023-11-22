@@ -34,6 +34,7 @@ public interface SyllabusMapper {
 	// @Mapping(source = "syllabus.data", target = "data")
 	@Mapping(source = "syllabus_unit",target = "unitList")
 	@Mapping(source = "syllabus_object" ,target = "learningList")
+	@Mapping(source = "syllabus.download_url", target = "downloadUrl")
 	// @Mapping(source = "syllabus_unit.training_content",target = "unitList.contentList")
 
 	SyllabusResponse toResponse(Syllabus syllabus);
