@@ -35,8 +35,13 @@ const Syllabus = () => {
   }, []);
 
   const change = (e) => {
-    setKeyword(e.target.value);
-    console.log(keyword);
+    apiSyllabusInstance.get(`search/${e.target.value}`).then((response) =>{
+      setList(response.data);
+      setTotalPage(Math.ceil(response.data.length / itemPerPage));
+    }).catch((error) => {
+      console.error(error);
+    });
+
   };
 
   const submit = (e) => {
@@ -75,7 +80,6 @@ const Syllabus = () => {
           <td>{item.topic_code}</td>
           <td>{item.createdDate}</td>
           <td>{item.create_by}</td>
-          <td>NULL</td>
           <td>{Math.ceil(item.programDuration / 24)} days</td>
           <td className="td-syllabus-status">
             <div
@@ -162,7 +166,6 @@ const Syllabus = () => {
               <th>Create on</th>
               <th>Create by</th>
               <th>Duration</th>
-              <th>Output standard</th>
               <th className="th-syllabus-status">Status</th>
             </tr>
           </thead>

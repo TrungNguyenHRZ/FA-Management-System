@@ -597,9 +597,7 @@ const CreateSyllabus = () => {
                                                                   open={
                                                                     isModalVisible
                                                                   }
-                                                                  onClose={
-                                                                    handleCancel
-                                                                  }
+
                                                                   name="modal-box"
                                                                   aria-labelledby="modal-modal-title"
                                                                   aria-describedby="modal-modal-description"
@@ -656,6 +654,19 @@ const CreateSyllabus = () => {
                                                                         }].duration`}
                                                                         className="modal-item"
                                                                         placeholder="Duration"
+                                                                      />
+
+                                                                      <ErrorMessage
+                                                                        name={`unitsByDay[${
+                                                                          selectedContent.dayNumber -
+                                                                          1
+                                                                        }].units[${
+                                                                          selectedContent.unitIndex
+                                                                        }].contentList[${
+                                                                          selectedContent.contentIndex
+                                                                        }].duration`}
+                                                                        className="error-mess"
+                                                                        component="div"
                                                                       />
 
                                                                       <Field

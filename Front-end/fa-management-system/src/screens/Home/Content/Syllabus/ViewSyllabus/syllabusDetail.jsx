@@ -105,8 +105,19 @@ const SyllabusDetail = () => {
     padding: theme.spacing(2),
     borderTop: "1px solid rgba(0, 0, 0, .125)",
   }));
+
   const steps = ["General", "Outline", "Others", "Completed"];
 
+  const delivery = [
+    "Assignment/Lab",
+    "Concept/Lecture",
+    "Guide/Review",
+    "Test/Quiz",
+    "Exam",
+    "Seminar/Workshop",
+  ];
+
+  
   let renderGeneral = () => {
     return (
       <div className="detail-body">
@@ -197,13 +208,6 @@ const SyllabusDetail = () => {
     );
   };
 
-  const toggleItem = (item) => {
-    if (openItems.includes(item)) {
-      setOpenItems(openItems.filter((openItem) => openItem !== item));
-    } else {
-      setOpenItems([...openItems, item]);
-    }
-  };
 
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -221,16 +225,6 @@ const SyllabusDetail = () => {
     }, []);
   }
   console.log(groupedUnits);
-
-  const [toggledItems, setToggledItems] = useState({});
-
-  const handleToggle = (itemId) => {
-    // Thực hiện toggle trạng thái của itemId
-    setToggledItems((prevToggledItems) => ({
-      ...prevToggledItems,
-      [itemId]: !prevToggledItems[itemId],
-    }));
-  };
 
   let duration = (unit) => {
     let a = 0;
