@@ -21,6 +21,7 @@
 }
 .search-input-text-syllabus {
   border: none;
+  cursor: pointer;
 }
 .search-input-text-syllabus:focus {
   outline: none;
