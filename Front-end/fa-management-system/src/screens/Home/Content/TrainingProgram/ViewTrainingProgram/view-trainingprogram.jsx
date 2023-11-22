@@ -48,7 +48,11 @@ const ViewTrainingProgram = () => {
           <tr key={item.training_code}>
             <td>{index + 1 + thisPage * itemPerPage}</td>
             <td>
-              <button value={item.training_code} onClick={OpenForm}>
+              <button
+                className="btn-view-training-program"
+                value={item.training_code}
+                onClick={OpenForm}
+              >
                 {item.training_name}
               </button>
             </td>

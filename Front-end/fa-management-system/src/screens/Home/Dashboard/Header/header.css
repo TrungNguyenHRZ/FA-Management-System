@@ -58,6 +58,7 @@
   color: #fff;
   padding: 2px 5px;
   border-radius: 5px;
+  justify-content: center;
 }
 .role-user-trainer {
   background-color: #50b846;

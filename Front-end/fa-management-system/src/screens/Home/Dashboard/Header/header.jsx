@@ -8,7 +8,7 @@ import { RxAvatar } from "react-icons/rx";
 
 const Header = () => {
   const [userInfo, setUserInfo] = useState({});
-  const [info, setInfo] = useState([]);
+  const [info, setInfo] = useState("");
 
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ const Header = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserInfo(decodedToken);
-      setInfo(decodedToken.userInfo);
+      setInfo(decodedToken.permission);
     }
   }, []);
 
@@ -46,14 +46,14 @@ const Header = () => {
         <div className="user-action">
           <div
             className={
-              info[0] === "Supper_Admin"
+              info === "Super admin"
                 ? "role-user role-user-super-admin"
-                : info[0] === "Admin"
+                : info === "Admin"
                 ? "role-user role-user-admin"
                 : "role-user role-user-trainer"
             }
           >
-            {userInfo ? userInfo.userInfo : "null"}
+            {info ? info : "null"}
           </div>
 
           <div className="name-user" onClick={handleViewInfo}>

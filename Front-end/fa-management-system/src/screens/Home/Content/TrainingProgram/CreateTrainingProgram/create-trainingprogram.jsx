@@ -69,7 +69,7 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
       toast.success("Add All Syllabus successfully !!!");
       closeForm3();
     } else {
-      toast.success("please pick syllabus !!!");
+      toast.error("Please add least one syllabus !!!");
     }
   };
 
@@ -186,13 +186,15 @@ const Confirm = ({ saveTrainingProgram, closeForm }) => {
   };
 
   return (
-    <div className="user-form-popup-container" onClick={handleOverlayClick}>
-      <div className="user-form">
-        <div className="btn-close-form"></div>
-        <div>Are you sure to submit</div>
+    <div
+      className="user-form-popup-container popup-confirm-training-container"
+      onClick={handleOverlayClick}
+    >
+      <div className="user-form popup-confirm-training">
+        <div>Are you sure to submit ?</div>
         <div className="create-training-action">
-          <button onClick={handleNo}>no</button>
-          <button onClick={handleYes}>yes</button>
+          <button onClick={handleNo}>No</button>
+          <button onClick={handleYes}>Yes</button>
         </div>
       </div>
     </div>
@@ -336,15 +338,29 @@ const CreateTrainingProgram = () => {
                     </div>
                     <div className="input-class input-code">
                       <label>Create by </label>
-                      <input type="text" value={userInfo?.name} readOnly />
+                      <input
+                        type="text"
+                        value={userInfo?.name}
+                        disabled
+                        style={{ color: "#2a00b7" }}
+                      />
                     </div>
                     <div className="input-class input-status">
                       <label>Modified by</label>
-                      <input type="text" value={userInfo?.name} readOnly />
+                      <input
+                        type="text"
+                        value={userInfo?.name}
+                        disabled
+                        style={{ color: "#2a00b7" }}
+                      />
                     </div>
                     <div className="input-class input-location">
                       <label>Info</label>
-                      <Field name="generalInfo" />
+                      <Field
+                        name="generalInfo"
+                        as="textarea"
+                        placeholder="Enter general information here..."
+                      />
                       {errors.generalInfo && touched.generalInfo ? (
                         <div style={{ color: "red" }}>{errors.generalInfo}</div>
                       ) : null}

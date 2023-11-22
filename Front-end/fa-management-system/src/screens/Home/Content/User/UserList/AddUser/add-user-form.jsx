@@ -3,13 +3,21 @@ import "./add-user-form.css";
 import { MdClose } from "react-icons/md";
 import apiUserInstance from "../../../../../../service/api-user";
 import { Formik, Field, Form } from "formik";
-import { ToastContainer, toast } from "react-toastify";
 import * as Yup from "yup";
+import { useNavigate } from "react-router";
+import { Switch } from "@mui/material";
 
-const AddUserForm = ({ showForm, closeForm, updateForm }) => {
+const AddUserForm = ({
+  showForm,
+  closeForm,
+  updateForm,
+  checkboxStates,
+  setCheckboxStates,
+}) => {
   const [list, setList] = useState([]);
   const [tmp, setTmp] = useState("");
 
+  const navigate = useNavigate();
   useEffect(() => {
     apiUserInstance
       .get("/all")
@@ -82,8 +90,22 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
         console.log(tmp);
         console.log(list);
         if (values != null) {
-          await apiUserInstance.post("/create-sp-admin", tmp);
-          updateForm();
+          try {
+            const response = await apiUserInstance.post(
+              "/create-sp-admin",
+              tmp
+            );
+            const newUserId = response.data.id;
+            const updatedCheckboxStates = checkboxStates.slice();
+            updatedCheckboxStates.push({
+              id: newUserId,
+              checked: Status === "ACTIVE",
+            });
+            setCheckboxStates(updatedCheckboxStates);
+            updateForm();
+          } catch (error) {
+            console.error(error);
+          }
         }
       }}
     >
@@ -140,7 +162,6 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                     </div>
                   </div>
                 </div>
-
                 <div className="ip ip-phone-doba">
                   <div className="user-email">
                     <label htmlFor="email">Password</label>
@@ -162,10 +183,8 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                         }}
                       />
                     </div>
-
                   </div>
                 </div>
-
                 <div className="user-gender">
                   <label>Gender:</label>
                   <div className="user-gender-choice" onChange={changeGender}>
@@ -186,10 +205,11 @@ const AddUserForm = ({ showForm, closeForm, updateForm }) => {
                 </div>
 
                 <div className="user-isActive">
-                  <label htmlFor="">Active</label>
-                  <input
+                  <label htmlFor="">Activate</label>
+                  <Switch
                     type="checkbox"
                     value={"ACTIVE"}
+                    checked={Status === "ACTIVE"}
                     onChange={changeStatus}
                   />
                 </div>

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 import apiUserInstance from "../../../../../service/api-user";
+import { useNavigate } from "react-router";
 
 const CreateUser = () => {
   const [list, setList] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiUserInstance

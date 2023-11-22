@@ -83,19 +83,21 @@ const TrainingProgramDetail = ({
           <div className="trainingprogram-detail-form-head">
             <h1>Training Program</h1>
             <div className="trainingprogram-detail-form-head-2">
-              <h1>{thisTrainingProgram.training_name}</h1>
+              <div>{thisTrainingProgram.training_name}</div>
               <div>({thisTrainingProgram.status})</div>
             </div>
           </div>
         </div>
         <div className="trainingprogram-detail-duration-form-container">
           <div className="trainingprogram-detail-duration-form">
-            <h4>Duration: {thisTrainingProgram.duration} </h4>
-            <div>days </div>
+            <div>Duration:</div>
+            <div>
+              {thisTrainingProgram.duration} <span>days</span>
+            </div>
           </div>
-          <div className="trainingprogram-detail-duration-form">
-            <h6>Modified on 20/10/2023 by </h6>
-            <h5> {thisTrainingProgram.modified_by}</h5>
+          <div className="trainingprogram-detail-duration-form-2">
+            <div>Modified on 20/10/2023 by </div>
+            <div>{thisTrainingProgram.modified_by}</div>
           </div>
         </div>
 
