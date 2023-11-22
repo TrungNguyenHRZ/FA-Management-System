@@ -6,6 +6,15 @@
   border-radius: 10px;
 }
 
+.btn-view-training-program {
+  border: none;
+  background-color: inherit;
+  color: #2a00b7;
+}
+.btn-view-training-program:hover {
+  color: red;
+  text-decoration: underline;
+}
 .td-status-active,
 .td-status-inactive,
 .td-status-drafting {

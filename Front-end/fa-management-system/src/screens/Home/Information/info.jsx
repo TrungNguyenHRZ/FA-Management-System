@@ -14,11 +14,9 @@ const Info = () => {
   const [enableEdit, setEnableEdit] = useState(false);
 
   const decodedToken = jwtDecode(Cookies.get("token"));
-  const navigate = useNavigate();
 
   useEffect(() => {
     Authorization();
-    console.log(Authorization());
   });
 
   useEffect(() => {
@@ -138,14 +136,14 @@ const Info = () => {
           <div
             className={
               "info-role " +
-              (listInfoUser.userType === "Supper_Admin"
+              (info.permission === "Super admin"
                 ? "role-super-admin"
-                : listInfoUser.userType === "Admin"
+                : info.permission === "Admin"
                 ? "role-admin"
                 : "role-trainer")
             }
           >
-            {listInfoUser.userType || "null"}
+            {info.permission || "null"}
           </div>
           <div className="info-status status-active">
             {listInfoUser.status || "null"}

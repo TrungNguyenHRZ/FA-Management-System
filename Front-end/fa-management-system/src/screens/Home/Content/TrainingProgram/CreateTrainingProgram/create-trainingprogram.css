@@ -31,7 +31,7 @@
 } */
 .training-program-content-main {
   height: 600px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .training-program-content-main-2 {
@@ -108,4 +108,38 @@
 
 .btn-delete-choosed-syllabus:hover {
   opacity: 0.8;
+}
+
+.popup-confirm-training {
+  font-size: 30px;
+  display: flex;
+  width: 500px;
+  height: 200px;
+  justify-content: center;
+  gap: 20px;
+}
+
+.create-training-action {
+  display: flex;
+  gap: 60px;
+}
+
+.create-training-action > button {
+  font-size: 25px;
+  border: none;
+  width: 100px;
+  border-radius: 10px;
+}
+
+.create-training-action > button:last-child {
+  background-color: #2a00b7;
+  color: #fff;
+}
+
+.create-training-action > button:last-child:hover {
+  opacity: 0.8;
+}
+.create-training-action > button:first-child:hover {
+  background-color: #ff0000;
+  color: #fff;
 }

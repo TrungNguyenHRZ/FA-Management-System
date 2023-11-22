@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import Authorization from "../../../../Authentication/Auth";
+import { FormControlLabel, Switch, styled } from "@mui/material";
 
 const UserList = () => {
   const [list, setList] = useState([]);
@@ -22,7 +23,6 @@ const UserList = () => {
 
   useEffect(() => {
     Authorization();
-    // console.log(Authorization());
   });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const UserList = () => {
         );
         const initialState = response.data.userResponseList.map((item) => ({
           id: item.id,
-          checked: item.status === "ACTIVE", // Sử dụng giá trị từ API
+          checked: item.status === "ACTIVE",
         }));
         setCheckboxStates(initialState);
       })
@@ -60,7 +60,6 @@ const UserList = () => {
   const closeForm = () => {
     setShowFormAddUser(false);
   };
-
   const updateForm = () => {
     setShowFormAddUser(false);
     apiUserInstance
@@ -102,12 +101,13 @@ const UserList = () => {
 
     // console.log(flag);
 
+    let gender = item.gender;
     await apiUserInstance
       .put(`/update/${item.id}`, {
         name: item.name,
         phone: item.phone,
         dob: item.dob,
-        genderTrueMale: 1,
+        genderTrueMale: gender === "Male" ? 1 : 0,
         status: flag,
       })
       .then(function (response) {
@@ -119,17 +119,17 @@ const UserList = () => {
                 ACTIVATE
               </strong>{" "}
               <br />
-              {item.email} successfully !!!
+              <strong>{item.email}</strong> successfully !!!
             </div>
           );
         } else {
           toast.success(
             <div>
               <strong style={{ fontWeight: "bold", color: "red" }}>
-                DE_ACTIVATE
+                DEACTIVATE
               </strong>{" "}
               <br />
-              {item.email} successfully !!!
+              <strong>{item.email}</strong> successfully !!!
             </div>
           );
         }
@@ -168,6 +168,8 @@ const UserList = () => {
                 openForm={openForm}
                 closeForm={closeForm}
                 updateForm={updateForm}
+                checkboxStates={checkboxStates}
+                setCheckboxStates={setCheckboxStates}
               />
             </div>
           </div>
@@ -217,11 +219,14 @@ const UserList = () => {
                       </div>
                     </td>
                     <td className="cb-user-list-status">
-                      <input
+                      <Switch
                         type="checkbox"
                         checked={
-                          checkboxStates.find((state) => state.id === item.id)
-                            ?.checked || false
+                          (
+                            checkboxStates.find(
+                              (state) => state.id === item.id
+                            ) || {}
+                          ).checked || false
                         }
                         onChange={() => handleCheckBoxChange(item)}
                       />
