@@ -67,12 +67,16 @@ public class ClassController {
         ClassResponse classResponse = new ClassResponse(c);
         return classResponse;
     }
-    @GetMapping(value = {"/searchByClassCode"})
-    public ClassResponse findClassByCode(@RequestParam(required = true) String classCode){
-        Class c = classService.searchByClassCode(classCode);
-        ClassResponse classResponse = new ClassResponse(c);
-        return classResponse;
-    }
+//    @GetMapping(value = {"/searchByClassCode"})
+//    public ClassResponse findClassByCode(@RequestParam(required = true) String classCode){
+//        Class c1 = classService.searchByClassCode(classCode);
+//        ClassResponse classResponse = new ClassResponse(c1);
+//        List<Class> classList = new ArrayList<>();
+//        for (ClassResponse c :classResponse) {
+//            classList.add(classService.findById(c.getClassId()));
+//        }
+//        return classService.isEnable(classList);
+//    }
     @GetMapping("/{id}")
     public ClassResponse getClassById(@PathVariable int id){
         Class tmp = classService.findById(id);
@@ -103,7 +107,9 @@ public class ClassController {
         String twoDigitYear = Integer.toString(currentYear).substring(2);
         c.setClassCode(c.getLocation()+"_"+ twoDigitYear+"_"+incrementalNumber);
         c.setCreatedDate(new Date());
-        Class tmp = classService.saveClass(classService.convert(c));
+        Class clazz = classService.convert(c);
+        clazz.setEnable(true);
+        Class tmp = classService.saveClass(clazz);
         ClassResponse tmp2 = new ClassResponse(tmp);
         apiResponse.ok(tmp2);
 
@@ -163,8 +169,12 @@ public class ClassController {
                                             @RequestParam(value = "endDay") String endDay) throws ParseException {
         Date startDayDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDay);
         Date endDayDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDay);
-
-        return classService.findClassesInDateRange(startDayDate, endDayDate);
+        List<ClassResponse> tmp = classService.findClassesInDateRange(startDayDate, endDayDate);
+        List<Class> classList = new ArrayList<>();
+        for (ClassResponse c :tmp) {
+            classList.add(classService.findById(c.getClassId()));
+        }
+        return classService.isEnable(classList);
     }
     @GetMapping(value = {"/getAllClassUser"})
     public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getAllClassUser() {
@@ -180,7 +190,12 @@ public class ClassController {
     @GetMapping(value = {"/searchClassByKeyword"})
     public ResponseEntity<ApiResponse<List<ClassResponse>>> getClassbyKey(@RequestParam(required = true) String key) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.ok(classService.findClassByKeyWord(key));
+        List<ClassResponse> tmp = classService.findClassByKeyWord(key);
+        List<Class> classList = new ArrayList<>();
+        for (ClassResponse c :tmp) {
+            classList.add(classService.findById(c.getClassId()));
+        }
+        apiResponse.ok(classService.isEnable(classList));
         return ResponseEntity.ok(apiResponse);
     }
     @PostMapping(value = {"/CreateClassUser"})
@@ -200,12 +215,16 @@ public class ClassController {
     }
     @GetMapping(value = {"/getClassesByStatus"})
     public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClassesByStatus(@RequestParam(required = true) String status) {
+        ApiResponse apiResponse = new ApiResponse();
         List<Class> cList = classService.searchByStatus(status);
         List<ClassResponse> cr = new ArrayList<>();
         for (Class c: cList) {
             cr.add(new ClassResponse(c));
         }
-        ApiResponse apiResponse = new ApiResponse();
+        List<Class> classList = new ArrayList<>();
+        for (ClassResponse c :cr) {
+            classList.add(classService.findById(c.getClassId()));
+        }
         apiResponse.ok(cr);
         return ResponseEntity.ok(apiResponse);
     }

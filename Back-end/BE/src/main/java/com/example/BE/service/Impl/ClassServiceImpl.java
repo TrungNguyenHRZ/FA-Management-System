@@ -9,10 +9,7 @@ import com.example.BE.service.TrainingProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ClassServiceImpl implements ClassService {
@@ -116,6 +113,17 @@ public class ClassServiceImpl implements ClassService {
         });
 
         return classes;
+    }
+
+    @Override
+    public List<ClassResponse> isEnable(List<Class> classList) {
+        List<ClassResponse> classResponseList  = new ArrayList<>();
+        for (Class c: classList) {
+            if(c.isEnable()){
+                classResponseList.add(new ClassResponse(c));
+            }
+        }
+        return classResponseList;
     }
 
     @Override
