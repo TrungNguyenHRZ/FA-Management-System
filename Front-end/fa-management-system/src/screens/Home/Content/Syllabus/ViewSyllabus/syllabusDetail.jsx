@@ -26,7 +26,7 @@ import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { Stepper, Step, StepLabel } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { FaCloudDownloadAlt } from "react-icons/fa";
@@ -393,26 +393,29 @@ const SyllabusDetail = () => {
   let downloadMaterial = async () => {
     try {
       // Gửi yêu cầu để lấy dữ liệu của tệp.
-      const response = await apiSyllabusInstance.get(`/downloadMaterials/${syllabus.topic_code}`, {
-        responseType: 'blob', // Yêu cầu kiểu dữ liệu là blob.
-      });
-  
+      const response = await apiSyllabusInstance.get(
+        `/downloadMaterials/${syllabus.topic_code}`,
+        {
+          responseType: "blob", // Yêu cầu kiểu dữ liệu là blob.
+        }
+      );
+
       // Tạo một đường link ẩn để tải xuống tệp.
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = URL.createObjectURL(new Blob([response.data]));
-  
+
       // Đặt tên tệp cho liên kết tải xuống.
       const fileName = syllabus.training_materials;
       link.download = fileName;
-  
+
       // Thêm liên kết vào trang và kích hoạt nó.
       document.body.appendChild(link);
       link.click();
-  
+
       // Xóa liên kết sau khi tải xong.
       document.body.removeChild(link);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     }
   };
 
@@ -518,15 +521,18 @@ const SyllabusDetail = () => {
         >
           Others
         </div>
-        {syllabus.downloadUrl && 
-        <div className="download-container">
-        <Tooltip title="Download Material(s)" >
-          <IconButton>
-            <FaCloudDownloadAlt className="download-icon" onClick={downloadMaterial}/>
-          </IconButton>
-        </Tooltip>
-        </div>
-        }
+        {syllabus.downloadUrl && (
+          <div className="download-container">
+            <Tooltip title="Download Material(s)">
+              <IconButton>
+                <FaCloudDownloadAlt
+                  className="download-icon"
+                  onClick={downloadMaterial}
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
       </div>
 
       {page === 1 ? (

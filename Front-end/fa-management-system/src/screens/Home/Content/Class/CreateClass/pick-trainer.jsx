@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import apiClassInstance from "../../../../../service/api-class";
-import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import apiUserInstance from "../../../../../service/api-user";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
@@ -9,7 +8,7 @@ import "./pick-trainer.css";
 import { useNavigate } from "react-router";
 import Authorization from "../../../../Authentication/Auth";
 
-const PickTrainer = ({ showForm1, closeForm1, classId, updateForm1 }) => {
+const PickTrainer = ({ showForm, closeForm, classId, updateForm }) => {
   const [allUser, setAllUser] = useState([]);
   const [filterAllUser, setFilterAllUser] = useState([]);
   const [remainUser, setRemainUser] = useState({});
@@ -87,7 +86,21 @@ const PickTrainer = ({ showForm1, closeForm1, classId, updateForm1 }) => {
     console.log(tmp2);
   };
 
-  const addAll = (e) => {};
+  const addAll = (e) => {
+    const tmp = [];
+    for (const item of totalUser) {
+      tmp.push({
+        userId: item.id,
+        classId: classId,
+        userType: item.userType,
+      });
+    }
+    console.log(tmp);
+    apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
+      console.log(response.data);
+    });
+    updateForm();
+  };
 
   return (
     <div className="pickTrainer-form-container">

@@ -66,7 +66,10 @@ const CreateClass = () => {
 
   const updateForm2 = () => {};
 
-  const updateForm1 = () => {};
+  const updateForm1 = () => {
+    setShowFormAddTrainer(false);
+    setShowFormAddSchedule(true);
+  };
   // console.log(userInfo.id);
 
   return (
@@ -96,7 +99,10 @@ const CreateClass = () => {
         tmp.start_date = addTrainingProgram.start_time;
 
         if (values != null) {
-          apiClassInstance.post("/CreateClass", tmp);
+          apiClassInstance.post("/CreateClass", tmp).then((response) => {
+            console.log(response.data);
+            setItem(response.data.payload.classId);
+          });
           toast.success("Add class successfully !!!");
           openForm1();
         }
