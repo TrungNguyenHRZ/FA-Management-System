@@ -30,9 +30,10 @@ public class SecurityConfig {
                         "/swagger-ui",
                         "/user/login",
                         "/dev/**",
-                        "/user/create-sp-admin",
-                        "user/view/**"
+                        "/user/create-sp-admin"
+//                        "user/view/**"
                     ).permitAll()
+//                    .anyRequest().authenticated()
                     .requestMatchers(
                         "/user/**",
                         "/user-permission/**"
