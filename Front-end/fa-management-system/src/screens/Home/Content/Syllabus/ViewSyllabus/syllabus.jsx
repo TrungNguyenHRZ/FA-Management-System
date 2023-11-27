@@ -18,6 +18,8 @@ const Syllabus = () => {
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
   const [keyword, setKeyword] = useState("");
+  const [firstTime,setFirstTime] = useState(1);
+  const[datePick,setDatePick] = useState("");
   const itemPerPage = 9;
   const navigate = useNavigate();
 
@@ -35,13 +37,32 @@ const Syllabus = () => {
   }, []);
 
   const change = (e) => {
-    apiSyllabusInstance.get(`search/${e.target.value}`).then((response) =>{
+    setKeyword(e.target.value);
+  };
+
+  const dateChange = async (e) => {
+    const selectedDate = e.target.value;
+  
+    try {
+      setDatePick(selectedDate);
+      console.log(selectedDate);
+      setIsLoading(true);
+  
+      const response = await apiSyllabusInstance.get(`search/${selectedDate}`);
+      
       setList(response.data);
       setTotalPage(Math.ceil(response.data.length / itemPerPage));
-    }).catch((error) => {
+      console.log(list);
+    } catch (error) {
       console.error(error);
-    });
-
+    } finally {
+      setIsLoading(false);
+      setFirstTime(2);
+      setDatePick("")
+    }
+  
+    console.log(isLoading);
+    console.log(firstTime);
   };
 
   const submit = (e) => {
@@ -49,14 +70,19 @@ const Syllabus = () => {
     apiSyllabusInstance
       .get(`search?keyword=${keyword}`)
       .then((response) => {
-        setList(response.data);
-        console.log(list);
+        setList(response.data)
         setTotalPage(Math.ceil(response.data.length / itemPerPage));
+        console.log(list);
       })
       .catch((error) => {
         console.error(error);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false)
+        setFirstTime(2);
+      });
+      console.log(isLoading)
+      console.log(firstTime)
   };
 
   const handlePageClick = (data) => {
@@ -65,7 +91,7 @@ const Syllabus = () => {
   };
 
   let renderData = () => {
-    return list.length !== 0 ? (
+    return list.length !== 0 ?  (
       list.slice(thisPage * 9, (thisPage + 1) * 9).map((item, index) => (
         <tr key={item.topic_code}>
           <td>{index + 1 + thisPage * itemPerPage}</td>
@@ -98,18 +124,24 @@ const Syllabus = () => {
           </td>
         </tr>
       ))
-    ) : (
-      <tr>
+    ) 
+    : (
+      firstTime === 1 ? (
+        <tr>
         <td style={{ textAlign: "center" }} colSpan={7}>
-          <div className="loading-overlay">
-            <div className="loading-container">
-              <SyncLoader color="#2a00b7" />
-            </div>
-          </div>
-        </td>
-      </tr>
-    );
+             <div className="loading-overlay">
+               <div className="loading-container">
+                 <SyncLoader color="#2a00b7" />
+               </div>
+             </div>
+             {/* <div> Data is NOT FOUND !!!</div>  */}
+           </td> 
+         </tr>
+      ): <div> Data is NOT FOUND !!!</div> 
+      )
+    
   };
+
 
   return (
     <div className="view-syllbus-container">
@@ -136,7 +168,7 @@ const Syllabus = () => {
             <input
               type="date"
               className="search-input-date"
-              onChange={change}
+              onChange={dateChange}
             />
           </div>
         </div>
@@ -171,6 +203,7 @@ const Syllabus = () => {
           </thead>
 
           <tbody>{renderData()}</tbody>
+          {/* <tbody>{isLoading && renderNonData()}</tbody> */}
         </table>
         <div className="syllabus-pagination">
           <ReactPaginate
