@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Integer> {
     @Query("SELECT tp FROM TrainingProgram tp WHERE tp.toggle = true")
@@ -26,9 +25,11 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
 
     @Query("SELECT tp FROM TrainingProgram tp")
     List<TrainingProgramResponse> findAllTrainingProgram();
+
     @Modifying
     @Query("UPDATE TrainingProgram tp SET tp.toggle = :toggle WHERE tp.training_code = :id")
     int softDeleteById(@Param("id") int id, @Param("toggle") boolean toggle);
+
     @Modifying
     @Query("UPDATE TrainingProgram tp SET tp.toggle = :toggle WHERE tp.training_code = :id")
     int reActivateById(@Param("id") int id, @Param("toggle") boolean toggle);

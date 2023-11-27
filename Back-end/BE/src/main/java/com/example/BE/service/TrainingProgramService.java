@@ -26,8 +26,6 @@ public interface TrainingProgramService {
 
     TrainingProgram saveTrainingProgram(TrainingProgram trainingProgram);
 
-//    List<TrainingProgram> findByNameLike(String name);
-
     TrainingProgram convert(TrainingProgramResponse t);
 
     TrainingProgram updateTrainingProgram(TrainingProgram tp);
