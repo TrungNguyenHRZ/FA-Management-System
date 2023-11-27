@@ -1,10 +1,99 @@
 .pickTrainer-form-container {
-  width: 1000px;
+  display: flex;
+  padding: 10px;
 }
 .pickTrainer-form-Pick-container {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .pickTrainer-form-Pick-Trainer {
   display: flex;
+  flex-direction: column;
+}
+
+.form-add-pick-trainer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  /* border: 1px solid black; */
+  background-color: #9e9e9e;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.form-pick-trainer-admin,
+.form-pick-user {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 20px;
+}
+
+.form-btn-add {
+  background-color: #2a00b7;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  width: 80px;
+}
+.form-btn-add:hover {
+  opacity: 0.8;
+}
+
+.picked-user-container {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid black; */
+  border-radius: 5px;
+  gap: 10px;
+  height: 450px;
+  overflow-y: scroll;
+}
+
+.picked-user-item {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 10px;
+  /* background-color: #495aff; */
+  border: 1px solid black;
+  /* color: #fff; */
+  font-size: 20px;
+}
+.picked-user-item > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+}
+.picked-user-item > div:last-child > button {
+  background-color: red;
+  border-radius: 5px;
+  color: #fff;
+  border: none;
+  padding: 3px 10px;
+}
+
+.picked-user-item > div:last-child > button:hover {
+  opacity: 0.8;
+}
+.picked-user-role-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.picked-user-role-container > .picked-user-role {
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.admin {
+  background-color: #f2721e;
+  color: #fff;
+}
+.trainer {
+  background-color: #50b846;
+  color: #fff;
 }

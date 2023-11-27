@@ -9,6 +9,7 @@ import {
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
+import { Avatar } from "@mui/material";
 const ViewTrainingProgram = () => {
   const [id, setId] = useState("");
   const [list, setList] = useState([]);
@@ -57,7 +58,19 @@ const ViewTrainingProgram = () => {
               </button>
             </td>
             <td>{item.createdDate}</td>
-            <td>{item.create_by}</td>
+            <td className="td-user-list-name">
+              <Avatar
+                className="avatar-img"
+                {...stringAvatar(`${item.create_by}`)}
+                sx={{
+                  width: 35,
+                  height: 35,
+                  bgcolor: stringToColor(`${item.create_by}`),
+                }}
+                style={{ fontSize: "15px" }}
+              />
+              {item.create_by}
+            </td>
             <td>{item.duration} days</td>
             <td>
               <div
@@ -130,7 +143,34 @@ const ViewTrainingProgram = () => {
         console.error(error);
       });
   };
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
 
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}`,
+    };
+  }
   return (
     <div className="view-syllbus-container">
       <h1>View Training Program</h1>

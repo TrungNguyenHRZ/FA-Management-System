@@ -26,14 +26,11 @@
   gap: 5px;
   color: #2a00b7;
   align-items: center;
-  padding: 5px;
+  padding: 5px 20px;
   background-color: #fff;
   margin-right: 10px;
   border-radius: 10px;
   justify-content: space-between;
-}
-.avatar-user > svg {
-  font-size: 60px;
 }
 .btn-message,
 .btn-notification {
@@ -72,6 +69,7 @@
 .name-user {
   font-size: 25px;
   cursor: pointer;
+  text-align: center;
 }
 
 .name-user:hover {
@@ -90,4 +88,17 @@
 }
 .logout-user > svg {
   font-size: 25px;
+}
+.form-btn-submit-picked {
+  border: none;
+  background-color: #2a00b7;
+  border-radius: 5px;
+  color: #fff;
+}
+.form-btn-submit-picked:hover {
+  opacity: 0.8;
+}
+
+.btn-name-user {
+  font-family: "Quicksand Bold", sans-serif;
 }

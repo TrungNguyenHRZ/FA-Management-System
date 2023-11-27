@@ -8,8 +8,7 @@ import {
   // FaUpload,
   // FaPlusCircle,
 } from "react-icons/fa";
-
-import { RiFileEditFill } from "react-icons/ri";
+import { Avatar } from "@mui/material";
 import "./view-class.css";
 //import { Await } from "react-router";
 
@@ -86,7 +85,34 @@ const ViewClass = () => {
     setThisPage(data.selected);
     console.log(data.selected);
   };
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
 
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}`,
+    };
+  }
   let renderData = () => {
     if (list && list.length > 0) {
       return list
@@ -97,7 +123,19 @@ const ViewClass = () => {
             <td>{item.className}</td>
             <td>{item.classCode}</td>
             <td>{item.createdDate}</td>
-            <td>{item.create_by}</td>
+            <td className="td-user-list-name">
+              <Avatar
+                className="avatar-img"
+                {...stringAvatar(`${item.create_by}`)}
+                sx={{
+                  width: 35,
+                  height: 35,
+                  bgcolor: stringToColor(`${item.create_by}`),
+                }}
+                style={{ fontSize: "15px" }}
+              />
+              {item.create_by}
+            </td>
             <td>{item.duration} days</td>
             <td>
               <div

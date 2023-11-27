@@ -10,6 +10,7 @@ import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 import CreateMultipleSchedules from "../../Schedule/create-schedule";
 import PickTrainer from "./pick-trainer";
+import { useNavigate } from "react-router";
 
 const SignupSchema = Yup.object().shape({
   className: Yup.string()
@@ -31,6 +32,19 @@ const CreateClass = () => {
   const [showFormAddSchedule, setShowFormAddSchedule] = useState(false);
   const [showFormAddTrainer, setShowFormAddTrainer] = useState(false);
   const [Item, setItem] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+
+    if (
+      decodedToken.userInfo[0] !== "Supper_Admin" &&
+      decodedToken.userInfo[0] !== "Admin"
+    ) {
+      navigate("/overview");
+    }
+  }, []);
   useEffect(() => {
     apiTrainingProgramInstance
       .get("/all")

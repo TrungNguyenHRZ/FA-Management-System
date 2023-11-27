@@ -11,7 +11,7 @@ import { SyncLoader } from "react-spinners";
 import "./syllabus.css";
 import { Outlet, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-
+import { Avatar } from "@mui/material";
 const Syllabus = () => {
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,7 @@ const Syllabus = () => {
   }, []);
 
   const change = (e) => {
+
     setKeyword(e.target.value);
   };
 
@@ -60,7 +61,6 @@ const Syllabus = () => {
       setFirstTime(2);
       setDatePick("")
     }
-  
     console.log(isLoading);
     console.log(firstTime);
   };
@@ -89,23 +89,59 @@ const Syllabus = () => {
     setThisPage(data.selected);
     console.log(data.selected);
   };
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
 
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}`,
+    };
+  }
   let renderData = () => {
     return list.length !== 0 ?  (
       list.slice(thisPage * 9, (thisPage + 1) * 9).map((item, index) => (
         <tr key={item.topic_code}>
           <td>{index + 1 + thisPage * itemPerPage}</td>
-          <td>
-            <Link
-              style={{ textDecoration: "none", color: "#d97bc5" }}
-              to={`/view-syllabus/${item.topic_code}`}
-            >
+          <td className="link-item-syllabus">
+            <Link to={`/view-syllabus/${item.topic_code}`}>
               {item.topic_name}
             </Link>
           </td>
           <td>{item.topic_code}</td>
           <td>{item.createdDate}</td>
-          <td>{item.create_by}</td>
+          <td className="td-user-list-name">
+            <Avatar
+              className="avatar-img"
+              {...stringAvatar(`${item.create_by}`)}
+              sx={{
+                width: 35,
+                height: 35,
+                bgcolor: stringToColor(`${item.create_by}`),
+              }}
+              style={{ fontSize: "15px" }}
+            />
+            {item.create_by}
+          </td>
           <td>{Math.ceil(item.programDuration / 24)} days</td>
           <td className="td-syllabus-status">
             <div
@@ -173,7 +209,10 @@ const Syllabus = () => {
           </div>
         </div>
         <div className="action-syllabus-container">
-          <div className="add-import" onClick={() => navigate("/create-syllabus")}>
+          <div
+            className="add-import"
+            onClick={() => navigate("/create-syllabus")}
+          >
             <button className="button-add-syllabus">
               <FaPlusCircle />
               Add syllabus

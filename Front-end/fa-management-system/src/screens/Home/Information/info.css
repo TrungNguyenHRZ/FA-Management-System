@@ -21,6 +21,15 @@
 
 .info-form-show > input {
   width: 500px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s ease-in-out;
+}
+.info-form-show > input:focus {
+  border-color: #2a00b7;
+  outline: none;
 }
 .info-form-other {
   display: flex;

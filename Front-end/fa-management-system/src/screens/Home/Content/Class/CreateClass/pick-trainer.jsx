@@ -103,60 +103,73 @@ const PickTrainer = ({ showForm, closeForm, classId, updateForm }) => {
 
   return (
     <div className="pickTrainer-form-container">
-      <div>
-        <h1>Create Multiple Trainer</h1>
-      </div>
-
-      <br />
-
       <div className="pickTrainer-form-Pick-container">
         <div>
           <div>
             <h1>Pick Trainer / Admin</h1>
           </div>
           <div className="pickTrainer-form-Pick-Trainer">
-            <div>
-              <div>Trainer/Admin</div>
-              <select name="" id="" onChange={changeTrainer}>
-                <option value="Trainer">Trainer</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
-            <div>
-              <div>User</div>
-              <select name="" id="" onChange={changeUser}>
-                {filterAllUser.map((item, index) => (
-                  <option selected={item == remainUser} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <button onClick={(e) => addNewUser(e)}>Add</button>
+            <div className="form-add-pick-trainer">
+              <div className="form-pick-trainer-admin">
+                <div>Trainer/Admin</div>
+                <select name="" id="" onChange={changeTrainer}>
+                  <option value="Trainer">Trainer</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              <div className="form-pick-user">
+                <div>User</div>
+                <select name="" id="" onChange={changeUser}>
+                  {filterAllUser.map((item, index) => (
+                    <option selected={item == remainUser} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-btn-add-container">
+                <button className="form-btn-add" onClick={(e) => addNewUser(e)}>
+                  Add
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div>-----------------------</div>
         <div>
           <div>
             <h1>User Picked</h1>
           </div>
-          <div>
+          <div className="picked-user-container">
             {totalUser.map((item, index) => (
-              <div>
+              <div className="picked-user-item">
                 <div>
-                  {item.name} | {item.dob} | {item.userType}
+                  Name: {item.name}
+                  <br />
+                  Day of birth: {item.dob}
+                  <br />
+                  <div className="picked-user-role-container">
+                    Role:{" "}
+                    <div
+                      className={`picked-user-role ${
+                        item.userType === "Admin" ? "admin" : "trainer"
+                      }`}
+                    >
+                      {item.userType}
+                    </div>
+                  </div>
                 </div>
-                <button value={item.id} onClick={deleteUser}>
-                  delete
-                </button>
-                <div>------------------------------------------</div>
+                <div>
+                  <button value={item.id} onClick={deleteUser}>
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
-        <button onClick={addAll}>Submit</button>
+        <button className="form-btn-submit-picked" onClick={addAll}>
+          Submit
+        </button>
       </div>
     </div>
   );
