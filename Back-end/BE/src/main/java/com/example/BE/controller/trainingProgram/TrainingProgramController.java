@@ -60,41 +60,21 @@ public class TrainingProgramController {
     @Autowired
     TrainingProgramSyllabusService trainingProgramSyllabusService;
 
-//    @GetMapping(value = {"", "/all"})
-//    public List<TrainingProgramResponse> getAllTrainingPrograms(){
-//        List<Syllabus> syllabusList = syllabusService.getAllSyllabus();
-//        List<TrainingProgram> trainingProgramList = trainingProgramService.findAllTrainingProgram();
-//        for(TrainingProgram tp : trainingProgramList){
-//            List<TrainingProgramSyllabus> psList =  psRepo.getSyllabusCode(tp.getTraining_code());
-//            tp.setSyllabus(psList);
-//        }
-//        return trainingProgramMapper.toTrainingProgramResponseList(trainingProgramList);
-//    }
-
-//    public ResponseEntity<?> getAllTrainingPrograms(){
-//        trainingProgramService.findAllTrainingProgram();
-//        return ResponseEntity.ok().build();
-//    }
-
-//    @GetMapping(value = {"/all"})
-//    public ResponseEntity<ApiResponse<List<TrainingProgram>>> getAllTrainingPrograms(){
-//        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.ok(trainingProgramService.findAllTrainingProgram());
-//        return ResponseEntity.ok(apiResponse);
-//    }
-
     @GetMapping(value = {"", "/all"})
     public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getAllTrainingPrograms() {
         ApiResponse apiResponse = new ApiResponse();
-        List<TrainingProgramResponse> trainingPrograms = trainingProgramRepository.findAllTrainingProgram();
+        List<TrainingProgramResponse> trainingPrograms = trainingProgramService.findAllTrainingProgram();
         apiResponse.ok(trainingPrograms);
         return ResponseEntity.ok(apiResponse);
     }
 
-//    @GetMapping(value = {"/{name}"})
-//    public List<TrainingProgramResponse> getTrainingProgramsByName(@PathVariable String name){
-//        return trainingProgramMapper.toTrainingProgramResponseList(trainingProgramService.findByTrainingName(name));
-//    }
+    @GetMapping(value =  {"/admin/all"})
+    public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getAllTPForAdmin(){
+        ApiResponse apiResponse = new ApiResponse();
+        List<TrainingProgramResponse> trainingPrograms = trainingProgramService.findAllTPForAdmin();
+        apiResponse.ok(trainingPrograms);
+        return ResponseEntity.ok(apiResponse);
+    }
 
     @GetMapping(value = {"/{name}"})
     public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getTrainingProgramsByName(@RequestParam(required = true) String name) {
@@ -122,7 +102,7 @@ public class TrainingProgramController {
             tps.setId(new TrainingProgramSyllabusId(tpsRes.getTrainingProgram(), tpsRes.getSyllabus()));
             tps.setSequence(tpsRes.getSequence());
 
-            TrainingProgram trainingProgram = trainingProgramService.findById(tpsRes.getTrainingProgram());
+            TrainingProgram trainingProgram = trainingProgramService.findByIdWithToggleTrue(tpsRes.getTrainingProgram());
 
             if (trainingProgram != null) {
                 int totalDuration = trainingProgram.getDuration();
@@ -146,7 +126,7 @@ public class TrainingProgramController {
     @PutMapping(value = {"update-training-program/{id}"})
     public ResponseEntity<ApiResponse<TrainingProgramResponse>> updateTrainingProgram(@PathVariable int id, @RequestBody TrainingProgramResponse t) {
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgram tp = trainingProgramService.findById(id);
+        TrainingProgram tp = trainingProgramService.findByIdWithToggleTrue(id);
         if (tp != null) {
             if (t.getTraining_name() != null){
                 tp.setTraining_name(t.getTraining_name());
@@ -243,7 +223,7 @@ public class TrainingProgramController {
             TrainingProgramSyllabusResponse result = new TrainingProgramSyllabusResponse(tps2);
             apiResponse.ok(result);*/
 
-            TrainingProgram tp = trainingProgramService.findById(tpsRes.getTrainingProgram());
+            TrainingProgram tp = trainingProgramService.findByIdWithToggleTrue(tpsRes.getTrainingProgram());
 
             if (tp == null) {
                 apiResponse.error("Training Program not found!");
@@ -284,10 +264,12 @@ public class TrainingProgramController {
         }
     }
 
+
+
     @PostMapping("/duplicate-training-program/{id}")
     public ResponseEntity<ApiResponse<TrainingProgramResponse>> duplicateTrainingProgram(@PathVariable int id){
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgram exTp = trainingProgramService.findById(id);
+        TrainingProgram exTp = trainingProgramService.findByIdWithToggleTrue(id);
         if (exTp != null){
             TrainingProgram newTp = trainingProgramService.duplicate(exTp);
             TrainingProgram savedTp = trainingProgramService.saveTrainingProgram(newTp);
@@ -318,10 +300,10 @@ public class TrainingProgramController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/training-programs/{trainingProgramCode}/detail")
-    public ResponseEntity<ApiResponse<TrainingProgramDetailResponse>> getTrainingProgramDetail(@PathVariable int trainingProgramCode) {
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<ApiResponse<TrainingProgramDetailResponse>> getTrainingProgramDetail(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(trainingProgramCode);
+        TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(id);
         if (programDetail != null) {
             apiResponse.ok(programDetail);
             return ResponseEntity.ok(apiResponse);
@@ -334,7 +316,7 @@ public class TrainingProgramController {
     public ResponseEntity<ApiResponse> uploadFiles(@RequestParam("file") MultipartFile file,
                                                        @PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgram existedTP = trainingProgramService.findById(id);
+        TrainingProgram existedTP = trainingProgramService.findByIdWithToggleTrue(id);
         if (existedTP != null){
             String fileName = file.getOriginalFilename();
             String filePath = trainingProgramService.uploading(fileName, file);
@@ -353,7 +335,7 @@ public class TrainingProgramController {
     @GetMapping(value = "/download-training-programs/{id}")
     public ResponseEntity<?> downloadFiles(@PathVariable int id){
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgram existedTP = trainingProgramService.findById(id);
+        TrainingProgram existedTP = trainingProgramService.findByIdWithToggleTrue(id);
         Resource resource = null;
         String filePath = existedTP.getDownload_url();
         try {
@@ -371,7 +353,29 @@ public class TrainingProgramController {
                 .body(resource);
     }
 
+    @PutMapping("/deleteTP/{id}")
+    public ResponseEntity<ApiResponse<TrainingProgramResponse>> deleteTP(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        if (trainingProgramService.softDelete(id)) {
+            apiResponse.okv2("Training program deleted successfully!");
+            return ResponseEntity.ok(apiResponse);
+        } else {
+            apiResponse.error("Failed to delete training program!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+        }
+    }
 
+    @PutMapping("restoreTP/{id}")
+    public ResponseEntity<ApiResponse<TrainingProgramResponse>> restoreTP(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        if (trainingProgramService.reActivate(id)) {
+            apiResponse.okv2("Training program reactivated successfully!");
+            return ResponseEntity.ok(apiResponse);
+        } else {
+            apiResponse.error("Failed to reactivate training program!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+        }
+    }
 }
 
 

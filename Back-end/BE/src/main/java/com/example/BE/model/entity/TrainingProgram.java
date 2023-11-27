@@ -71,8 +71,8 @@ public class TrainingProgram implements Serializable {
     @Column(name = "Download_url")
     private String download_url;
 
-//    @Column(name = "Toggle")
-//    private boolean toggle;
+    @Column(name = "Toggle", columnDefinition = "boolean default true")
+    private boolean toggle;
 
     @ManyToOne
     @JoinColumn(name = "userid")

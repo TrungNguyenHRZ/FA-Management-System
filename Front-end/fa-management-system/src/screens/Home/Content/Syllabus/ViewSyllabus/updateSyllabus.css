@@ -67,3 +67,8 @@
 	color: #6d7cff!important;
 	background-color:white !important;
 }
+
+.modal-title{
+	display: flex;
+	flex-wrap:wrap;
+}

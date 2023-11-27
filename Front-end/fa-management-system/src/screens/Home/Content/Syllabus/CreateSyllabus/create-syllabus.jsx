@@ -27,7 +27,7 @@ import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-
+import { Navigate, useNavigate } from 'react-router-dom';
 import { MdOutlineEdit } from "react-icons/md";
 // import Button from "@mui/material/Button";
 import jwtDecode from "jwt-decode";
@@ -85,6 +85,7 @@ const CreateSyllabus = () => {
 
   let levels = ["fresher", "junior", "senior"];
 
+  const navigate = useNavigate();
   const convertToUnitList = (values) => {
     const unitList = values.unitsByDay.flatMap((day) =>
       day.units.map((unit) => ({
@@ -111,12 +112,33 @@ const CreateSyllabus = () => {
       dayNumber: null,
     };
     console.log("Dữ liệu đã gửi:", updatedValue);
-    apiSyllabusInstance.post("/saveSyllabus", updatedValue);
-  };
+    
+    console.log(selectedFile);
+    apiSyllabusInstance.post("/saveSyllabus", updatedValue).
+    then(response => {
+      if(selectedFile !== null){
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        apiSyllabusInstance.post(`/uploadMaterials/${response.data.payload.topic_code}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      }
+      console.log(response.data);
+      
+      setTimeout(() => {
+        const id = response.data.payload.topic_code; // Thay thế bằng id cụ thể bạn muốn navigate đến
+        navigate(`/view-syllabus/${id}`)
+      }, 2200);
+    });
+     
 
-  const unit = {
-    unit_name: "",
-    day_number: 0,
+    
+    
+    
   };
 
   const [dayNumber, setDayNumber] = useState([1]);
@@ -306,6 +328,14 @@ const CreateSyllabus = () => {
     ),
   });
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+    
+  };
+
+
+
   return (
     <div className="create-syllabus-container">
       <div className="detail-header">
@@ -443,6 +473,27 @@ const CreateSyllabus = () => {
                       )}
                     </FieldArray>
                     <ErrorMessage name="learningList" component="div" className="error-mess"/>
+                    <div className="file-upload">
+                  <label
+                    htmlFor="fileInput"
+                    className="custom-file-input-label"
+                  >
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    className="custom-file-input"
+                    accept=".zip"
+                    onChange={handleFileChange}
+                  />
+                  <div>
+                    {selectedFile
+                      ? selectedFile.name
+                      : null}
+                  </div>
+                             
+                  </div>
                   </div>
                 ) : page === 2 ? (
                   //Outlie Screen
@@ -519,6 +570,7 @@ const CreateSyllabus = () => {
                                                         remove(unitIndex)
                                                       }
                                                     />
+                                                    <ErrorMessage name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`} className="error-mess" component="div"/>
 
                                                     <FieldArray
                                                       name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList`}
@@ -794,7 +846,13 @@ const CreateSyllabus = () => {
                                                                                     ] !==
                                                                                     undefined
                                                                                   ) {
-                                                                                    if (error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                    if(error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                      .units[
+                                                                                      selectedContent
+                                                                                        .unitIndex
+                                                                                    ]
+                                                                                      .contentList !== undefined){
+                                                                                      if (error.unitsByDay[selectedContent.dayNumber - 1]
                                                                                         .units[
                                                                                         selectedContent
                                                                                           .unitIndex
@@ -803,9 +861,15 @@ const CreateSyllabus = () => {
                                                                                         selectedContent
                                                                                           .contentIndex
                                                                                       ] !== undefined) {
+
                                                                                     } else {
                                                                                       handleCancel();
                                                                                     }
+                                                                                    }else{
+                                                                                      handleCancel();
+
+                                                                                    }
+                                                  
                                                                                     console.log(
                                                                                       error
                                                                                         .unitsByDay[
@@ -1112,6 +1176,7 @@ const CreateSyllabus = () => {
                               progress: undefined,
                               theme: "light",
                               });
+
                           }
                         })
                         console.log(values.publish_status);

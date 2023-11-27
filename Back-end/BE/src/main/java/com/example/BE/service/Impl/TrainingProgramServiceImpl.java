@@ -4,8 +4,6 @@ import com.example.BE.model.dto.response.ClassResponse;
 import com.example.BE.model.dto.response.SyllabusResponse;
 import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
-import com.example.BE.model.entity.Class;
-import com.example.BE.model.entity.Syllabus;
 import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
 import com.example.BE.repository.ClassRepository;
@@ -13,15 +11,14 @@ import com.example.BE.repository.SyllabusRepository;
 import com.example.BE.repository.TrainingProgramRepository;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
-import jakarta.mail.Quota;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -30,7 +27,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,31 +43,22 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
 
     @Override
     public List<TrainingProgramResponse> findAllTrainingProgram(){
-        return trainingProgramRepository.findAllTrainingProgram();
+        return trainingProgramRepository.findByToggleTrue();
     }
 
-//    @Override
-//    public void findAllTrainingProgram(){
-//        List<TrainingProgram> trainingPrograms = trainingProgramRepository.findAll();
-//        for (TrainingProgram programs : trainingPrograms){
-//            programs.getTraining_code();
-//            programs.getTraining_name();
-//            programs.getTraining_topic_code();
-//            programs.getStatus();
-//            programs.getDuration();
-//            programs.getCreate_by();
-//            programs.getCreatedDate();
-//            programs.getModified_date();
-//            programs.getModified_by();
-//            for (TrainingProgramSyllabus tps : programs.getSyllabus()){
-//                tps.getProgram_topic().getTopic_code();
-//            }
-//        }
-//    }
+    @Override
+    public List<TrainingProgramResponse> findAllTPForAdmin(){
+        return trainingProgramRepository.findAllTrainingProgram();
+    }
 
     @Override
     public TrainingProgram findById(int id) {
         return trainingProgramRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public TrainingProgram findByIdWithToggleTrue(int id){
+        return trainingProgramRepository.findByIdWithToggleTrue(id);
     }
 
     @Override
@@ -84,11 +71,6 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     public TrainingProgram saveTrainingProgram(TrainingProgram trainingProgram) {
         return trainingProgramRepository.save(trainingProgram);
     }
-
-//    @Override
-//    public List<TrainingProgram> findByNameLike(String name) {
-//        return null;
-//    }
 
     @Override
     public TrainingProgram convert(TrainingProgramResponse t){
@@ -104,7 +86,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         trainingProgram.setModified_date(t.getModified_date());
         trainingProgram.setModified_by(t.getModified_by());
         trainingProgram.setGeneralInfo(t.getGeneralInfo());
-
+        trainingProgram.setToggle(true);
 //        if (t.getSyllabusIds() != null && !t.getSyllabusIds().isEmpty()) {
 //            List<Syllabus> syllabuses = syllabusRepository.findAllById(t.getSyllabusIds());
 //            for (Syllabus syllabus : syllabuses){
@@ -132,7 +114,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     @Override
     public TrainingProgram duplicate (TrainingProgram original){
         TrainingProgram newTp = new TrainingProgram();
-        newTp.setTraining_name(original.getTraining_name() + "Copy");
+        newTp.setTraining_name(original.getTraining_name());
         newTp.setTraining_topic_code(original.getTraining_topic_code());
         newTp.setStatus(original.getStatus());
         newTp.setStart_time(original.getStart_time());
@@ -142,6 +124,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         newTp.setModified_date(original.getModified_date());
         newTp.setModified_by(original.getModified_by());
         newTp.setGeneralInfo(original.getGeneralInfo());
+        newTp.setToggle(true);
         List<TrainingProgramSyllabus> originalSyllabus = original.getSyllabus();
         List<TrainingProgramSyllabus> newSyllabus = new ArrayList<>();
         for (TrainingProgramSyllabus originalTps : originalSyllabus){
@@ -160,7 +143,7 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
 
     @Override
     public TrainingProgramDetailResponse getTrainingProgramDetail(int trainingProgramCode) {
-        TrainingProgram trainingProgram = findById(trainingProgramCode);
+        TrainingProgram trainingProgram = findByIdWithToggleTrue(trainingProgramCode);
         if (trainingProgram != null) {
             List<SyllabusResponse> syllabuses = trainingProgram.getSyllabus()
                     .stream()
@@ -207,5 +190,15 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         } return null;
     }
 
+    @Override
+    @Transactional
+    public boolean softDelete(int id){
+        return trainingProgramRepository.softDeleteById(id, false) > 0;
+    }
 
+    @Override
+    @Transactional
+    public boolean reActivate(int id){
+        return trainingProgramRepository.reActivateById(id, true) > 0;
+    }
 }

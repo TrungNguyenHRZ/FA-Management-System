@@ -23,7 +23,7 @@ const UserList = () => {
 
   useEffect(() => {
     Authorization();
-  });
+  }, []);
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -180,6 +180,39 @@ const UserList = () => {
       children: `${name.split(" ")[0][0]}`,
     };
   }
+=======
+  const ChangeStatus = async (e, item) => {
+    let tmp = e.target.value.toUpperCase();
+    if (tmp == "SUPPER_ADMIN") {
+      tmp = "SUPER_ADMIN";
+    }
+
+    await apiUserInstance
+      .put(`/gant-permission/${item}`, {
+        newPermission: tmp,
+      })
+      .then((response) => {
+        console.log(response.data);
+      });
+
+    await apiUserInstance
+      .get("/all")
+      .then((response) => {
+        setList(response.data.userResponseList);
+        setTotalPage(
+          Math.ceil(response.data.userResponseList.length / itemPerPage)
+        );
+        const initialState = response.data.userResponseList.map((item) => ({
+          id: item.id,
+          checked: item.status === "ACTIVE",
+        }));
+        setCheckboxStates(initialState);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    toast.success("Change User Permission successfully !!!");
+  };
   return (
     <div className="view-syllbus-container">
       <h1>View Users</h1>
@@ -246,8 +279,9 @@ const UserList = () => {
                     >
                       <IoPerson />
                     </td>
-                    <td className="td-user-list-status">
-                      <div
+
+                    <td>
+                      <select
                         className={
                           item.userType === "Admin"
                             ? "td-status-admin"
@@ -255,9 +289,30 @@ const UserList = () => {
                             ? "td-status-trainer"
                             : "td-status-superAdmin"
                         }
+                        onChange={(e) => ChangeStatus(e, item.id)}
                       >
-                        {item.userType}
-                      </div>
+                        <option
+                          value="Admin"
+                          selected={item.userType == "Admin"}
+                          className="td-status-admin"
+                        >
+                          Admin
+                        </option>
+                        <option
+                          value="Trainer"
+                          selected={item.userType == "Trainer"}
+                          className="td-status-trainer"
+                        >
+                          Trainer
+                        </option>
+                        <option
+                          value="Supper_Admin"
+                          selected={item.userType == "Supper_Admin"}
+                          className="td-status-superAdmin"
+                        >
+                          Supper_Admin
+                        </option>
+                      </select>
                     </td>
                     <td className="cb-user-list-status">
                       <Switch

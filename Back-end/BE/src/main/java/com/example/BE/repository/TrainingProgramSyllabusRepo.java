@@ -24,7 +24,7 @@ public interface TrainingProgramSyllabusRepo extends JpaRepository<TrainingProgr
 
     @Query(value= "select * from training_program_syllabus where topic_code = :num",
     nativeQuery = true)
-     public List<TrainingProgramSyllabus> getTrainingPrograms(int num);
+    public List<TrainingProgramSyllabus> getTrainingPrograms(int num);
 
     @Modifying
     @Transactional

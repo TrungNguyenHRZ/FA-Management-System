@@ -30,6 +30,7 @@ import { Stepper, Step, StepLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { FaCloudDownloadAlt } from "react-icons/fa";
+import { Doughnut } from "react-chartjs-2";
 
 const SyllabusDetail = () => {
   const paramName = useParams();
@@ -419,6 +420,65 @@ const SyllabusDetail = () => {
     }
   };
 
+  const data = 
+    {labels : [
+      "Assignment/Lab",
+      "Concept/Lecture",
+      "Guide/Review",
+      "Test/Quiz",
+      "Exam",
+      "Seminar/Workshop",
+    ],
+    datasets: [{
+      data : checkData().datasets,
+      
+    }],
+    
+  }
+  ;
+
+  console.log(data)
+
+  function checkData() {
+    const result = 
+      {label : [
+        "Assignment/Lab",
+        "Concept/Lecture",
+        "Guide/Review",
+        "Test/Quiz",
+        "Exam",
+        "Seminar/Workshop",
+      ],
+      datasets:[]
+    };
+  
+    if (syllabus.unitList) {
+      const labelCountMap = {};
+  
+      syllabus.unitList.forEach((unit) => {
+        unit.contentList.forEach((content) => {
+          const deliveryType = content.deliveryType;
+  
+          // Check if the deliveryType is in the label array
+          if (result.label.includes(deliveryType)) {
+            labelCountMap[deliveryType] = (labelCountMap[deliveryType] || 0) + 1;
+          }
+        });
+      });
+  
+      // Populate the datasets array based on the labelCountMap
+      result.label.forEach((label) => {
+        result.datasets.push(labelCountMap[label] || 0);
+      });
+    }
+  
+    return result;
+  }
+
+  console.log(checkData())
+
+
+
   return (
     <div className="detail-container">
       {isLoading && (
@@ -441,17 +501,6 @@ const SyllabusDetail = () => {
           </div>
         </div>
         <div className="header-right">
-          <div className="progress-bar">
-            <Box sx={{ width: "100%" }}>
-              <Stepper activeStep={page} alternativeLabel>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            </Box>
-          </div>
           <BsThreeDots
             className="three-dot-icon"
             onClick={() => handleOpen()}
@@ -541,6 +590,7 @@ const SyllabusDetail = () => {
         renderOutline()
       ) : (
         <div>
+          
           <label>Training Principles: </label>
           <textarea
             name="training_principles"
@@ -549,9 +599,22 @@ const SyllabusDetail = () => {
           >
             {syllabus.training_principles}
           </textarea>
+          <div>
+          <Doughnut data={data} 
+            options={{
+            legend: { 
+              display: true,
+              position: 'right',
+            },
+            title: {
+              display: true,
+            }
+          }}/>
+          </div>
+          
         </div>
       )}
-      <image src={`data:image/png;base64,${syllabus.data1}`} />
+      {/* <image src={`data:image/png;base64,${syllabus.data1}`} /> */}
     </div>
   );
 };

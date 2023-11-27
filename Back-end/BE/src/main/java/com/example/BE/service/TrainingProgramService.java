@@ -3,14 +3,12 @@ package com.example.BE.service;
 import com.example.BE.model.dto.response.TrainingProgramDetailResponse;
 import com.example.BE.model.dto.response.TrainingProgramResponse;
 import com.example.BE.model.entity.TrainingProgram;
-import jakarta.mail.Quota;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 
@@ -18,13 +16,15 @@ public interface TrainingProgramService {
 
     List<TrainingProgramResponse> findAllTrainingProgram();
 
+    List<TrainingProgramResponse> findAllTPForAdmin();
+
     TrainingProgram findById(int id);
+
+    TrainingProgram findByIdWithToggleTrue(int id);
 
     List<TrainingProgramResponse> findByTrainingName(String name);
 
     TrainingProgram saveTrainingProgram(TrainingProgram trainingProgram);
-
-//    List<TrainingProgram> findByNameLike(String name);
 
     TrainingProgram convert(TrainingProgramResponse t);
 
@@ -40,5 +40,7 @@ public interface TrainingProgramService {
 
     public Resource downloading(String fileCode) throws IOException;
 
+    public boolean softDelete(int id);
 
+    public boolean reActivate(int id);
 }

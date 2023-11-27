@@ -75,7 +75,7 @@ const TrainingProgramDetail = ({
       <div className="trainingprogram-detail-main-form">
         <div className="trainingprogram-detail-btn-close-form">
           <button onClick={handleCloseForm}>
-            <MdClose />
+            <MdClose/>
           </button>
         </div>
         <br />
