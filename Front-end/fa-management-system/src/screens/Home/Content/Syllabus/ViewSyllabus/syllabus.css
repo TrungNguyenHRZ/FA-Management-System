@@ -81,7 +81,11 @@
 }
 
 .table-syllabus-container {
+  display: flex;
+  flex-direction: column;
   margin-top: 20px;
+  height: 560px;
+  justify-content: space-between;
 }
 .table-syllabus {
   border-collapse: collapse;
@@ -141,5 +145,15 @@
   background-color: rgb(35, 35, 241);
 }
 .td-status-inactive {
-  background-color: black;
+  background-color: rgb(141, 141, 141);
+}
+
+.link-item-syllabus > a {
+  color: #2a00b7;
+  text-decoration: none;
+}
+
+.link-item-syllabus > a:hover {
+  color: red;
+  text-decoration: underline;
 }

@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import Authorization from "../../../../Authentication/Auth";
 import { FormControlLabel, Switch, styled } from "@mui/material";
-
+import { Avatar } from "@mui/material";
 const UserList = () => {
   const [list, setList] = useState([]);
   const [showFormAddUser, setShowFormAddUser] = useState(false);
@@ -151,6 +151,35 @@ const UserList = () => {
         console.error(error);
       });
   };
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}`,
+    };
+  }
   return (
     <div className="view-syllbus-container">
       <h1>View Users</h1>
@@ -178,8 +207,8 @@ const UserList = () => {
           <thead>
             <tr>
               <th>No.</th>
-              <th>Full name</th>
               <th>Email</th>
+              <th>Name</th>
               <th>Date of birth</th>
               <th className="th-user-list-gender">Gender</th>
               <th className="th-user-list-type">Type</th>
@@ -193,8 +222,20 @@ const UserList = () => {
                 .map((item, index) => (
                   <tr key={item.id}>
                     <td>{index + 1}</td>
-                    <td>{item.name}</td>
                     <td>{item.email}</td>
+                    <td className="td-user-list-name">
+                      <Avatar
+                        className="avatar-img"
+                        {...stringAvatar(`${item.name}`)}
+                        sx={{
+                          width: 35,
+                          height: 35,
+                          bgcolor: stringToColor(`${item.name}`),
+                        }}
+                        style={{ fontSize: "15px" }}
+                      />
+                      {item.name}
+                    </td>
                     <td>{item.dob}</td>
                     <td
                       className={

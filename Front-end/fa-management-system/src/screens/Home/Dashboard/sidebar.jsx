@@ -164,14 +164,20 @@ const Sidebar = () => {
                   View Class
                 </Link>
               </li>
-              <li
-                className={isPage === 6 ? "sidebar-page" : ""}
-                onClick={changeCreateClass}
-              >
-                <Link to={"/create-class"} className="home-link">
-                  Create Class
-                </Link>
-              </li>
+              {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
+                <>
+                  <li
+                    className={isPage === 6 ? "sidebar-page" : ""}
+                    onClick={changeCreateClass}
+                  >
+                    <Link to={"/create-class"} className="home-link">
+                      Create Class
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <></>
+              )}
             </ul>
             <li
               className={isPage === 11 ? "sidebar-page" : ""}
@@ -182,7 +188,7 @@ const Sidebar = () => {
                 Create Candidate
               </Link>
             </li>
-            {info[0] === "Supper_Admin" ? (
+            {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
               <>
                 <li onClick={toggleSubMenuUser}>
                   <FaUserGroup className="icon-sidebar" />
