@@ -116,6 +116,7 @@ const ViewClass = () => {
                 {item.status}
               </div>
             </td>
+
             <td>{item.location}</td>
             <td>{item.fsu}</td>
             <td>
