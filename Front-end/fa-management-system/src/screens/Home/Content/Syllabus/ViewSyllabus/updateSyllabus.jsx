@@ -9,6 +9,7 @@ import {
   ErrorMessage,
   useFormikContext,
 } from "formik";
+import {useNavigate } from "react-router";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import {
   MdOutlineExpandCircleDown,
@@ -38,6 +39,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import * as Yup from "yup";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 import "./updateSyllabus.css";
 
@@ -49,6 +51,9 @@ const UpdateSyllabus = () => {
   const [groupedUnits, setGroupedUnits] = useState([]);
   const [expanded, setExpanded] = useState("panel1");
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
+  const [permission,setPermission] = useState("");
   const handleOpen = () => {
     setOpen(true);
   };
@@ -63,8 +68,23 @@ const UpdateSyllabus = () => {
       setPage(page + 1);
     }
   };
+  
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInfo(decodedToken);
+      
+    }
+  }, []);
   console.log(paramName.id);
   const steps = ["General", "Outline", "Others", "Completed"];
+  let a
+  if(userInfo){
+    a = userInfo.permission;
+  }
+
+  console.log(a)
 
   useEffect(() => {
     apiSyllabusInstance
@@ -471,7 +491,7 @@ const UpdateSyllabus = () => {
 
 
   return (
-    <div className="create-syllabus-container">
+  a === "Super admin" ? <div className="create-syllabus-container">
       <div className="detail-header">
         <h2 className="detail-title">Syllabus</h2>
         <div className="progress-bar">
@@ -760,7 +780,8 @@ const UpdateSyllabus = () => {
                                                                     isModalVisible
                                                                   }
                                                                   onClose={
-                                                                    handleCancel
+                                                                    errors === undefined ?
+                                                                    handleCancel : null
                                                                   }
                                                                   name="modal-box"
                                                                   aria-labelledby="modal-modal-title"
@@ -771,6 +792,7 @@ const UpdateSyllabus = () => {
                                                                     className="modal-box-container"
                                                                     sx={style}
                                                                   >
+                                                                    <div className="modal-title">
                                                                     <p>
                                                                       Edit
                                                                       Content -
@@ -779,6 +801,10 @@ const UpdateSyllabus = () => {
                                                                         selectedContent.dayNumber
                                                                       }
                                                                     </p>
+
+                                                                    <MdClose />
+                                                                    </div>
+                                                                    
                                                                     <Form className="form-modal">
                                                                       <Field
                                                                         type="text"
@@ -808,6 +834,7 @@ const UpdateSyllabus = () => {
 
                                                                       <Field
                                                                         type="number"
+                                                                        min="0"
                                                                         name={`groupedUnits[${
                                                                           selectedContent.dayNumber -
                                                                           1
@@ -1249,7 +1276,7 @@ const UpdateSyllabus = () => {
         </Formik>
       </div>
     </div>
-  );
+  : <div>Access Denied</div> ) ;
 };
 
 export default UpdateSyllabus;
