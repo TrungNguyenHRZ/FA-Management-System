@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "./create-schedule.css";
 import { FaCheck } from "react-icons/fa6";
+import apiScheduleInstance from "../../../../service/api-schedule";
 
 const CreateMultipleSchedules = ({
-  showForm2,
-  closeForm2,
+  showForm,
+  closeForm,
   classId,
-  updateForm2,
+  updateForm,
 }) => {
   const [numberOfSchedules, setNumberOfSchedules] = useState(0);
   const [overlayStates, setOverlayStates] = useState(Array(10).fill(false));
@@ -28,9 +29,29 @@ const CreateMultipleSchedules = ({
     setOverlayStates(Array(10).fill(false));
     setNumberOfSchedules(0);
   };
+
+  const handleCloseForms = () => {
+    closeForm();
+  };
+  const SaveSchedules = (e, item) => {
+    console.log(item);
+    apiScheduleInstance
+      .post(
+        `/TestautoGenarateSchedule?classid=${classId}&slotPerWeek=${numberOfSchedules}`,
+        item
+      )
+      .then((response) => console.log(response.data));
+  };
+
   const renderScheduleForms = () => {
     const scheduleForms = [];
     for (let i = 0; i < numberOfSchedules; i++) {
+      let tmp = {
+        startTime: "",
+        endTime: "",
+        day: "",
+        class_id: classId,
+      };
       scheduleForms.push(
         <div key={i} className="schedule-form-input">
           <form onSubmit={(event) => handleSaveForm(event, i)}>
@@ -41,6 +62,10 @@ const CreateMultipleSchedules = ({
                   type="time"
                   id={`scheduleName${i}`}
                   name={`scheduleName${i}`}
+                  onChange={(e) => {
+                    tmp.startTime = e.target.value;
+                  }}
+                  required
                 />
               </div>
               <div className="schedule-form-end">
@@ -50,6 +75,10 @@ const CreateMultipleSchedules = ({
                   type="time"
                   id={`scheduleName${i}`}
                   name={`scheduleName${i}`}
+                  onChange={(e) => {
+                    tmp.endTime = e.target.value;
+                  }}
+                  required
                 />
               </div>
             </div>
@@ -60,19 +89,20 @@ const CreateMultipleSchedules = ({
                   type="date"
                   id={`scheduleName${i}`}
                   name={`scheduleName${i}`}
-                />
-              </div>
-              <div className="schedule-form-class">
-                <label htmlFor={`scheduleName${i}`}>Class id</label>
-                <input
-                  type="text"
-                  id={`scheduleName${i}`}
-                  name={`scheduleName${i}`}
+                  onChange={(e) => {
+                    tmp.day = e.target.value;
+                    console.log(tmp);
+                  }}
+                  required
                 />
               </div>
             </div>
 
-            <button className="schedule-form-btn-save" type="submit">
+            <button
+              className="schedule-form-btn-save"
+              type="submit"
+              onClick={(e) => SaveSchedules(e, tmp)}
+            >
               Save
             </button>
           </form>
@@ -106,7 +136,7 @@ const CreateMultipleSchedules = ({
           </select>
         </div>
         <div className="create-schedule-reset">
-          <button onClick={handleResetForms}>Reset</button>
+          <button onClick={handleCloseForms}>Finish</button>
         </div>
       </div>
 
