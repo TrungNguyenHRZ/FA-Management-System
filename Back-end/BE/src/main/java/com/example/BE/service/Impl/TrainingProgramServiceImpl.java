@@ -51,25 +51,6 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
         return trainingProgramRepository.findAllTrainingProgram();
     }
 
-//    @Override
-//    public void findAllTrainingProgram(){
-//        List<TrainingProgram> trainingPrograms = trainingProgramRepository.findAll();
-//        for (TrainingProgram programs : trainingPrograms){
-//            programs.getTraining_code();
-//            programs.getTraining_name();
-//            programs.getTraining_topic_code();
-//            programs.getStatus();
-//            programs.getDuration();
-//            programs.getCreate_by();
-//            programs.getCreatedDate();
-//            programs.getModified_date();
-//            programs.getModified_by();
-//            for (TrainingProgramSyllabus tps : programs.getSyllabus()){
-//                tps.getProgram_topic().getTopic_code();
-//            }
-//        }
-//    }
-
     @Override
     public TrainingProgram findById(int id) {
         return trainingProgramRepository.findById(id).orElse(null);
@@ -90,11 +71,6 @@ public class TrainingProgramServiceImpl implements TrainingProgramService {
     public TrainingProgram saveTrainingProgram(TrainingProgram trainingProgram) {
         return trainingProgramRepository.save(trainingProgram);
     }
-
-//    @Override
-//    public List<TrainingProgram> findByNameLike(String name) {
-//        return null;
-//    }
 
     @Override
     public TrainingProgram convert(TrainingProgramResponse t){

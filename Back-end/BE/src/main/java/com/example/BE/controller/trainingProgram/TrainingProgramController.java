@@ -60,29 +60,6 @@ public class TrainingProgramController {
     @Autowired
     TrainingProgramSyllabusService trainingProgramSyllabusService;
 
-//    @GetMapping(value = {"", "/all"})
-//    public List<TrainingProgramResponse> getAllTrainingPrograms(){
-//        List<Syllabus> syllabusList = syllabusService.getAllSyllabus();
-//        List<TrainingProgram> trainingProgramList = trainingProgramService.findAllTrainingProgram();
-//        for(TrainingProgram tp : trainingProgramList){
-//            List<TrainingProgramSyllabus> psList =  psRepo.getSyllabusCode(tp.getTraining_code());
-//            tp.setSyllabus(psList);
-//        }
-//        return trainingProgramMapper.toTrainingProgramResponseList(trainingProgramList);
-//    }
-
-//    public ResponseEntity<?> getAllTrainingPrograms(){
-//        trainingProgramService.findAllTrainingProgram();
-//        return ResponseEntity.ok().build();
-//    }
-
-//    @GetMapping(value = {"/all"})
-//    public ResponseEntity<ApiResponse<List<TrainingProgram>>> getAllTrainingPrograms(){
-//        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.ok(trainingProgramService.findAllTrainingProgram());
-//        return ResponseEntity.ok(apiResponse);
-//    }
-
     @GetMapping(value = {"", "/all"})
     public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getAllTrainingPrograms() {
         ApiResponse apiResponse = new ApiResponse();
@@ -98,11 +75,6 @@ public class TrainingProgramController {
         apiResponse.ok(trainingPrograms);
         return ResponseEntity.ok(apiResponse);
     }
-
-//    @GetMapping(value = {"/{name}"})
-//    public List<TrainingProgramResponse> getTrainingProgramsByName(@PathVariable String name){
-//        return trainingProgramMapper.toTrainingProgramResponseList(trainingProgramService.findByTrainingName(name));
-//    }
 
     @GetMapping(value = {"/{name}"})
     public ResponseEntity<ApiResponse<List<TrainingProgramResponse>>> getTrainingProgramsByName(@RequestParam(required = true) String name) {
@@ -292,6 +264,8 @@ public class TrainingProgramController {
         }
     }
 
+
+
     @PostMapping("/duplicate-training-program/{id}")
     public ResponseEntity<ApiResponse<TrainingProgramResponse>> duplicateTrainingProgram(@PathVariable int id){
         ApiResponse apiResponse = new ApiResponse();
@@ -326,10 +300,10 @@ public class TrainingProgramController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/detail/{trainingProgramCode}")
-    public ResponseEntity<ApiResponse<TrainingProgramDetailResponse>> getTrainingProgramDetail(@PathVariable int trainingProgramCode) {
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<ApiResponse<TrainingProgramDetailResponse>> getTrainingProgramDetail(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
-        TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(trainingProgramCode);
+        TrainingProgramDetailResponse programDetail = trainingProgramService.getTrainingProgramDetail(id);
         if (programDetail != null) {
             apiResponse.ok(programDetail);
             return ResponseEntity.ok(apiResponse);
