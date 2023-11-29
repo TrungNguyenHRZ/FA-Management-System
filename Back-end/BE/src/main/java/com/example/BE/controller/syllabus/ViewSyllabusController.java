@@ -177,48 +177,55 @@ public class ViewSyllabusController {
 			}
 		} catch (Exception e) {
 			apiResponse.error("Server failed");
-			;
 			return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping("/saveSyllabus")
-	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse,
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse) {
 		ApiResponse apiResponse = new ApiResponse();
+		try{
 		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
 		Syllabus result = repo.save(syllabus);
-		result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
-		result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+		// if(userRepo.getUserById(syllabusResponse.getUserId()) != null){
+		// 	result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+		// 	result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+		// }else{
+		// 	apiResponse.error("User not found");
+		// 	return ResponseEntity.ok(apiResponse);
+		// }
 
-		if (syllabusResponse.getUnitList() != null) {
-			for (TrainingUnit tu : result.getSyllabus_unit()) {
-				tu.setUnit_topic_code(result);
-			}
-			List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
-			for (TrainingUnit tun : unitList) {
-				for (TrainingContent tc : tun.getTraining_content()) {
-					tc.setUnitCode(tun);
-				}
-				contentService.saveAllTrainingContents(tun.getTraining_content());
-			}
+		// if (syllabusResponse.getUnitList() != null) {
+		// 	for (TrainingUnit tu : result.getSyllabus_unit()) {
+		// 		tu.setUnit_topic_code(result);
+		// 	}
+		// 	List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
+		// 	for (TrainingUnit tun : unitList) {
+		// 		for (TrainingContent tc : tun.getTraining_content()) {
+		// 			tc.setUnitCode(tun);
+		// 		}
+		// 		contentService.saveAllTrainingContents(tun.getTraining_content());
+		// 	}
+		// }
+
+		// if (syllabusResponse.getLearningList() != null) {
+		// 	for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
+		// 		LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
+		// 		syllabusService.saveObjective(lo, result.getTopic_code());
+		// 	}
+		
+		// }
+		SyllabusResponse test = syllabusMapper.toResponse(result);
+		apiResponse.ok(test);
+		return ResponseEntity.ok(apiResponse);
+		} catch(Exception e){
+			e.printStackTrace();
+			apiResponse.error(e);
+			return ResponseEntity.ok(apiResponse);
+			 
 		}
+		
 
-		if (syllabusResponse.getLearningList() != null) {
-			for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
-				LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
-				syllabusService.saveObjective(lo, result.getTopic_code());
-			}
-		}
-
-		if (file != null) {
-			String fileName = file.getOriginalFilename();
-			String filePath = syllabusService.uploadFile(fileName, file);
-			result.setDownload_url(filePath);
-			result.setTraining_materials(fileName);
-		}
-
-		return getSyllabusByTopicCode(result.getTopic_code());
 	}
 
 	@PostMapping("/saveUnit/{id}")

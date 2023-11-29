@@ -16,7 +16,7 @@ import {
   MdOutlineSnippetFolder,
 } from "react-icons/md";
 import { HiOutlineDuplicate } from "react-icons/hi";
-import { FiEyeOff } from "react-icons/fi";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -225,6 +225,7 @@ const SyllabusDetail = () => {
       return acc;
     }, []);
   }
+  
   console.log(groupedUnits);
 
   let duration = (unit) => {
@@ -475,8 +476,7 @@ const SyllabusDetail = () => {
     return result;
   }
 
-  console.log(checkData())
-
+  console.log(checkData());
 
 
   return (
@@ -520,8 +520,11 @@ const SyllabusDetail = () => {
               <div className="option-pick" onClick={handleOpened}>
                 <HiOutlineDuplicate className="option-icon" /> Duplicate
               </div>
-              <div className="option-pick">
-                <FiEyeOff className="option-icon" /> De-active syllabus
+              <div className="option-pick" onClick={syllabus && syllabus.publish_status === "Active" ? handleDeactivated : handleActivated}>
+              {syllabus && syllabus.publish_status  === "Active" ? <FiEyeOff className="option-icon" /> 
+              : <FiEye className="option-icon" />}  
+              {syllabus && syllabus.publish_status  === "Active" ? "De-activate syllabus" 
+              : "Activate syllabus"}
               </div>
               <Modal
                 open={open}
@@ -596,6 +599,7 @@ const SyllabusDetail = () => {
             name="training_principles"
             type="text"
             className="principles"
+            readOnly
           >
             {syllabus.training_principles}
           </textarea>
