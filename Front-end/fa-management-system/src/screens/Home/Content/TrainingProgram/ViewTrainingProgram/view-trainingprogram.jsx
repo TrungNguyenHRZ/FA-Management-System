@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import TrainingProgramDetail from "../TrainingProgramDetails/detail-trainingprogram";
+import UpdateTrainingProgram from "../UpdateTrainingProgram/update-trainingprogram";
 import ReactPaginate from "react-paginate";
 import "./view-trainingprogram.css";
 import {
@@ -16,6 +17,7 @@ const ViewTrainingProgram = () => {
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
   const [showFormAddUser, setShowFormAddUser] = useState(false);
+  const [showFormAddUser2, setShowFormAddUser2] = useState(false);
   const [Item, setItem] = useState(1);
   // const [showFormAddUser, setShowFormAddUser] = useState(false);
   // const [Item, setItem] = useState(1);
@@ -129,6 +131,22 @@ const ViewTrainingProgram = () => {
     setShowFormAddUser(false);
   };
 
+  const openForm2 = (e) => {
+    setShowFormAddUser2(true);
+  };
+
+  const closeForm2 = () => {
+    setShowFormAddUser2(false);
+    setShowFormAddUser(true);
+  };
+
+  const updateForm2 = () => {};
+
+  const updateTraining2 = () => {
+    setShowFormAddUser(false);
+    setShowFormAddUser2(true);
+  };
+
   const updateForm = () => {
     setShowFormAddUser(false);
     apiTrainingProgramInstance
@@ -182,6 +200,19 @@ const ViewTrainingProgram = () => {
               closeForm={closeForm}
               trainingProgramId={Item}
               updateForm={updateForm}
+              updateTraining={updateTraining2}
+            />
+          </div>
+        </div>
+      )}
+      {showFormAddUser2 && (
+        <div className="user-form-popup-container">
+          <div className="user-form">
+            <UpdateTrainingProgram
+              openForm={openForm2}
+              closeForm={closeForm2}
+              trainingProgramId={Item}
+              updateForm={updateForm2}
             />
           </div>
         </div>
