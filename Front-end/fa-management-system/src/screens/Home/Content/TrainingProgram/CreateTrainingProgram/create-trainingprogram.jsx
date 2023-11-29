@@ -95,8 +95,7 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
                   </div>
                   <div className="training-program-detail">
                     <div>
-                      132 | {item.programDuration} days | Modified on{" "}
-                      {item.modified_date} by {item.modified_by}
+                      Modified on {item.modified_date} by {item.modified_by}
                     </div>
                   </div>
                 </div>
@@ -118,8 +117,7 @@ const ChooseSyllabus = ({ saveSyllabus, closeForm3, trainingProgramID }) => {
 
                     <div className="training-program-detail">
                       <div>
-                        132 | {item2.programDuration} days | Modified on{" "}
-                        {item2.modified_date} by {item2.modified_by}
+                        Modified on {item2.modified_date} by {item2.modified_by}
                       </div>
                     </div>
                     <div className="btn-delete-choosed-container">

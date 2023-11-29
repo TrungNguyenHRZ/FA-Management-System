@@ -183,7 +183,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="number"
                   defaultValue={thisClass.duration}
                   onChange={changeDuration}
-                  required
+                  readOnly
                 />
               </div>
             </div>
@@ -258,7 +258,6 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
                   type="text"
                   defaultValue={thisClass.create_by}
                   onChange={changeCreate_by}
-                  required
                   readOnly
                 />
               </div>
