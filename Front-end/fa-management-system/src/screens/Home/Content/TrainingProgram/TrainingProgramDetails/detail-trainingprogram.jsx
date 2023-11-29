@@ -9,6 +9,7 @@ const TrainingProgramDetail = ({
   closeForm,
   trainingProgramId,
   updateForm,
+  updateTraining,
 }) => {
   const [thisTrainingProgram, setThisTrainingProgram] = useState({});
 
@@ -26,6 +27,9 @@ const TrainingProgramDetail = ({
   const handleCloseForm = (e) => {
     e.preventDefault();
     closeForm();
+  };
+  const UpdateTP = (e) => {
+    updateTraining();
   };
 
   let renderData = () => {
@@ -75,7 +79,7 @@ const TrainingProgramDetail = ({
       <div className="trainingprogram-detail-main-form">
         <div className="trainingprogram-detail-btn-close-form">
           <button onClick={handleCloseForm}>
-            <MdClose/>
+            <MdClose />
           </button>
         </div>
         <br />
@@ -94,10 +98,11 @@ const TrainingProgramDetail = ({
             <div>
               {thisTrainingProgram.duration} <span>days</span>
             </div>
+            <button onClick={UpdateTP}>Update</button>
           </div>
           <div className="trainingprogram-detail-duration-form-2">
-            <div>Modified on 20/10/2023 by </div>
-            <div>{thisTrainingProgram.modified_by}</div>
+            <div>Modified on {thisTrainingProgram.modified_date} by :</div>
+            <div> {thisTrainingProgram.modified_by}</div>
           </div>
         </div>
 
