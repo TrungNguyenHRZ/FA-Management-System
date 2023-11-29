@@ -14,7 +14,7 @@ const TrainingProgramDetail = ({
 
   useEffect(() => {
     apiTrainingProgramInstance
-      .get(`/training-programs/${trainingProgramId}/detail`)
+      .get(`/detail/${trainingProgramId}`)
       .then((response) => {
         setThisTrainingProgram(response.data.payload);
         console.log(response.data.payload);
