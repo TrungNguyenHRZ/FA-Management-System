@@ -130,8 +130,22 @@ const Header = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleViewInfo}>Profile</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleViewInfo();
+            handleClose();
+          }}
+        >
+          Profile
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleLogout();
+            handleClose();
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </div>
   );

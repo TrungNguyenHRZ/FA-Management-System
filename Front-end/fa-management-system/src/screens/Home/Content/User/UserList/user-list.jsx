@@ -18,6 +18,7 @@ const UserList = () => {
   const [TotalPage, setTotalPage] = useState(0);
   const [thisPage, setThisPage] = useState(0);
   const [checkboxStates, setCheckboxStates] = useState([]);
+  const [infoId, setInfoId] = useState({});
   const navigate = useNavigate();
   const itemPerPage = 9;
 
@@ -28,7 +29,8 @@ const UserList = () => {
   useEffect(() => {
     const token = Cookies.get("token");
     const decodedToken = jwtDecode(token);
-
+    setInfoId(decodedToken.id);
+    console.log(infoId);
     if (decodedToken.userInfo[0] !== "Supper_Admin") {
       navigate("/overview");
     }
@@ -74,7 +76,7 @@ const UserList = () => {
       .catch((error) => {
         console.error(error);
       });
-    toast.success("Add User successfully !!!");
+    toast.success("Add new user successfully !!!");
   };
 
   const handlePageClick = (data) => {
@@ -145,7 +147,6 @@ const UserList = () => {
         setTotalPage(
           Math.ceil(response.data.userResponseList.length / itemPerPage)
         );
-        // console.log(response.data.userResponseList);
       })
       .catch((error) => {
         console.error(error);
@@ -186,15 +187,21 @@ const UserList = () => {
     if (tmp == "SUPPER_ADMIN") {
       tmp = "SUPER_ADMIN";
     }
-
-    await apiUserInstance
-      .put(`/gant-permission/${item}`, {
-        newPermission: tmp,
-      })
-      .then((response) => {
-        console.log(response.data);
-      });
-
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+    try {
+      if (item !== decodedToken.id) {
+        const response = await apiUserInstance.put(`/gant-permission/${item}`, {
+          newPermission: tmp,
+        });
+        console.log(response);
+      } else {
+        toast.error("You can't change your permission !!!");
+        return;
+      }
+    } catch (error) {
+      console.log("Error at change permission: " + error);
+    }
     await apiUserInstance
       .get("/all")
       .then((response) => {
