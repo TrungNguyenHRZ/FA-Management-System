@@ -179,15 +179,6 @@ const Sidebar = () => {
                 <></>
               )}
             </ul>
-            <li
-              className={isPage === 11 ? "sidebar-page" : ""}
-              onClick={changeCreateSchedules}
-            >
-              <AiFillSchedule className="icon-sidebar" />
-              <Link to={"/create-schedules"} className="home-link">
-                Create Candidate
-              </Link>
-            </li>
             {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
               <>
                 <li onClick={toggleSubMenuUser}>
