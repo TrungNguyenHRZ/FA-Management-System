@@ -260,8 +260,6 @@ const CreateTrainingProgram = () => {
           duration: 0,
           status: "",
           create_by: "",
-          createdDate: "",
-          modified_date: "",
           modified_by: "",
           generalInfo: "",
         }}
@@ -272,12 +270,8 @@ const CreateTrainingProgram = () => {
           const today = new Date();
 
           const tmp = values;
-          const formattedDate = `${today.getFullYear()}-${
-            today.getMonth() + 1
-          }-${today.getDate()}`;
           tmp.status = Status;
           tmp.create_by = userInfo.name;
-          tmp.createdDate = formattedDate;
           tmp.modified_by = userInfo.name;
           console.log(tmp);
           setTrainingProgram(tmp);

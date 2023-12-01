@@ -15,32 +15,59 @@ const UpdateTrainingProgram = ({
   const [addNewSyllabus, setAddNewSyllabus] = useState([]);
   const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);
 
-  useEffect(() => {
-    apiTrainingProgramInstance
-      .get(`/detail/${trainingProgramId}`)
-      .then((response) => {
-        setThisTrainingProgram(response.data.payload);
-        console.log(response.data.payload);
-        setAddNewSyllabus(response.data.payload.syllabuses);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   apiTrainingProgramInstance
+  //     .get(`/detail/${trainingProgramId}`)
+  //     .then((response) => {
+  //       setThisTrainingProgram(response.data.payload);
+  //       console.log(response.data.payload);
+  //       setAddNewSyllabus(response.data.payload.syllabuses);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   apiSyllabusInstance
+  //     .get("/view")
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setAllSyllabus(response.data);
+
+  //       console.log(addNewSyllabus);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
 
   useEffect(() => {
-    apiSyllabusInstance
-      .get("/view")
-      .then((response) => {
-        console.log(response.data);
-        setAllSyllabus(response.data);
-
-        console.log(addNewSyllabus);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const responseTrainingProgram = await apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`);
+        setThisTrainingProgram(responseTrainingProgram.data.payload);
+        console.log(responseTrainingProgram.data.payload);
+        setAddNewSyllabus(responseTrainingProgram.data.payload.syllabuses);
+        
+        const responseSyllabus = await apiSyllabusInstance.get("/view");
+        console.log(responseSyllabus.data);
+        setAllSyllabus(responseSyllabus.data);
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+  
+    fetchData();
   }, []);
+  
+  useEffect(() => {
+    // Lọc và cập nhật filterAllSyllabus
+    const filteredSyllabus = allSyllabus.filter(syllabus => !addNewSyllabus.some(newSyllabus => newSyllabus.id === syllabus.id));
+    setFilterAllSyllabus(filteredSyllabus);
+  }, [allSyllabus, addNewSyllabus]);
+
+  console.log(filterAllSyllabus);
 
   const handleCloseForm = (e) => {
     closeForm();

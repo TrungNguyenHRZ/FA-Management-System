@@ -187,34 +187,34 @@ public class ViewSyllabusController {
 		try{
 		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
 		Syllabus result = repo.save(syllabus);
-		// if(userRepo.getUserById(syllabusResponse.getUserId()) != null){
-		// 	result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
-		// 	result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
-		// }else{
-		// 	apiResponse.error("User not found");
-		// 	return ResponseEntity.ok(apiResponse);
-		// }
+		if(userRepo.getUserById(syllabusResponse.getUserId()) != null){
+			result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+			result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+		}else{
+			apiResponse.error("User not found");
+			return ResponseEntity.ok(apiResponse);
+		}
 
-		// if (syllabusResponse.getUnitList() != null) {
-		// 	for (TrainingUnit tu : result.getSyllabus_unit()) {
-		// 		tu.setUnit_topic_code(result);
-		// 	}
-		// 	List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
-		// 	for (TrainingUnit tun : unitList) {
-		// 		for (TrainingContent tc : tun.getTraining_content()) {
-		// 			tc.setUnitCode(tun);
-		// 		}
-		// 		contentService.saveAllTrainingContents(tun.getTraining_content());
-		// 	}
-		// }
+		if (syllabusResponse.getUnitList() != null) {
+			for (TrainingUnit tu : result.getSyllabus_unit()) {
+				tu.setUnit_topic_code(result);
+			}
+			List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
+			for (TrainingUnit tun : unitList) {
+				for (TrainingContent tc : tun.getTraining_content()) {
+					tc.setUnitCode(tun);
+				}
+				contentService.saveAllTrainingContents(tun.getTraining_content());
+			}
+		}
 
-		// if (syllabusResponse.getLearningList() != null) {
-		// 	for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
-		// 		LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
-		// 		syllabusService.saveObjective(lo, result.getTopic_code());
-		// 	}
+		if (syllabusResponse.getLearningList() != null) {
+			for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
+				LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
+				syllabusService.saveObjective(lo, result.getTopic_code());
+			}
 		
-		// }
+		}
 		SyllabusResponse test = syllabusMapper.toResponse(result);
 		apiResponse.ok(test);
 		return ResponseEntity.ok(apiResponse);

@@ -102,6 +102,7 @@ const CreateSyllabus = () => {
     userID = userInfo.id;
   }
   const handleSubmit = (values) => {
+    console.log(values);
     // Gửi dữ liệu lên máy chủ thông qua phương thức POST tại đây.
     const afterValue = convertToUnitList(values);
     const updatedValue = {
@@ -134,11 +135,7 @@ const CreateSyllabus = () => {
         navigate(`/view-syllabus/${id}`)
       }, 2200);
     });
-     
 
-    
-    
-    
   };
 
   const [dayNumber, setDayNumber] = useState([1]);
@@ -411,7 +408,7 @@ const CreateSyllabus = () => {
                         duration: 0,
                         learningObjective: "",
                         note: "",
-                        trainingFormat: "",
+                        trainingFormat: "Offline",
                       },
                     ],
                   },
