@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,7 @@ public class TrainingProgramController {
     @PostMapping(value = {"/create-training-program"})
     public ResponseEntity<ApiResponse> createTrainingProgram(@Valid @RequestBody TrainingProgramResponse t, BindingResult bindingResult) {
         ApiResponse apiResponse = new ApiResponse();
+        t.setCreatedDate(new Date());
         TrainingProgram tp = trainingProgramService.saveTrainingProgram(trainingProgramService.convert(t));
         TrainingProgramResponse tp2 = new TrainingProgramResponse(tp);
         apiResponse.ok(tp2);
@@ -149,9 +151,9 @@ public class TrainingProgramController {
             if (t.getCreatedDate() != null){
                 tp.setCreatedDate(t.getCreatedDate());
             }
-            if (t.getModified_date() != null){
-                tp.setModified_date(t.getModified_date());
-            }
+
+                tp.setModified_date(new Date());
+
             if (t.getModified_by() != null){
                 tp.setModified_by(t.getModified_by());
             }
@@ -376,6 +378,18 @@ public class TrainingProgramController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
         }
     }
-}
 
+    @DeleteMapping("delete-training-program-syllabus")
+    public ResponseEntity<ApiResponse> deleteTPS(@RequestParam int training_code, @RequestParam int topic_code){
+        ApiResponse apiResponse = new ApiResponse();
+        try {
+            trainingProgramSyllabusService.deleteTPS(training_code, topic_code);
+            apiResponse.ok("Deleted successfully!");
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e){
+            apiResponse.error("Failed to delete!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+        }
+    }
+}
 
