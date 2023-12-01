@@ -84,7 +84,7 @@ const UpdateSyllabus = () => {
     a = userInfo.permission;
   }
 
-  console.log(a)
+  console.log(userInfo)
 
   useEffect(() => {
     apiSyllabusInstance
@@ -299,6 +299,11 @@ const UpdateSyllabus = () => {
 
     apiSyllabusInstance.post(`/saveUnit/${values.topic_code}`,newUnits)
     console.log(newUnits);
+
+    // setTimeout(() => {
+    //   const id = values.topic_code; // Thay thế bằng id cụ thể bạn muốn navigate đến
+    //   navigate(`/view-syllabus/${id}`)
+    // }, 2200);
   };
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -491,7 +496,7 @@ const UpdateSyllabus = () => {
 
 
   return (
-  a === "Super admin" ? <div className="create-syllabus-container">
+  a === "Super admin" || a === "Admin" || a === "Trainer" ? <div className="create-syllabus-container">
       <div className="detail-header">
         <h2 className="detail-title">Syllabus</h2>
         <div className="progress-bar">
