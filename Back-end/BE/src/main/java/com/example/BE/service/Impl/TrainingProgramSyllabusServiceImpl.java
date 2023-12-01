@@ -3,13 +3,13 @@ package com.example.BE.service.Impl;
 import com.example.BE.model.dto.response.TrainingProgramSyllabusResponse;
 import com.example.BE.model.entity.TrainingProgram;
 import com.example.BE.model.entity.TrainingProgramSyllabus;
-import com.example.BE.model.entity.TrainingProgramSyllabusId;
 import com.example.BE.repository.TrainingProgramSyllabusRepo;
 import com.example.BE.service.SyllabusService;
 import com.example.BE.service.TrainingProgramService;
 import com.example.BE.service.TrainingProgramSyllabusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,5 +60,18 @@ public class TrainingProgramSyllabusServiceImpl implements TrainingProgramSyllab
             duration+=tp.getDuration();
         }
         return duration;
+    }
+
+    @Override
+    @Transactional
+    public void deleteTPS(int training_code, int topic_code){
+        TrainingProgram trainingProgram = trainingProgramService.findByIdWithToggleTrue(training_code);
+        if (trainingProgram != null){
+            int oldDuration = trainingProgram.getDuration();
+            trainingProgramSyllabusRepo.deleteByProgramAndProgram_topic(training_code, topic_code);
+            int newDuration = oldDuration - syllabusService.getAllDuration(topic_code);
+            trainingProgram.setDuration(newDuration);
+            trainingProgramService.saveTrainingProgram(trainingProgram);
+        }
     }
 }
