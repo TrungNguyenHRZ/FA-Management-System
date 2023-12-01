@@ -34,9 +34,7 @@ const Login = () => {
         const data = response.data;
         if (data.status === "ACTIVE") {
           console.log(response);
-
           Cookies.set("token", data.accessToken, { expires: 1 });
-
           apiUserInstance.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${data.accessToken}`;
