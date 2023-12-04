@@ -103,6 +103,27 @@ const UpdateTrainingProgram = ({
       .then((response) => {
         console.log(response.data.payload);
       });
+    if (listDeleteSyllabus.length > 0) {
+      listDeleteSyllabus.map((item, index) => {
+        apiTrainingProgramInstance.delete(
+          `delete-training-program-syllabus?training_code=${thisTrainingProgram.training_code}&topic_code=${item.topic_code}`
+        );
+      });
+    }
+
+    if (listAddNewSyllabus.length > 0) {
+      let tmp = [];
+      for (const item of listAddNewSyllabus) {
+        tmp.push({
+          syllabus: item.topic_code,
+          trainingProgram: thisTrainingProgram.training_code,
+          sequence: "",
+        });
+      }
+
+      apiTrainingProgramInstance.post("/create-training-program-syllabus", tmp);
+    }
+
     updateForm();
   };
 
