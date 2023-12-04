@@ -94,11 +94,19 @@ const TrainingProgramDetail = ({
         </div>
         <div className="trainingprogram-detail-duration-form-container">
           <div className="trainingprogram-detail-duration-form">
-            <div>Duration:</div>
-            <div>
-              {thisTrainingProgram.duration} <span>days</span>
+            <div className="trainingprogram-detail-duration-form-1">
+              <div>Duration:</div>
+              <div>
+                {thisTrainingProgram.duration} <span>days</span>
+              </div>
             </div>
-            <button onClick={UpdateTP}>Update</button>
+
+            <button
+              className="trainingprogram-detail-duration-form-btn-update"
+              onClick={UpdateTP}
+            >
+              Update
+            </button>
           </div>
           <div className="trainingprogram-detail-duration-form-2">
             <div>Modified on {thisTrainingProgram.modified_date} by :</div>

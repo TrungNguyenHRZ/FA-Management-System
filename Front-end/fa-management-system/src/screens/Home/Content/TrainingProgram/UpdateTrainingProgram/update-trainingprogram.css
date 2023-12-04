@@ -1,0 +1,44 @@
+.choose-syllabus-container-update {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form-choose-syllabus-training-update {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  box-shadow: 1px 1px 10px #000000;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.training-program-content-main-update {
+  width: 500px;
+  height: 390px;
+  overflow-y: scroll;
+}
+.training-program-content-update {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+}
+.training-program-content-update:hover {
+  background-color: #6d7cff;
+  color: #fff;
+  cursor: pointer;
+}
+.training-program-content-main-2-update > button {
+  border: none;
+  background-color: #0015cd;
+  color: #fff;
+  padding: 5px 10px;
+  width: 200px;
+  border-radius: 10px;
+}
+
+.training-program-content-main-2-update > button:hover {
+  opacity: 0.8;
+}
