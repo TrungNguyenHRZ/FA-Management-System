@@ -100,8 +100,15 @@ public class ClassController {
             return ResponseEntity.ok(apiResponse);
         }
         List<Class> list = classService.findAllClass();
-        int n = list.size()-1;
-        int incrementalNumber = list.get(n).getClassId()+1;
+        int n = 0;
+        int incrementalNumber = 0;
+        if(list.size()-1<0){
+            n = 1;
+            incrementalNumber = 1;
+        }else{
+            n = list.size()-1;
+            incrementalNumber = list.get(n).getClassId()+1;
+        }
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         String twoDigitYear = Integer.toString(currentYear).substring(2);
