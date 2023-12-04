@@ -138,7 +138,6 @@ const UpdateTrainingProgram = ({
               </>
             ))}
             {filterAllSyllabus?.map((item, index) => (
-
               <>
                 <div
                   className="training-program-content-update"
@@ -192,7 +191,7 @@ const UpdateTrainingProgram = ({
 
               {listAddNewSyllabus?.map((item3, index) => (
                 <>
-                  <div className="training-program-content">
+                  <div className="training-program-content-update">
                     <div className="training-program-content-title">
                       <div>
                         <h2>{item3.topic_name}</h2>
@@ -267,10 +266,13 @@ const UpdateTrainingProgram = ({
         </div>
         <div className="trainingprogram-detail-duration-form-container">
           <div className="trainingprogram-detail-duration-form">
-            <div>Duration:</div>
-            <div>
-              {thisTrainingProgram.duration} <span>days</span>
+            <div className="trainingprogram-detail-duration-update">
+              <div>Duration:</div>
+              <div>
+                {thisTrainingProgram.duration} <span>days</span>
+              </div>
             </div>
+
             <button onClick={SaveTrainingProgram}>Save</button>
           </div>
           <div className="trainingprogram-detail-duration-form-2">
@@ -294,7 +296,7 @@ const UpdateTrainingProgram = ({
         </div>
 
         <div className="btn-close-form"></div>
-        <div className="choose-syllabus-training-title">
+        <div className="choose-syllabus-training-title-update">
           Choose one or more syllabus on the left !!!
         </div>
         <div className="create-training-action"></div>

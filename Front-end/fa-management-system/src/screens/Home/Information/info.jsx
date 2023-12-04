@@ -103,7 +103,7 @@ const Info = () => {
   }
   return (
     <div className="info-container">
-      <h1 className="info-title">Your information</h1>
+      <h1 className="info-title">{listInfoUser.name}'s information</h1>
       <div className="info-content">
         <div className="info-form-container">
           <div className="info-form-show">
@@ -195,7 +195,7 @@ const Info = () => {
       <div>
         <ToastContainer
           position="top-center"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
