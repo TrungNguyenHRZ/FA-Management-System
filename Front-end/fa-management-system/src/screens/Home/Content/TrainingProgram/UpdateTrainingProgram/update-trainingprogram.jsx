@@ -24,12 +24,12 @@ const UpdateTrainingProgram = ({
       try {
         const [responseTrainingProgram, responseSyllabus] = await Promise.all([
           apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`),
+
           apiSyllabusInstance.get("/view"),
         ]);
 
         setThisTrainingProgram(responseTrainingProgram.data.payload);
         setAddNewSyllabus(responseTrainingProgram.data.payload.syllabuses);
-
         setAllSyllabus(responseSyllabus.data);
       } catch (error) {
         console.error(error);

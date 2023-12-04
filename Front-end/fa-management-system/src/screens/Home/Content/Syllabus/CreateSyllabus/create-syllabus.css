@@ -298,7 +298,7 @@
 }
 
 .objective-wrapper{
-  overflow-y: scroll;
+  overflow-y: auto;;
   height:100px;
 }
 
@@ -318,6 +318,11 @@
 
 .error-mess{
   color:red;
+}
+
+.scroll-container{
+  height: 55vh;
+  overflow-y: scroll;
 }
 
 

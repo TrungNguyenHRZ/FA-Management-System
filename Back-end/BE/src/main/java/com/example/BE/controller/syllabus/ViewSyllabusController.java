@@ -134,7 +134,20 @@ public class ViewSyllabusController {
 			return syllabusService.getAll();
 		} else {
 			List<SyllabusResponse> syList = syllabusService.getAllSyllabusByKey(keyword);
+			int duration = 0;
 			if (syList != null) {
+				for (SyllabusResponse syllabus : syList) {
+					for (TrainingUnitResponse tur : syllabus.getUnitList()) {
+						for (TrainingContentResponse tcr : tur.getContentList()) {
+							duration += tcr.getDuration();
+						}
+					}
+					if (duration != 0) {
+						syllabus.setProgramDuration(duration);
+					} else {
+						syllabus.setProgramDuration(0);
+					}
+				}
 				return syList;
 			} else {
 				return null;
@@ -144,7 +157,21 @@ public class ViewSyllabusController {
 
 	@GetMapping("/search/{date}")
 	public List<SyllabusResponse> getAllSyllabusByDate(@PathVariable String date) {
-		return syllabusService.getAllSyllabusByCreateDate(date);
+		List<SyllabusResponse> result = syllabusService.getAllSyllabusByCreateDate(date);
+		int duration = 0;
+		for(SyllabusResponse syllabus : result) {
+			for (TrainingUnitResponse tur : syllabus.getUnitList()) {
+						for (TrainingContentResponse tcr : tur.getContentList()) {
+							duration += tcr.getDuration();
+						}
+					}
+					if (duration != 0) {
+						syllabus.setProgramDuration(duration);
+					} else {
+						syllabus.setProgramDuration(0);
+					}
+		}
+		return result;
 	}
 
 	@GetMapping("viewSyllabus/{code}")
@@ -184,47 +211,46 @@ public class ViewSyllabusController {
 	@PostMapping("/saveSyllabus")
 	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse) {
 		ApiResponse apiResponse = new ApiResponse();
-		try{
-		Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
-		Syllabus result = repo.save(syllabus);
-		if(userRepo.getUserById(syllabusResponse.getUserId()) != null){
-			result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
-			result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
-		}else{
-			apiResponse.error("User not found");
-			return ResponseEntity.ok(apiResponse);
-		}
-
-		if (syllabusResponse.getUnitList() != null) {
-			for (TrainingUnit tu : result.getSyllabus_unit()) {
-				tu.setUnit_topic_code(result);
+		try {
+			Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
+			Syllabus result = repo.save(syllabus);
+			if (userRepo.getUserById(syllabusResponse.getUserId()) != null) {
+				result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+				result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
+			} else {
+				apiResponse.error("User not found");
+				return ResponseEntity.ok(apiResponse);
 			}
-			List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
-			for (TrainingUnit tun : unitList) {
-				for (TrainingContent tc : tun.getTraining_content()) {
-					tc.setUnitCode(tun);
+
+			if (syllabusResponse.getUnitList() != null) {
+				for (TrainingUnit tu : result.getSyllabus_unit()) {
+					tu.setUnit_topic_code(result);
 				}
-				contentService.saveAllTrainingContents(tun.getTraining_content());
+				List<TrainingUnit> unitList = trainingUnitService.saveAllUnits(result.getSyllabus_unit());
+				for (TrainingUnit tun : unitList) {
+					for (TrainingContent tc : tun.getTraining_content()) {
+						tc.setUnitCode(tun);
+					}
+					contentService.saveAllTrainingContents(tun.getTraining_content());
+				}
 			}
-		}
 
-		if (syllabusResponse.getLearningList() != null) {
-			for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
-				LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
-				syllabusService.saveObjective(lo, result.getTopic_code());
+			if (syllabusResponse.getLearningList() != null) {
+				for (SyllabusObjectResponse sObjectResponse : syllabusResponse.getLearningList()) {
+					LearningObject lo = syllabusService.convertObject(sObjectResponse.getLearningObjectList());
+					syllabusService.saveObjective(lo, result.getTopic_code());
+				}
+
 			}
-		
-		}
-		SyllabusResponse test = syllabusMapper.toResponse(result);
-		apiResponse.ok(test);
-		return ResponseEntity.ok(apiResponse);
-		} catch(Exception e){
+			SyllabusResponse test = syllabusMapper.toResponse(result);
+			apiResponse.ok(test);
+			return ResponseEntity.ok(apiResponse);
+		} catch (Exception e) {
 			e.printStackTrace();
 			apiResponse.error(e);
 			return ResponseEntity.ok(apiResponse);
-			 
+
 		}
-		
 
 	}
 
@@ -532,25 +558,24 @@ public class ViewSyllabusController {
 
 	// @PostMapping("/uploadMultipleMaterials/{id}")
 	// public ResponseEntity<ApiResponse> uploadMultipleMaterials(
-	// 		@RequestParam("file") List<MultipartFile> file,
-	// 		@PathVariable int id) {
-	// 	ApiResponse apiResponse = new ApiResponse();
-	// 	Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
-	// 	if (existedSyllabus != null) {
+	// @RequestParam("file") List<MultipartFile> file,
+	// @PathVariable int id) {
+	// ApiResponse apiResponse = new ApiResponse();
+	// Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
+	// if (existedSyllabus != null) {
 
-	// 		String fileName = file.getOriginalFilename();
-	// 		String filePath = syllabusService.uploadFile(fileName, file);
-	// 		existedSyllabus.setDownload_url(filePath);
-	// 		existedSyllabus.setTraining_materials(fileName);
-	// 		Syllabus afterSyllabus = syllabusService.updateSyllabus(existedSyllabus);
-	// 		apiResponse.ok(afterSyllabus.getDownload_url());
-	// 		return ResponseEntity.ok(apiResponse);
-	// 	} else {
-	// 		apiResponse.error("Syllabus not found");
-	// 		return ResponseEntity.ok(apiResponse);
-	// 	}
+	// String fileName = file.getOriginalFilename();
+	// String filePath = syllabusService.uploadFile(fileName, file);
+	// existedSyllabus.setDownload_url(filePath);
+	// existedSyllabus.setTraining_materials(fileName);
+	// Syllabus afterSyllabus = syllabusService.updateSyllabus(existedSyllabus);
+	// apiResponse.ok(afterSyllabus.getDownload_url());
+	// return ResponseEntity.ok(apiResponse);
+	// } else {
+	// apiResponse.error("Syllabus not found");
+	// return ResponseEntity.ok(apiResponse);
 	// }
-
+	// }
 
 	Path foundFile = null;
 
