@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class TrainingProgramDetailResponse {
+    private int training_code;
     private String training_name;
     private int duration;
     private String status;
@@ -24,6 +25,7 @@ public class TrainingProgramDetailResponse {
     private List<ClassResponse> classes;
 
     public TrainingProgramDetailResponse(TrainingProgram trainingProgram, List<SyllabusResponse> syllabuses, List<ClassResponse> classes){
+        this.training_code = trainingProgram.getTraining_code();
         this.training_name = trainingProgram.getTraining_name();
         this.duration = trainingProgram.getDuration();
         this.status = trainingProgram.getStatus();
