@@ -12,89 +12,97 @@ const UpdateTrainingProgram = ({
 }) => {
   const [thisTrainingProgram, setThisTrainingProgram] = useState({});
   const [allSyllabus, setAllSyllabus] = useState([]);
+
   const [addNewSyllabus, setAddNewSyllabus] = useState([]);
   const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);
-
-  // useEffect(() => {
-  //   apiTrainingProgramInstance
-  //     .get(`/detail/${trainingProgramId}`)
-  //     .then((response) => {
-  //       setThisTrainingProgram(response.data.payload);
-  //       console.log(response.data.payload);
-  //       setAddNewSyllabus(response.data.payload.syllabuses);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   apiSyllabusInstance
-  //     .get("/view")
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setAllSyllabus(response.data);
-
-  //       console.log(addNewSyllabus);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
+  const [listAddNewSyllabus, setListAddNewSyllabus] = useState([]);
+  const [listDeleteSyllabus, setListDeleteSyllabus] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseTrainingProgram = await apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`);
+        const [responseTrainingProgram, responseSyllabus] = await Promise.all([
+          apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`),
+          apiSyllabusInstance.get("/view"),
+        ]);
+
         setThisTrainingProgram(responseTrainingProgram.data.payload);
-        console.log(responseTrainingProgram.data.payload);
         setAddNewSyllabus(responseTrainingProgram.data.payload.syllabuses);
-        
-        const responseSyllabus = await apiSyllabusInstance.get("/view");
-        console.log(responseSyllabus.data);
+
         setAllSyllabus(responseSyllabus.data);
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  useEffect(() => {
-    // Lọc và cập nhật filterAllSyllabus
-    const filteredSyllabus = allSyllabus.filter(syllabus => !addNewSyllabus.some(newSyllabus => newSyllabus.id === syllabus.id));
-    setFilterAllSyllabus(filteredSyllabus);
-  }, [allSyllabus, addNewSyllabus]);
 
-  console.log(filterAllSyllabus);
+  useEffect(() => {
+    if (allSyllabus && addNewSyllabus) {
+      const filteredSyllabus = allSyllabus.filter((syllabus) => {
+        return !addNewSyllabus.some(
+          (newSyllabus) => newSyllabus.topic_code === syllabus.topic_code
+        );
+      });
+
+      setFilterAllSyllabus(filteredSyllabus);
+    }
+  }, [allSyllabus, addNewSyllabus]);
 
   const handleCloseForm = (e) => {
     closeForm();
   };
 
-  let new_arr = [];
-  if (addNewSyllabus && allSyllabus) {
-    new_arr = allSyllabus.filter(
-      (item) =>
-        !addNewSyllabus.find((it2) => item.topic_code === it2.topic_code)
-    );
-  }
-  // setFilterAllSyllabus(new_arr);
-
   const addToList = (e, item1) => {
-    console.log(item1);
-    setAddNewSyllabus([...addNewSyllabus, item1]);
+    setListAddNewSyllabus([...listAddNewSyllabus, item1]);
 
-    const new_arr = allSyllabus.filter((item) => item !== item1);
-    setAllSyllabus(new_arr);
+    const new_arr = filterAllSyllabus.filter((item) => item !== item1);
+    setFilterAllSyllabus(new_arr);
   };
 
-  const addToList2 = (e, item2) => {
-    console.log(item2);
-    setAllSyllabus([...allSyllabus, item2]);
+  const addToList2 = (e, item3) => {
+    setFilterAllSyllabus([...filterAllSyllabus, item3]);
+    const new_arr = listAddNewSyllabus.filter((item) => item !== item3);
+    setListAddNewSyllabus(new_arr);
+  };
+
+  const addToDeleteList = (e, item2) => {
+    setListDeleteSyllabus([...listDeleteSyllabus, item2]);
     const new_arr = addNewSyllabus.filter((item) => item !== item2);
     setAddNewSyllabus(new_arr);
+  };
+
+  const addToRemainList = (e, item4) => {
+    setAddNewSyllabus([...addNewSyllabus, item4]);
+    const new_arr = listDeleteSyllabus.filter((item) => item !== item4);
+    setListDeleteSyllabus(new_arr);
+  };
+
+  let tmp_trainingprogram = {
+    training_name: thisTrainingProgram.training_name,
+    status: thisTrainingProgram.status,
+    modified_date: "2023-12-01",
+    generalInfo: thisTrainingProgram.generalInfo,
+  };
+  const ChangeName = (e) => {
+    tmp_trainingprogram.training_name = e.target.value;
+  };
+
+  const ChangeInfo = (e) => {
+    tmp_trainingprogram.generalInfo = e.target.value;
+  };
+  const ChangeStatus = (e) => {
+    tmp_trainingprogram.status = e.target.value;
+  };
+
+  const SaveTrainingProgram = (e) => {
+    apiTrainingProgramInstance
+      .put(`/update-training-program/${trainingProgramId}`, tmp_trainingprogram)
+      .then((response) => {
+        console.log(response.data.payload);
+      });
+    updateForm();
   };
 
   const saveAll = (e, item2) => {};
@@ -107,7 +115,29 @@ const UpdateTrainingProgram = ({
       <div className="choose-syllabus-container">
         <div className="form-choose-syllabus-training">
           <div className="training-program-content-main">
-            {allSyllabus?.map((item, index) => (
+            {" "}
+            {listDeleteSyllabus?.map((item4, index) => (
+              <>
+                <div
+                  className="training-program-content"
+                  onClick={(e) => addToRemainList(e, item4)}
+                >
+                  <div className="training-program-content-title">
+                    <div>
+                      <h2>{item4.topic_name}</h2>
+                    </div>
+                    <div>{item4.publish_status}</div>
+                  </div>
+                  <div className="training-program-detail">
+                    <div>
+                      Modified on {item4.modified_date} by {item4.modified_by}
+                    </div>
+                  </div>
+                </div>
+                <br />
+              </>
+            ))}
+            {filterAllSyllabus?.map((item, index) => (
               <>
                 <div
                   className="training-program-content"
@@ -149,7 +179,35 @@ const UpdateTrainingProgram = ({
                     <div className="btn-delete-choosed-container">
                       <button
                         className="btn-delete-choosed-syllabus"
-                        onClick={(e) => addToList2(e, item2)}
+                        onClick={(e) => addToDeleteList(e, item2)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                </>
+              ))}
+
+              {listAddNewSyllabus?.map((item3, index) => (
+                <>
+                  <div className="training-program-content">
+                    <div className="training-program-content-title">
+                      <div>
+                        <h2>{item3.topic_name}</h2>
+                      </div>
+                      <div>{item3.publish_status}</div>
+                    </div>
+
+                    <div className="training-program-detail">
+                      <div>
+                        Modified on {item3.modified_date} by {item3.modified_by}
+                      </div>
+                    </div>
+                    <div className="btn-delete-choosed-container">
+                      <button
+                        className="btn-delete-choosed-syllabus"
+                        onClick={(e) => addToList2(e, item3)}
                       >
                         Delete
                       </button>
@@ -187,10 +245,22 @@ const UpdateTrainingProgram = ({
             <h1>Training Program</h1>
             <div className="trainingprogram-detail-form-head-2">
               <input
+                onChange={(e) => ChangeName(e)}
                 type="text"
                 defaultValue={thisTrainingProgram.training_name}
+                required
               />
-              <div>({thisTrainingProgram.status})</div>
+
+              <select
+                name=""
+                id=""
+                defaultValue={thisTrainingProgram.status}
+                onChange={(e) => ChangeStatus(e)}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Drafting">Drafting</option>
+              </select>
             </div>
           </div>
         </div>
@@ -200,6 +270,7 @@ const UpdateTrainingProgram = ({
             <div>
               {thisTrainingProgram.duration} <span>days</span>
             </div>
+            <button onClick={SaveTrainingProgram}>Save</button>
           </div>
           <div className="trainingprogram-detail-duration-form-2">
             <div>Modified on {thisTrainingProgram.modified_date} by :</div>
@@ -212,7 +283,12 @@ const UpdateTrainingProgram = ({
             <h4>General information</h4>
           </div>
           <div className="trainingprogram-detail-general-item">
-            <input type="text" defaultValue={thisTrainingProgram.generalInfo} />
+            <input
+              type="text"
+              defaultValue={thisTrainingProgram.generalInfo}
+              required
+              onChange={(e) => ChangeInfo(e)}
+            />
           </div>
         </div>
 

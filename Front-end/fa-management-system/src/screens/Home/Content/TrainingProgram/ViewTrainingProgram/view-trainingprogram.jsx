@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import TrainingProgramDetail from "../TrainingProgramDetails/detail-trainingprogram";
 import UpdateTrainingProgram from "../UpdateTrainingProgram/update-trainingprogram";
+import { ToastContainer, toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 import "./view-trainingprogram.css";
 import {
@@ -129,6 +130,17 @@ const ViewTrainingProgram = () => {
 
   const closeForm = () => {
     setShowFormAddUser(false);
+    apiTrainingProgramInstance
+      .get("/all")
+      .then((response) => {
+        setList(response.data.payload);
+        setTotalPage(Math.ceil(response.data.payload.length / itemPerPage));
+
+        console.log(response.data.payload);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const openForm2 = (e) => {
@@ -140,7 +152,9 @@ const ViewTrainingProgram = () => {
     setShowFormAddUser(true);
   };
 
-  const updateForm2 = () => {};
+  const updateForm2 = () => {
+    toast.success("Update training program successfully !!!");
+  };
 
   const updateTraining2 = () => {
     setShowFormAddUser(false);
@@ -270,6 +284,20 @@ const ViewTrainingProgram = () => {
             activeClassName="active"
           />
         </div>
+      </div>
+      <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </div>
   );
