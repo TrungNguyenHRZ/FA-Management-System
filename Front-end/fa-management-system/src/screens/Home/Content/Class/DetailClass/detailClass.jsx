@@ -125,7 +125,39 @@ const DetailClass = () => {
           <div className="detail-class-syllabus-item-container">
             <div className="detail-class-syllabus-item">
               <div className="detail-class-syllabus-item-img">Hinh</div>
-              <div className="detail-class-syllabus-item-info">LINUX</div>
+              <div className="detail-class-syllabus-item-info">
+                <div className="detail-class-syllabus-item-info-title">
+                  <div>LINUX</div>
+                  <div>Avtive</div>
+                </div>
+                <div className="detail-class-syllabus-item-info-detail">
+                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
+                </div>
+              </div>
+            </div>
+            <div className="detail-class-syllabus-item">
+              <div className="detail-class-syllabus-item-img">Hinh</div>
+              <div className="detail-class-syllabus-item-info">
+                <div className="detail-class-syllabus-item-info-title">
+                  <div>LINUX</div>
+                  <div>Avtive</div>
+                </div>
+                <div className="detail-class-syllabus-item-info-detail">
+                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
+                </div>
+              </div>
+            </div>
+            <div className="detail-class-syllabus-item">
+              <div className="detail-class-syllabus-item-img">Hinh</div>
+              <div className="detail-class-syllabus-item-info">
+                <div className="detail-class-syllabus-item-info-title">
+                  <div>LINUX</div>
+                  <div>Avtive</div>
+                </div>
+                <div className="detail-class-syllabus-item-info-detail">
+                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
+                </div>
+              </div>
             </div>
           </div>
         </div>

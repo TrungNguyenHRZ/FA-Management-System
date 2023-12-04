@@ -158,13 +158,13 @@ const ViewClass = () => {
             <td>{item.location}</td>
             <td>{item.fsu}</td>
             <td>
-              <div className="edit-user">
+              <div className="edit-class">
                 <button
                   value={item.classId}
-                  className="btn-add-user"
+                  className="btn-edit-class"
                   onClick={openForm}
                 >
-                  Edit
+                  ...
                 </button>
               </div>
             </td>

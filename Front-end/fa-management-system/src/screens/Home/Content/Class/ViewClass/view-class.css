@@ -61,7 +61,11 @@
   background-color: rgb(255, 0, 187);
 }
 
-.edit-user {
+.edit-class {
   display: flex;
-  justify-content: right;
+  justify-content: center;
+}
+.btn-edit-class {
+  border: none;
+  background-color: inherit;
 }

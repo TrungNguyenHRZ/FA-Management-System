@@ -52,28 +52,48 @@
 .detail-class-syllabus-title {
   display: flex;
   flex-direction: column;
-  background-color: #2a00b7;
+  background-color: #6d7cff;
   color: #fff;
   border-radius: 10px 10px 0px 0px;
-  /* padding: 10px; */
+  padding: 10px;
 }
 .detail-class-syllabus-item-container {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .detail-class-syllabus-item {
   display: flex;
-  border: 1px solid #000000;
   border-radius: 10px;
-  padding: 10px;
+  box-shadow: #a8a8a8 1px 1px 9px 1px;
 }
 .detail-class-syllabus-item-img {
-  /* display: flex; */
   flex: 1;
-  background-color: aqua;
+  background-color: #6d7cff;
   border-radius: 10px 0px 0px 10px;
 }
 .detail-class-syllabus-item-info {
-  /* display: flex; */
+  display: flex;
   flex: 5;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.detail-class-syllabus-item-info-title {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+.detail-class-syllabus-item-info-title > div:first-child {
+  font-size: 45px;
+  font-weight: bold;
+}
+
+.detail-class-syllabus-item-info-title > div:last-child {
+  background-color: green;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
 }

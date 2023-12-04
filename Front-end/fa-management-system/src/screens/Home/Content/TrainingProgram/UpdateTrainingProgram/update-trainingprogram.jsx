@@ -4,6 +4,7 @@ import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trai
 import apiSyllabusInstance from "../../../../../service/api-syllabus";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
+import "./update-trainingprogram.css";
 const UpdateTrainingProgram = ({
   showForm,
   closeForm,
@@ -74,16 +75,13 @@ const UpdateTrainingProgram = ({
 
   let renderData2 = () => {
     return (
-      // if (allSyllabus && allSyllabus.length > 0) {
-      // allSyllabus.map(
-
-      <div className="choose-syllabus-container">
-        <div className="form-choose-syllabus-training">
-          <div className="training-program-content-main">
+      <div className="choose-syllabus-container-update">
+        <div className="form-choose-syllabus-training-update">
+          <div className="training-program-content-main-update">
             {allSyllabus?.map((item, index) => (
               <>
                 <div
-                  className="training-program-content"
+                  className="training-program-content-update"
                   onClick={(e) => addToList(e, item)}
                 >
                   <div className="training-program-content-title">
@@ -103,10 +101,10 @@ const UpdateTrainingProgram = ({
             ))}
           </div>
           <div className="training-program-main">
-            <div className="training-program-content-main">
+            <div className="training-program-content-main-update">
               {addNewSyllabus?.map((item2, index) => (
                 <>
-                  <div className="training-program-content">
+                  <div className="training-program-content-update">
                     <div className="training-program-content-title">
                       <div>
                         <h2>{item2.topic_name}</h2>
@@ -134,8 +132,8 @@ const UpdateTrainingProgram = ({
             </div>
           </div>
         </div>
-        <div className="training-program-main">
-          <div className="training-program-content-main-2">
+        <div className="training-program-main-update">
+          <div className="training-program-content-main-2-update">
             <button onClick={(e) => saveAll(e)}>Save</button>
           </div>
         </div>

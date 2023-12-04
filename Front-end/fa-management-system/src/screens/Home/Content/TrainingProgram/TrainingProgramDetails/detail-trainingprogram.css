@@ -7,6 +7,7 @@
   border-radius: 10px;
   background-color: #fff;
   gap: 10px;
+  height: 95%;
 }
 
 .trainingprogram-detail-btn-close-form {
@@ -51,6 +52,7 @@
   display: flex;
   font-size: 20px;
   gap: 10px;
+  justify-content: space-between;
 }
 .trainingprogram-detail-duration-form > div:last-child {
   color: rgb(0, 170, 0);
@@ -126,4 +128,20 @@
   height: 200px;
   overflow: auto;
   margin-top: 20px;
+}
+.trainingprogram-detail-duration-form-1 {
+  display: flex;
+  gap: 10px;
+}
+.trainingprogram-detail-duration-form-btn-update {
+  border: none;
+  margin-right: 10px;
+  background-color: inherit;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: underline;
+}
+.trainingprogram-detail-duration-form-btn-update:hover {
+  background-color: #6d7cff;
+  color: #fff;
 }
