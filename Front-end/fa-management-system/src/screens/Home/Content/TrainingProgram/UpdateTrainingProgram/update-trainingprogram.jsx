@@ -14,10 +14,10 @@ const UpdateTrainingProgram = ({
   const [thisTrainingProgram, setThisTrainingProgram] = useState({});
   const [allSyllabus, setAllSyllabus] = useState([]);
 
-  const [addNewSyllabus, setAddNewSyllabus] = useState([]);
-  const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);
-  const [listAddNewSyllabus, setListAddNewSyllabus] = useState([]);
-  const [listDeleteSyllabus, setListDeleteSyllabus] = useState([]);
+  const [addNewSyllabus, setAddNewSyllabus] = useState([]); // cũ có trong db
+  const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);// lọc tất cả - cũ trong db
+  const [listAddNewSyllabus, setListAddNewSyllabus] = useState([]);// ngta add vào cái list này nằm bên phải ( khác màu)
+  const [listDeleteSyllabus, setListDeleteSyllabus] = useState([]);// list xoá những cái cũ đem qua bên trái
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +56,7 @@ const UpdateTrainingProgram = ({
   };
 
   const addToList = (e, item1) => {
-    setListAddNewSyllabus([...listAddNewSyllabus, item1]);
+    setListAddNewSyllabus([...listAddNewSyllabus, item1]); // ngta add vào cái list này nằm bên phải ( khác màu) // đem qua trái qua phải
 
     const new_arr = filterAllSyllabus.filter((item) => item !== item1);
     setFilterAllSyllabus(new_arr);
@@ -64,19 +64,26 @@ const UpdateTrainingProgram = ({
 
   const addToList2 = (e, item3) => {
     setFilterAllSyllabus([...filterAllSyllabus, item3]);
-    const new_arr = listAddNewSyllabus.filter((item) => item !== item3);
+    const new_arr = listAddNewSyllabus.filter((item) => item !== item3); // phải qua trái
     setListAddNewSyllabus(new_arr);
   };
 
+  // const addToDeleteList = (e, item2) => {
+  //   setListDeleteSyllabus([...listDeleteSyllabus, item2]);
+  //   const new_arr = addNewSyllabus.filter((item) => item !== item2); //trái qua phải
+  //   setAddNewSyllabus(new_arr);
+  // };
+  
   const addToDeleteList = (e, item2) => {
-    setListDeleteSyllabus([...listDeleteSyllabus, item2]);
-    const new_arr = addNewSyllabus.filter((item) => item !== item2);
-    setAddNewSyllabus(new_arr);
+    if (!listDeleteSyllabus.some(item => item.topic_code === item2.topic_code)) { // Kiểm tra trùng lặp trước
+      addNewSyllabus.splice(addNewSyllabus.indexOf(item2), 1);
+      setAddNewSyllabus(addNewSyllabus);
+      setListDeleteSyllabus([...listDeleteSyllabus, item2]);
+    }
   };
-
   const addToRemainList = (e, item4) => {
     setAddNewSyllabus([...addNewSyllabus, item4]);
-    const new_arr = listDeleteSyllabus.filter((item) => item !== item4);
+    const new_arr = listDeleteSyllabus.filter((item) => item !== item4); // phải qua trai
     setListDeleteSyllabus(new_arr);
   };
 
