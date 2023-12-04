@@ -5,7 +5,13 @@
 .info-content {
   display: flex;
 }
-
+.info-title {
+  display: flex;
+  background-color: #486bff;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
 .info-form-container {
   display: flex;
   align-items: center;
