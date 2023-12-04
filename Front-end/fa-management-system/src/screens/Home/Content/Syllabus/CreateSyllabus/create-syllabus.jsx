@@ -155,7 +155,10 @@ const CreateSyllabus = () => {
       event.preventDefault();
     } else if (event.key === "Backspace" && event.target.value === "") {
       // Remove the field when Backspace is pressed and the field is empty
-      remove(index);
+      if(index !== 0){
+        remove(index);
+      }
+      
       event.preventDefault();
     }
   };
@@ -429,6 +432,7 @@ const CreateSyllabus = () => {
             }) => (
               <Form>
                 {page === 1 ? (
+                  <div className="scroll-container">
                   <div className="create-general">
                     <label>Syllabus Name:</label>
                     <Field type="text" name="topic_name" />
@@ -438,7 +442,7 @@ const CreateSyllabus = () => {
                     <ErrorMessage name="version" component="div" className="error-mess"/>
                     <label>Training audience: </label>
                     <Field type="number" name="training_audience" />
-                    <ErrorMessage name="training_audience" className="error-mess"/>
+                    <ErrorMessage name="training_audience" component="div" className="error-mess"/>
                     <label>Technical requirements:</label>
                     <Field name="technical_group" as="textarea" />
                     <ErrorMessage name="technical_group" component="div" className="error-mess"/>
@@ -463,6 +467,7 @@ const CreateSyllabus = () => {
                                   handleKeyPress(e, push, lIndex, remove)
                                 }
                                 type="text"
+                                autocomplete="off"
                               />
                             </div>
                           ))}
@@ -492,6 +497,8 @@ const CreateSyllabus = () => {
                              
                   </div>
                   </div>
+                  </div>
+                  
                 ) : page === 2 ? (
                   //Outlie Screen
                   <div>
@@ -985,11 +992,13 @@ const CreateSyllabus = () => {
                       <button
                         className="btn-addnew-ouline-syllabus"
                         onClick={() => {
-                          let lastDayNumber = Number(
+                          let lastDayNumber = 0;
+
+                          {values.dayNumber.length !== 0 ? lastDayNumber = Number(
                             values.dayNumber[
                               Number(values.dayNumber.length - 1)
                             ]
-                          );
+                          ) : lastDayNumber = 0};
                           console.log(lastDayNumber);
                           // Calculate the new day number
                           let newDayNumber = lastDayNumber + 1;
@@ -1062,7 +1071,7 @@ const CreateSyllabus = () => {
                 <div className="form-create-syllabus-action">
                   <Button
                     className="form-create-syllabus-draft"
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       setFieldValue("publish_status", "Draft");
                       console.log(values.publish_status);

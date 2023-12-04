@@ -15,12 +15,12 @@ import java.util.List;
 
 public interface SyllabusRepository extends JpaRepository<Syllabus, Integer> {
     //Search theo topic code, topic name,
-    @Query(value = "Select * from syllabus where topic_code like %:keyword% or topic_name like %:keyword%  or training_principles like %:keyword% "
+    @Query(value = "Select * from syllabus where topic_code like %:keyword% or topic_name like %:keyword%  or training_principles like %:keyword% order by create_date desc,topic_code desc"
         , nativeQuery = true)
     List<Syllabus> getSyllabusListByKeyword(String keyword);
 
 
-	@Query(value = "Select * from syllabus where create_date = :date",nativeQuery = true)
+	@Query(value = "Select * from syllabus where create_date = :date order by create_date desc,topic_code desc",nativeQuery = true)
 	List<Syllabus> getSyllabusByCreateDate(String date);
 
 	@Query(value = "Select * from syllabus where userid = :userid",

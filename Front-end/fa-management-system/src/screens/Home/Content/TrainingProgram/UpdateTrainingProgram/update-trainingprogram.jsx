@@ -45,13 +45,14 @@ const UpdateTrainingProgram = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseTrainingProgram = await apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`);
+        const [responseTrainingProgram, responseSyllabus] = await Promise.all([
+          apiTrainingProgramInstance.get(`/detail/${trainingProgramId}`),
+          apiSyllabusInstance.get("/view")
+        ]);
+  
         setThisTrainingProgram(responseTrainingProgram.data.payload);
-        console.log(responseTrainingProgram.data.payload);
         setAddNewSyllabus(responseTrainingProgram.data.payload.syllabuses);
-        
-        const responseSyllabus = await apiSyllabusInstance.get("/view");
-        console.log(responseSyllabus.data);
+  
         setAllSyllabus(responseSyllabus.data);
       } catch (error) {
         console.error(error);
@@ -62,9 +63,13 @@ const UpdateTrainingProgram = ({
   }, []);
   
   useEffect(() => {
-    // Lọc và cập nhật filterAllSyllabus
-    const filteredSyllabus = allSyllabus.filter(syllabus => !addNewSyllabus.some(newSyllabus => newSyllabus.id === syllabus.id));
-    setFilterAllSyllabus(filteredSyllabus);
+    if (allSyllabus && addNewSyllabus) {
+      const filteredSyllabus = allSyllabus.filter(syllabus => {
+        return !addNewSyllabus.some(newSyllabus => newSyllabus.topic_code === syllabus.topic_code);
+      });
+  
+      setFilterAllSyllabus(filteredSyllabus);
+    }
   }, [allSyllabus, addNewSyllabus]);
 
   console.log(filterAllSyllabus);

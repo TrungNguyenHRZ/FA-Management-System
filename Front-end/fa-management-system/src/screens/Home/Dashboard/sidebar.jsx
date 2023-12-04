@@ -179,7 +179,7 @@ const Sidebar = () => {
                 <></>
               )}
             </ul>
-            {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
+            {info[0] === "Supper_Admin"  ? (
               <>
                 <li onClick={toggleSubMenuUser}>
                   <FaUserGroup className="icon-sidebar" />

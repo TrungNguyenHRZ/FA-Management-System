@@ -373,7 +373,11 @@ const UpdateSyllabus = () => {
       event.preventDefault();
     } else if (event.key === "Backspace" && event.target.value === "") {
       // Remove the field when Backspace is pressed and the field is empty
-      remove(index);
+      if(index !== 0 ){
+        remove(index);
+        console.log(index);
+      }
+     
       event.preventDefault();
     }
   };
@@ -579,8 +583,9 @@ const UpdateSyllabus = () => {
                               <Field
                               className="objective-field"
                                 name={`learningList[${lIndex}].learningObjectList.learning_description`}
-                                onKeyDown={(e) =>
+                                onKeyDown={(e) => {
                                   handleKeyPress(e, push, lIndex, remove)
+                                }
                                 }
                                 type="text"
                               />
