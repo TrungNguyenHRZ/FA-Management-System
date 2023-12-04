@@ -85,6 +85,8 @@ const UserList = () => {
   };
 
   const handleCheckBoxChange = async (item) => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
     const updatedCheckboxStates = checkboxStates.map((state) => {
       if (state.id === item.id) {
         return {
@@ -95,50 +97,56 @@ const UserList = () => {
       return state;
     });
 
-    setCheckboxStates(updatedCheckboxStates);
-    let flag = updatedCheckboxStates.find((state) => state.id === item.id)
-      .checked
-      ? "ACTIVE"
-      : "IN_ACTIVE";
-
-    // console.log(flag);
-
-    let gender = item.gender;
-    await apiUserInstance
-      .put(`/update/${item.id}`, {
-        name: item.name,
-        phone: item.phone,
-        dob: item.dob,
-        genderTrueMale: gender === "Male" ? 1 : 0,
-        status: flag,
-      })
-      .then(function (response) {
-        // console.log("role updated: " + response);
-        if (flag === "ACTIVE") {
-          toast.success(
-            <div>
-              <strong style={{ fontWeight: "bold", color: "green" }}>
-                ACTIVATE
-              </strong>{" "}
-              <br />
-              <strong>{item.email}</strong> successfully !!!
-            </div>
-          );
-        } else {
-          toast.success(
-            <div>
-              <strong style={{ fontWeight: "bold", color: "red" }}>
-                DEACTIVATE
-              </strong>{" "}
-              <br />
-              <strong>{item.email}</strong> successfully !!!
-            </div>
-          );
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      if (decodedToken.id !== item.id) {
+        setCheckboxStates(updatedCheckboxStates);
+        let flag = updatedCheckboxStates.find((state) => state.id === item.id)
+          .checked
+          ? "ACTIVE"
+          : "IN_ACTIVE";
+        let gender = item.gender;
+        await apiUserInstance
+          .put(`/update/${item.id}`, {
+            name: item.name,
+            phone: item.phone,
+            dob: item.dob,
+            genderTrueMale: gender === "Male" ? 1 : 0,
+            status: flag,
+          })
+          .then(function (response) {
+            // console.log(decodedToken.id);
+            if (flag === "ACTIVE") {
+              toast.success(
+                <div>
+                  <strong style={{ fontWeight: "bold", color: "green" }}>
+                    ACTIVATE
+                  </strong>{" "}
+                  <br />
+                  <strong>{item.email}</strong> successfully !!!
+                </div>
+              );
+            } else {
+              toast.success(
+                <div>
+                  <strong style={{ fontWeight: "bold", color: "red" }}>
+                    DEACTIVATE
+                  </strong>{" "}
+                  <br />
+                  <strong>{item.email}</strong> successfully !!!
+                </div>
+              );
+            }
+          });
+      } else {
+        toast.error(
+          <div>
+            Do not change <strong>{item.email}</strong> activation at this time.
+          </div>
+        );
+      }
+    } catch (error) {
+      console.log("Error at change status: " + error);
+    }
 
     apiUserInstance
       .get("/all")
@@ -195,6 +203,7 @@ const UserList = () => {
           newPermission: tmp,
         });
         console.log(response);
+        toast.success("Change role this account successfully !!!");
       } else {
         toast.error("You can't change your permission !!!");
         return;
@@ -218,7 +227,6 @@ const UserList = () => {
       .catch((error) => {
         console.error(error);
       });
-    toast.success("Change User Permission successfully !!!");
   };
   return (
     <div className="view-syllbus-container">
@@ -287,7 +295,7 @@ const UserList = () => {
                       <IoPerson />
                     </td>
 
-                    <td>
+                    <td className="td-user-list-type">
                       <select
                         className={
                           item.userType === "Admin"
@@ -338,7 +346,7 @@ const UserList = () => {
                       <ToastContainer
                         position="top-center"
                         // position="top-right"
-                        autoClose={5000}
+                        autoClose={3000}
                         hideProgressBar={false}
                         newestOnTop={false}
                         closeOnClick
