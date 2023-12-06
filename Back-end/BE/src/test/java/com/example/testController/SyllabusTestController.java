@@ -45,7 +45,7 @@ public class SyllabusTestController {
 
 	@Test 
 	public void testViewSyllabus() throws Exception {
-		int topicCode = 1;
+		int topicCode = 9;
 
     	mockMvc.perform(get("/syllabus/viewSyllabus/" + topicCode )
             .contentType("application/json"))
@@ -55,6 +55,19 @@ public class SyllabusTestController {
 
 	@Test 
 	public void testViewSyllabusNotOk() throws Exception {
+		int topicCode = 2000;
+		mockMvc.perform(get("/syllabus/viewSyllabus/" + topicCode )
+            .contentType("application/json"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value("ERROR"))
+			.andExpect(jsonPath("$.message").value("Syllabus not found"));
+	}
+
+	@Test
+	public void testSaveSyllabus() throws Exception {
 		
 	}
+
+
+
 }
