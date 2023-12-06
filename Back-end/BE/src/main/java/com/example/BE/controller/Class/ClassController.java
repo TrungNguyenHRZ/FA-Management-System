@@ -324,4 +324,27 @@ public class ClassController {
         }
         return new ResponseEntity<>(classUserList, HttpStatus.CREATED);
     }
+    @GetMapping(value = {"/getUserByClassId"})
+    public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getUserByClassId(@RequestParam(required = true) int classId) {
+        List<ClassUser> tmp = classUserService.getClassUserListByClassId(classId);
+        List<ClassUserDTO> cuDTO = new ArrayList<>();
+        for (ClassUser c: tmp) {
+            ClassUserDTO existingClassUserDTO = null;
+            for (ClassUserDTO cu: cuDTO) {
+                if (cu.getClassId() == c.getClass_object().getClassId()&& cu.getUserId() == c.getUser().getUserId()) {
+                    existingClassUserDTO = cu;
+                    break;
+                }
+            }
+
+            if (existingClassUserDTO == null) {
+                cuDTO.add(new ClassUserDTO(c));
+            } else {
+                cuDTO.add(existingClassUserDTO);
+            }
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(cuDTO);
+        return ResponseEntity.ok(apiResponse);
+    }
 }

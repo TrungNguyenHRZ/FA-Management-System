@@ -38,13 +38,6 @@ public class ApiResponse<T> {
         this.status = StatusEnum.ERROR;
         this.message = message;
     }
-    public T getData() {
-        return payload;
-    }
-
-    public boolean isSuccess() {
-        return status == StatusEnum.SUCCESS;
-    }
 
 }
 
