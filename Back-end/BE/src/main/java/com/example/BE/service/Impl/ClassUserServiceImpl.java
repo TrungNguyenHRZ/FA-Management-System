@@ -56,4 +56,9 @@ public class ClassUserServiceImpl implements ClassUserService {
     public ClassUser getClassUserById(int userId, int classId) {
         return classUserRepository.findByClassUserId(userId, classId);
     }
+
+    @Override
+    public List<ClassUser> getClassUserListByClassId(int classId) {
+        return classUserRepository.findAllClassUserByClassId(classId);
+    }
 }
