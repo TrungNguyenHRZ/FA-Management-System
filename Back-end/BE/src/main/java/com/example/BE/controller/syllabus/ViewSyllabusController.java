@@ -113,7 +113,8 @@ public class ViewSyllabusController {
 		for (SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-			for (TrainingUnitResponse tur : syr.getUnitList()) {
+			if(yr.getUnitList() != null){
+				for (TrainingUnitResponse tur : syr.getUnitList()) {
 				for (TrainingContentResponse tcr : tur.getContentList()) {
 					duration += tcr.getDuration();
 				}
@@ -123,6 +124,10 @@ public class ViewSyllabusController {
 			} else {
 				syr.setProgramDuration(0);
 			}
+			}else{
+				syr.setProgramDuration(0);
+			}
+			
 			syr.setLearningList(syObjsResult);
 		}
 		return syList;
@@ -159,17 +164,17 @@ public class ViewSyllabusController {
 	public List<SyllabusResponse> getAllSyllabusByDate(@PathVariable String date) {
 		List<SyllabusResponse> result = syllabusService.getAllSyllabusByCreateDate(date);
 		int duration = 0;
-		for(SyllabusResponse syllabus : result) {
+		for (SyllabusResponse syllabus : result) {
 			for (TrainingUnitResponse tur : syllabus.getUnitList()) {
-						for (TrainingContentResponse tcr : tur.getContentList()) {
-							duration += tcr.getDuration();
-						}
-					}
-					if (duration != 0) {
-						syllabus.setProgramDuration(duration);
-					} else {
-						syllabus.setProgramDuration(0);
-					}
+				for (TrainingContentResponse tcr : tur.getContentList()) {
+					duration += tcr.getDuration();
+				}
+			}
+			if (duration != 0) {
+				syllabus.setProgramDuration(duration);
+			} else {
+				syllabus.setProgramDuration(0);
+			}
 		}
 		return result;
 	}
@@ -199,8 +204,7 @@ public class ViewSyllabusController {
 				return ResponseEntity.ok(apiResponse);
 			} else {
 				apiResponse.error("Syllabus not found");
-				;
-				return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+				return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
 			}
 		} catch (Exception e) {
 			apiResponse.error("Server failed");
@@ -212,15 +216,24 @@ public class ViewSyllabusController {
 	public ResponseEntity<ApiResponse> saveSyllabus(@RequestBody SyllabusResponse syllabusResponse) {
 		ApiResponse apiResponse = new ApiResponse();
 		try {
-			Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
-			Syllabus result = repo.save(syllabus);
+			Syllabus result;
+			if(syllabusResponse.getTopic_code() != 0){
+				if(syllabusService.getSyllabusByTopic_Code(syllabusResponse.getTopic_code()) != null){
+					apiResponse.error("Syllabus has already exists");
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+				}
+			}
+			
 			if (userRepo.getUserById(syllabusResponse.getUserId()) != null) {
+				Syllabus syllabus = syllabusService.convertSyllabus(syllabusResponse);
+				result = repo.save(syllabus);
 				result.setCreate_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
 				result.setModified_by(userRepo.getUserById(syllabusResponse.getUserId()).getName());
 			} else {
 				apiResponse.error("User not found");
-				return ResponseEntity.ok(apiResponse);
+				return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
 			}
+			
 
 			if (syllabusResponse.getUnitList() != null) {
 				for (TrainingUnit tu : result.getSyllabus_unit()) {
@@ -248,8 +261,7 @@ public class ViewSyllabusController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			apiResponse.error(e);
-			return ResponseEntity.ok(apiResponse);
-
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
 		}
 
 	}

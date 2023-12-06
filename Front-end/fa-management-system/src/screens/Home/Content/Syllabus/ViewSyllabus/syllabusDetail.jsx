@@ -592,8 +592,8 @@ const SyllabusDetail = () => {
       ) : page === 2 ? (
         renderOutline()
       ) : (
-        <div>
-          
+        <div className="other-container">
+          <div className="other-text">
           <label>Training Principles: </label>
           <textarea
             name="training_principles"
@@ -603,7 +603,9 @@ const SyllabusDetail = () => {
           >
             {syllabus.training_principles}
           </textarea>
-          <div>
+          </div>
+          
+          <div className="other-chart">
           <Doughnut data={data} 
             options={{
             legend: { 
