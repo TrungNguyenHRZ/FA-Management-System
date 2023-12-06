@@ -347,4 +347,33 @@ public class ClassController {
         apiResponse.ok(cuDTO);
         return ResponseEntity.ok(apiResponse);
     }
+    @GetMapping(value = {"/getUserByClassIdAndUserType"})
+    public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getAdminByClassId(@RequestParam(required = true) int classId,@RequestParam(required = true) String userType) {
+        List<ClassUser> tmp = classUserService.getClassUserListByClassId(classId);
+        List<ClassUserDTO> cuDTO = new ArrayList<>();
+        for (ClassUser c: tmp) {
+            ClassUserDTO existingClassUserDTO = null;
+            for (ClassUserDTO cu: cuDTO) {
+                if (cu.getClassId() == c.getClass_object().getClassId()&& cu.getUserId() == c.getUser().getUserId()) {
+                    existingClassUserDTO = cu;
+                    break;
+                }
+            }
+
+            if (existingClassUserDTO == null) {
+                cuDTO.add(new ClassUserDTO(c));
+            } else {
+                cuDTO.add(existingClassUserDTO);
+            }
+        }
+        List<ClassUserDTO> result = new ArrayList<>();
+        for (ClassUserDTO cu:cuDTO) {
+            if(cu.getUserType().equalsIgnoreCase(userType)){
+                result.add(cu);
+            }
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(result);
+        return ResponseEntity.ok(apiResponse);
+    }
 }
