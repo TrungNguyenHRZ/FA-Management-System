@@ -14,10 +14,10 @@ const UpdateTrainingProgram = ({
   const [thisTrainingProgram, setThisTrainingProgram] = useState({});
   const [allSyllabus, setAllSyllabus] = useState([]);
 
-  const [addNewSyllabus, setAddNewSyllabus] = useState([]); // cũ có trong db
-  const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);// lọc tất cả - cũ trong db
-  const [listAddNewSyllabus, setListAddNewSyllabus] = useState([]);// ngta add vào cái list này nằm bên phải ( khác màu)
-  const [listDeleteSyllabus, setListDeleteSyllabus] = useState([]);// list xoá những cái cũ đem qua bên trái
+  const [addNewSyllabus, setAddNewSyllabus] = useState([]);
+  const [filterAllSyllabus, setFilterAllSyllabus] = useState([]);
+  const [listAddNewSyllabus, setListAddNewSyllabus] = useState([]);
+  const [listDeleteSyllabus, setListDeleteSyllabus] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,34 +56,27 @@ const UpdateTrainingProgram = ({
   };
 
   const addToList = (e, item1) => {
-    setListAddNewSyllabus([...listAddNewSyllabus, item1]); // ngta add vào cái list này nằm bên phải ( khác màu) // đem qua trái qua phải
+    setListAddNewSyllabus([...listAddNewSyllabus, item1]);
 
-    const new_arr = filterAllSyllabus.filter((item) => item !== item1);
+    const new_arr = filterAllSyllabus.filter((item5) => item5 !== item1);
     setFilterAllSyllabus(new_arr);
   };
 
   const addToList2 = (e, item3) => {
     setFilterAllSyllabus([...filterAllSyllabus, item3]);
-    const new_arr = listAddNewSyllabus.filter((item) => item !== item3); // phải qua trái
+    const new_arr = listAddNewSyllabus.filter((item6) => item6 !== item3);
     setListAddNewSyllabus(new_arr);
   };
 
-  // const addToDeleteList = (e, item2) => {
-  //   setListDeleteSyllabus([...listDeleteSyllabus, item2]);
-  //   const new_arr = addNewSyllabus.filter((item) => item !== item2); //trái qua phải
-  //   setAddNewSyllabus(new_arr);
-  // };
-  
   const addToDeleteList = (e, item2) => {
-    if (!listDeleteSyllabus.some(item => item.topic_code === item2.topic_code)) { // Kiểm tra trùng lặp trước
-      addNewSyllabus.splice(addNewSyllabus.indexOf(item2), 1);
-      setAddNewSyllabus(addNewSyllabus);
-      setListDeleteSyllabus([...listDeleteSyllabus, item2]);
-    }
+    setListDeleteSyllabus([...listDeleteSyllabus, item2]);
+    let new_arr = addNewSyllabus.filter((item7) => item7 !== item2);
+    setAddNewSyllabus(new_arr);
   };
+
   const addToRemainList = (e, item4) => {
     setAddNewSyllabus([...addNewSyllabus, item4]);
-    const new_arr = listDeleteSyllabus.filter((item) => item !== item4); // phải qua trai
+    const new_arr = listDeleteSyllabus.filter((item8) => item8 !== item4);
     setListDeleteSyllabus(new_arr);
   };
 
@@ -133,8 +126,6 @@ const UpdateTrainingProgram = ({
 
     updateForm();
   };
-
-  const saveAll = (e, item2) => {};
 
   let renderData2 = () => {
     return (
@@ -246,10 +237,11 @@ const UpdateTrainingProgram = ({
               ))}
             </div>
           </div>
+          2
         </div>
         <div className="training-program-main-update">
           <div className="training-program-content-main-2-update">
-            <button onClick={(e) => saveAll(e)}>Save</button>
+            <button onClick={SaveTrainingProgram}>Save</button>
           </div>
         </div>
       </div>
@@ -300,8 +292,6 @@ const UpdateTrainingProgram = ({
                 {thisTrainingProgram.duration} <span>days</span>
               </div>
             </div>
-
-            <button onClick={SaveTrainingProgram}>Save</button>
           </div>
           <div className="trainingprogram-detail-duration-form-2">
             <div>Modified on {thisTrainingProgram.modified_date} by :</div>

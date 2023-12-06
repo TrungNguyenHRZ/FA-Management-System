@@ -1,4 +1,3 @@
-import { React, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -10,10 +9,28 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./detailClass.css";
 import dayjs from "dayjs";
+import { useParams, Link } from "react-router-dom";
+import apiClassInstance from "../../../../../service/api-class";
+import React, { useEffect, useState } from "react";
 
 const DetailClass = () => {
   const [startDate, setStartDate] = useState(dayjs("2022-04-17"));
   const [endDate, setEndDate] = useState(dayjs("2023-09-30"));
+  const [thisClass, setThisClass] = useState({});
+  const paramName = useParams();
+
+  useEffect(() => {
+    apiClassInstance
+      .get("/" + paramName.id)
+      .then((response) => {
+        setThisClass(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   // const showStartDate = () => {
   //   const formattedStartDate = dayjs(startDate).format("DD/MM/YYYY");
   //   console.log("Selected Date:", formattedStartDate);
@@ -24,10 +41,10 @@ const DetailClass = () => {
       <div className="detail-class-header">
         <h3>Class</h3>
         <div>
-          <h1>FRESHER DEVELOP OPERATION</h1>
-          <span>Planing</span>
+          <h1>{thisClass.className}</h1>
+          <span>{thisClass.status}</span>
         </div>
-        <h5>HCM23_CPL_JAVA_13</h5>
+        <h5>{thisClass.classCode}</h5>
       </div>
       <div className="detail-class-content">
         <div className="detail-class-form-container">
