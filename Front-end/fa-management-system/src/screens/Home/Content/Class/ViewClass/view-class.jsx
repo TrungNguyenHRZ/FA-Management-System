@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { Avatar } from "@mui/material";
 import "./view-class.css";
+import { Link } from "react-router-dom";
 //import { Await } from "react-router";
 
 const ViewClass = () => {
@@ -118,9 +119,11 @@ const ViewClass = () => {
       return list
         .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
         .map((item, index) => (
-          <tr key={item.topic_code}>
+          <tr key={item.classId}>
             <td>{index + 1 + thisPage * itemPerPage}</td>
-            <td>{item.className}</td>
+            <td>
+              <Link to={`/view-class/${item.classId}`}>{item.className}</Link>
+            </td>
             <td>{item.classCode}</td>
             <td>{item.createdDate}</td>
             <td className="td-user-list-name">

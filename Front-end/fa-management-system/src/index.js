@@ -75,9 +75,14 @@ const App = () => {
           element: <CreateTrainingProgram />,
         },
         {
-          path: "/view-class",
+          path: "/view-class/",
           element: <ViewClass />,
         },
+        {
+          path: "/view-class/:id",
+          element: <DetailClass />,
+        },
+
         {
           path: "/create-class",
           element: <CreateClass />,
@@ -97,7 +102,8 @@ const App = () => {
         {
           path: "/update-syllabus/:id",
           element: <UpdateSyllabus />,
-        }, {
+        },
+        {
           path: "/detail-class",
           element: <DetailClass />,
         },

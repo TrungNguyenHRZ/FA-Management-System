@@ -52,7 +52,6 @@ const SyllabusDetail = () => {
     apiSyllabusInstance
       .get(`/viewSyllabus/${paramName.id}`)
       .then((response) => {
-        console.log(response.data.payload);
         setSyllabus(response.data.payload);
         // setUnit(syllabus.unitList);
       })
@@ -118,7 +117,6 @@ const SyllabusDetail = () => {
     "Seminar/Workshop",
   ];
 
-  
   let renderGeneral = () => {
     return (
       <div className="detail-body">
@@ -209,7 +207,6 @@ const SyllabusDetail = () => {
     );
   };
 
-
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
@@ -225,7 +222,7 @@ const SyllabusDetail = () => {
       return acc;
     }, []);
   }
-  
+
   console.log(groupedUnits);
 
   let duration = (unit) => {
@@ -421,8 +418,8 @@ const SyllabusDetail = () => {
     }
   };
 
-  const data = 
-    {labels : [
+  const data = {
+    labels: [
       "Assignment/Lab",
       "Concept/Lecture",
       "Guide/Review",
@@ -430,19 +427,17 @@ const SyllabusDetail = () => {
       "Exam",
       "Seminar/Workshop",
     ],
-    datasets: [{
-      data : checkData().datasets,
-      
-    }],
-    
-  }
-  ;
-
-  console.log(data)
+    datasets: [
+      {
+        data: checkData().datasets,
+      },
+    ],
+  };
+  console.log(data);
 
   function checkData() {
-    const result = 
-      {label : [
+    const result = {
+      label: [
         "Assignment/Lab",
         "Concept/Lecture",
         "Guide/Review",
@@ -450,34 +445,34 @@ const SyllabusDetail = () => {
         "Exam",
         "Seminar/Workshop",
       ],
-      datasets:[]
+      datasets: [],
     };
-  
+
     if (syllabus.unitList) {
       const labelCountMap = {};
-  
+
       syllabus.unitList.forEach((unit) => {
         unit.contentList.forEach((content) => {
           const deliveryType = content.deliveryType;
-  
+
           // Check if the deliveryType is in the label array
           if (result.label.includes(deliveryType)) {
-            labelCountMap[deliveryType] = (labelCountMap[deliveryType] || 0) + 1;
+            labelCountMap[deliveryType] =
+              (labelCountMap[deliveryType] || 0) + 1;
           }
         });
       });
-  
+
       // Populate the datasets array based on the labelCountMap
       result.label.forEach((label) => {
         result.datasets.push(labelCountMap[label] || 0);
       });
     }
-  
+
     return result;
   }
 
   console.log(checkData());
-
 
   return (
     <div className="detail-container">
@@ -520,11 +515,22 @@ const SyllabusDetail = () => {
               <div className="option-pick" onClick={handleOpened}>
                 <HiOutlineDuplicate className="option-icon" /> Duplicate
               </div>
-              <div className="option-pick" onClick={syllabus && syllabus.publish_status === "Active" ? handleDeactivated : handleActivated}>
-              {syllabus && syllabus.publish_status  === "Active" ? <FiEyeOff className="option-icon" /> 
-              : <FiEye className="option-icon" />}  
-              {syllabus && syllabus.publish_status  === "Active" ? "De-activate syllabus" 
-              : "Activate syllabus"}
+              <div
+                className="option-pick"
+                onClick={
+                  syllabus && syllabus.publish_status === "Active"
+                    ? handleDeactivated
+                    : handleActivated
+                }
+              >
+                {syllabus && syllabus.publish_status === "Active" ? (
+                  <FiEyeOff className="option-icon" />
+                ) : (
+                  <FiEye className="option-icon" />
+                )}
+                {syllabus && syllabus.publish_status === "Active"
+                  ? "De-activate syllabus"
+                  : "Activate syllabus"}
               </div>
               <Modal
                 open={open}
@@ -592,8 +598,10 @@ const SyllabusDetail = () => {
       ) : page === 2 ? (
         renderOutline()
       ) : (
+
         <div className="other-container">
           <div className="other-text">
+
           <label>Training Principles: </label>
           <textarea
             name="training_principles"
@@ -603,6 +611,7 @@ const SyllabusDetail = () => {
           >
             {syllabus.training_principles}
           </textarea>
+
           </div>
           
           <div className="other-chart">
@@ -616,8 +625,8 @@ const SyllabusDetail = () => {
               display: true,
             }
           }}/>
+
           </div>
-          
         </div>
       )}
       {/* <image src={`data:image/png;base64,${syllabus.data1}`} /> */}
