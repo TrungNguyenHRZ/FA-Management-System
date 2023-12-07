@@ -1,0 +1,22 @@
+.view-schedule-by-class-container {
+  display: flex;
+  flex-direction: column;
+  /* padding: 10px; */
+}
+.view-schedule-by-class-header {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #3174ad;
+  border-radius: 10px 10px 0px 0px;
+  color: #fff;
+}
+.view-schedule-by-class-body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.view-schedule-by-class-title {
+  font-size: 25px;
+  font-weight: bold;
+}

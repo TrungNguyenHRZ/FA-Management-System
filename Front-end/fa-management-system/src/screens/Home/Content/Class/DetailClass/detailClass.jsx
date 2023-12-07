@@ -169,10 +169,10 @@ const DetailClass = () => {
               <div className="detail-class-syllabus-item-info">
                 <div className="detail-class-syllabus-item-info-title">
                   <div>LINUX</div>
-                  <div>Avtive</div>
+                  <div>Active</div>
                 </div>
                 <div className="detail-class-syllabus-item-info-detail">
-                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
+                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johnny Depp
                 </div>
               </div>
             </div>
