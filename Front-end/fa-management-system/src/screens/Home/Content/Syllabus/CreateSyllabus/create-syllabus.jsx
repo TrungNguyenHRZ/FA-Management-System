@@ -45,6 +45,16 @@ const CreateSyllabus = () => {
   const [groupedUnits, setGroupedUnits] = useState([]);
   const [expanded, setExpanded] = useState("panel1");
   const [open, setOpen] = React.useState(false);
+  const [openDraft,setOpenDraft] = useState(false);
+
+  const handleOpenDraft = () => {
+    setOpenDraft(true);
+  }
+
+  const handleCloseDraft = () => {
+    setOpenDraft(false);
+  }
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -111,6 +121,7 @@ const CreateSyllabus = () => {
       userId: userID,
       unitsByDay: null,
       dayNumber: null,
+      publish_status : "Active"
     };
     console.log("Dữ liệu đã gửi:", updatedValue);
     
@@ -137,6 +148,37 @@ const CreateSyllabus = () => {
     });
 
   };
+
+  const handleSaveDraft = (values) => {
+    console.log(values);
+    const afterValue = convertToUnitList(values);
+    const updatedValue = {
+      ...values,
+      unitList: afterValue,
+      userId: userID,
+      unitsByDay: null,
+      dayNumber: null,
+      publish_status : "Draft"
+    };
+    console.log("Dữ liệu đã gửi:", updatedValue);
+    
+    console.log(selectedFile);
+    apiSyllabusInstance.post("/saveSyllabus", updatedValue).
+    then(response => {
+      if(selectedFile !== null){
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        apiSyllabusInstance.post(`/uploadMaterials/${response.data.payload.topic_code}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      }
+      console.log(response.data);
+    });
+  }
 
   const [dayNumber, setDayNumber] = useState([1]);
 
@@ -301,7 +343,7 @@ const CreateSyllabus = () => {
     ),
     training_principles:Yup.string().required("Training principles is required")
     .max(255, "Maximum 255 characters"),
-    learningList:Yup.array().min(1, "Course Objective(s) is required"),
+    learningList:Yup.array().min(2, "Course Objective(s) is required"),
     unitsByDay: Yup.array().of(
       Yup.object().shape({
         units: Yup.array().of(
@@ -331,10 +373,7 @@ const CreateSyllabus = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
-    
   };
-
-
 
   return (
     <div className="create-syllabus-container">
@@ -386,7 +425,6 @@ const CreateSyllabus = () => {
               training_principles: "",
               priority: "",
               level: "",
-              publish_status: "",
               create_by: "",
               modified_by: "",
               programDuration: 0,
@@ -598,22 +636,31 @@ const CreateSyllabus = () => {
                                                                     type="text"
                                                                     name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
                                                                     placeholder="Content"
+                                                                    value={values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].content !== "" ? 
+                                                                    values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].content 
+                                                                    : ""}
                                                                     readOnly
                                                                     className="syllabus-content-name-c"
                                                                   />
                                                                 </div>
 
                                                                 <div className="syllabus-content-box-right-c">
-                                                                  <Field
+                                                                  <input
                                                                     type="text"
-                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                    // name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
+                                                                    value={values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].deliveryType !== "" ? 
+                                                                    values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].deliveryType 
+                                                                    : ""}
                                                                     placeholder="DeliveryType"
                                                                     readOnly
                                                                     className="syllabus-content-format-c"
                                                                   />
-                                                                  <Field
+                                                                  <input
                                                                     type="number"
-                                                                    name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
+                                                                    // name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].duration`}
+                                                                    value={values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].duration > 0 ? 
+                                                                    values.unitsByDay[dayIndex].units[unitIndex].contentList[contentIndex].duration 
+                                                                    : ""}
                                                                     placeholder="Duration"
                                                                     readOnly
                                                                     className="syllabus-content-name-c"
@@ -653,6 +700,7 @@ const CreateSyllabus = () => {
                                                                   open={
                                                                     isModalVisible
                                                                   }
+                                                                  onClose={handleCancel}
 
                                                                   name="modal-box"
                                                                   aria-labelledby="modal-modal-title"
@@ -937,7 +985,7 @@ const CreateSyllabus = () => {
                                                                   "",
                                                                 note: "",
                                                                 trainingFormat:
-                                                                  "",
+                                                                  "Offline",
                                                               })
                                                             }
                                                           />
@@ -961,7 +1009,7 @@ const CreateSyllabus = () => {
                                                       duration: 0,
                                                       learningObjective: "",
                                                       note: "",
-                                                      trainingFormat: "",
+                                                      trainingFormat: "Offline",
                                                     },
                                                   ],
                                                 })
@@ -1027,7 +1075,7 @@ const CreateSyllabus = () => {
                                           duration: 0,
                                           learningObjective: "",
                                           note: "",
-                                          trainingFormat: "",
+                                          trainingFormat: "Offline",
                                         },
                                       ],
                                     },
@@ -1073,18 +1121,42 @@ const CreateSyllabus = () => {
                     className="form-create-syllabus-draft"
                     type="button"
                     onClick={() => {
-                      setFieldValue("publish_status", "Draft");
+                      handleOpenDraft();
                       console.log(values.publish_status);
                     }}
                   >
                     Save as Draft
                   </Button>
+                  <Modal
+                  open={openDraft}
+                  onClose={handleCloseDraft}
+                  aria-labelledby="child-modal-title"
+                  aria-describedby="child-modal-description"
+                >
+                <Box sx={{ ...style1, width: 400 }}>
+                  <h4 id="child-modal-title">
+                      Are you sure you want to save this Syllabus as Draft ?
+                  </h4>
+                    <Button type="button" onClick={handleCloseDraft}>
+                      Cancel
+                    </Button>
+
+                    <Button type="button" onClick={() => {
+                      handleSaveDraft(values);
+                      handleCloseDraft();
+                    }}>
+                      Submit
+                    </Button>
+                </Box>
+                    
+
+
+                </Modal>
                   <Button
                     className="form-create-syllabus-submit"
                     type="submit"
                     onClick={() => {
                       switchPage();
-                      setFieldValue("publish_status", "Active");
                     }
                       
                     }
@@ -1116,14 +1188,14 @@ const CreateSyllabus = () => {
                     <h4 id="child-modal-title">
                       Are you sure you want to create this Syllabus ?
                     </h4>
-
+                    
                     <Button type="button" onClick={handleClose}>
                       Cancel
                     </Button>
                     <Button
                       type="submit"
                       onClick={() => {
-                        validateForm().then((errors) => {
+                      validateForm().then((errors) => {
                           if(
                             errors.topic_name !== undefined || 
                             errors.version !== undefined ||

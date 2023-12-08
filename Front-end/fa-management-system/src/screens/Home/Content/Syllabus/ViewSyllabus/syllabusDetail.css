@@ -366,9 +366,17 @@
 
 .other-chart{
   width:50%;
+  padding:20px;
 }
 
 .other-text{
   width:50%;
+  /* display: flex; */
+  /* justify-content: center; */
 }
 
+.chart-delivery{
+  width: 350px !important;
+  height:350px !important;
+  margin-left: 25%;
+}

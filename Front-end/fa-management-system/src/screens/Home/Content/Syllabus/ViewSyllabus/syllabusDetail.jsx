@@ -46,23 +46,9 @@ const SyllabusDetail = () => {
   const [activated, setActivated] = useState(false);
   const handleOpened = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [status,setStatus] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    apiSyllabusInstance
-      .get(`/viewSyllabus/${paramName.id}`)
-      .then((response) => {
-        console.log(response.data.payload);
-        setSyllabus(response.data.payload);
-        // setUnit(syllabus.unitList);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-  //   if (syllabus.learningList) {
-  // 	console.log(syllabus.learningList);
-  //   }
 
   useEffect(() => {
     apiSyllabusInstance
@@ -70,6 +56,7 @@ const SyllabusDetail = () => {
       .then((response) => {
         console.log(response.data.payload);
         setSyllabus(response.data.payload);
+        setStatus(response.data.payload.publish_status);
         // setUnit(syllabus.unitList);
       })
       .catch((error) => {
@@ -360,6 +347,8 @@ const SyllabusDetail = () => {
       .finally(() => {
         handleClose();
         setIsLoading(false);
+        setOption(false);
+        setStatus("Active");
         navigate(`/view-syllabus/${paramName.id}`);
       });
   };
@@ -377,6 +366,9 @@ const SyllabusDetail = () => {
       .finally(() => {
         handleClose();
         setIsLoading(false);
+        setOption(false);
+        setStatus("Inactive");
+        navigate(`/view-syllabus/${paramName.id}`);
       });
   };
 
@@ -520,10 +512,10 @@ const SyllabusDetail = () => {
               <div className="option-pick" onClick={handleOpened}>
                 <HiOutlineDuplicate className="option-icon" /> Duplicate
               </div>
-              <div className="option-pick" onClick={syllabus && syllabus.publish_status === "Active" ? handleDeactivated : handleActivated}>
-              {syllabus && syllabus.publish_status  === "Active" ? <FiEyeOff className="option-icon" /> 
+              <div className="option-pick" onClick={status && status === "Active" ? handleDeactivated : handleActivated}>
+              {status && status === "Active"  ? <FiEyeOff className="option-icon" /> 
               : <FiEye className="option-icon" />}  
-              {syllabus && syllabus.publish_status  === "Active" ? "De-activate syllabus" 
+              {status && status  === "Active" ? "De-activate syllabus" 
               : "Activate syllabus"}
               </div>
               <Modal
@@ -615,7 +607,8 @@ const SyllabusDetail = () => {
             title: {
               display: true,
             }
-          }}/>
+          }}
+          className="chart-delivery"/>
           </div>
           
         </div>

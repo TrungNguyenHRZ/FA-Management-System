@@ -109,11 +109,12 @@ public class ViewSyllabusController {
 	@GetMapping("/view")
 	public List<SyllabusResponse> getAllSyllabus() {
 		List<SyllabusResponse> syList = syllabusService.getAll();
-		int duration = 0;
+		
 		for (SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
-			if(yr.getUnitList() != null){
+			int duration = 0;
+			if(syr.getUnitList() != null){
 				for (TrainingUnitResponse tur : syr.getUnitList()) {
 				for (TrainingContentResponse tcr : tur.getContentList()) {
 					duration += tcr.getDuration();
@@ -257,7 +258,7 @@ public class ViewSyllabusController {
 			}
 			SyllabusResponse test = syllabusMapper.toResponse(result);
 			apiResponse.ok(test);
-			return ResponseEntity.ok(apiResponse);
+			return getSyllabusByTopicCode(test.getTopic_code());
 		} catch (Exception e) {
 			e.printStackTrace();
 			apiResponse.error(e);
@@ -311,7 +312,6 @@ public class ViewSyllabusController {
 		ApiResponse apiResponse = new ApiResponse();
 		try {
 			Syllabus existedSyllabus = syllabusService.getSyllabusByTopic_Code(id);
-
 			if (existedSyllabus != null) {
 				// SyllabusResponse syllabus = syllabusService.getSyllabusByTopicCode(id);
 				// Syllabus syResponse = syllabusService.convertSyllabus(syllabusResponse);
@@ -377,8 +377,7 @@ public class ViewSyllabusController {
 				return ResponseEntity.ok(apiResponse);
 			} else {
 				apiResponse.error("Syllabus not found");
-				;
-				return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
