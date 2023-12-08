@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-// import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useNavigate,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./screens/Login/login";
 import Sidebar from "./screens/Home/Dashboard/sidebar";
 import TrainingProgram from "./screens/Home/Content/TrainingProgram/training-program";
@@ -22,14 +17,11 @@ import Overview from "./screens/Home/Content/Overview/overview";
 import ErrorPage from "./screens/Error/error-page";
 import ViewTrainingProgram from "./screens/Home/Content/TrainingProgram/ViewTrainingProgram/view-trainingprogram";
 import CreateTrainingProgram from "./screens/Home/Content/TrainingProgram/CreateTrainingProgram/create-trainingprogram";
-
 import UpdateSyllabus from "./screens/Home/Content/Syllabus/ViewSyllabus/updateSyllabus";
-import Cookies from "js-cookie";
-// import CreateMultipleSchedules from "./screens/Home/Content/Class/CreateClass/t";
-
 import CreateMultipleSchedules from "./screens/Home/Content/Schedule/create-schedule";
 import Info from "./screens/Home/Information/info";
 import DetailClass from "./screens/Home/Content/Class/DetailClass/detailClass";
+import ViewScheduleByClassId from "./screens/Home/Content/Schedule/ViewScheduleByClassId/view-schedule";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -75,9 +67,14 @@ const App = () => {
           element: <CreateTrainingProgram />,
         },
         {
-          path: "/view-class",
+          path: "/view-class/",
           element: <ViewClass />,
         },
+        {
+          path: "/view-class/:id",
+          element: <DetailClass />,
+        },
+
         {
           path: "/create-class",
           element: <CreateClass />,
@@ -85,6 +82,10 @@ const App = () => {
         {
           path: "/create-schedules",
           element: <CreateMultipleSchedules />,
+        },
+        {
+          path: "/view-class/:id/view-schedule",
+          element: <ViewScheduleByClassId />,
         },
         {
           path: "/user-list",
@@ -97,7 +98,8 @@ const App = () => {
         {
           path: "/update-syllabus/:id",
           element: <UpdateSyllabus />,
-        }, {
+        },
+        {
           path: "/detail-class",
           element: <DetailClass />,
         },

@@ -114,6 +114,7 @@ public class ViewSyllabusController {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
 			int duration = 0;
+
 			if(syr.getUnitList() != null){
 				for (TrainingUnitResponse tur : syr.getUnitList()) {
 				for (TrainingContentResponse tcr : tur.getContentList()) {

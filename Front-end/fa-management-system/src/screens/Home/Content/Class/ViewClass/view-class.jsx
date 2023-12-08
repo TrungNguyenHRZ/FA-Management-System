@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { Avatar } from "@mui/material";
 import "./view-class.css";
+import { Link } from "react-router-dom";
 //import { Await } from "react-router";
 
 const ViewClass = () => {
@@ -118,9 +119,11 @@ const ViewClass = () => {
       return list
         .slice(thisPage * itemPerPage, (thisPage + 1) * itemPerPage)
         .map((item, index) => (
-          <tr key={item.topic_code}>
+          <tr key={item.classId}>
             <td>{index + 1 + thisPage * itemPerPage}</td>
-            <td>{item.className}</td>
+            <td className="link-item-class">
+              <Link to={`/view-class/${item.classId}`}>{item.className}</Link>
+            </td>
             <td>{item.classCode}</td>
             <td>{item.createdDate}</td>
             <td className="td-user-list-name">
@@ -159,13 +162,14 @@ const ViewClass = () => {
             <td>{item.fsu}</td>
             <td>
               <div className="edit-class">
-                <button
-                  value={item.classId}
-                  className="btn-edit-class"
-                  onClick={openForm}
-                >
-                  ...
+                <button value={item.classId} onClick={openForm}>
+                  Edit
                 </button>
+                <div>
+                  <Link to={`/view-class/${item.classId}/view-schedule`}>
+                    View schedule
+                  </Link>
+                </div>
               </div>
             </td>
           </tr>
@@ -223,7 +227,7 @@ const ViewClass = () => {
               <th className="th-view-class">Status</th>
               <th>Location</th>
               <th>FSU</th>
-              <th></th>
+              <th className="th-action-class">Action</th>
             </tr>
           </thead>
           <tbody>{renderData()}</tbody>

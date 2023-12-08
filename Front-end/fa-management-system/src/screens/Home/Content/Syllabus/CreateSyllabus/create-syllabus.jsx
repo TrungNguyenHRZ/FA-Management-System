@@ -27,7 +27,7 @@ import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from "react-router-dom";
 import { MdOutlineEdit } from "react-icons/md";
 // import Button from "@mui/material/Button";
 import jwtDecode from "jwt-decode";
@@ -36,7 +36,7 @@ import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import "./create-syllabus.css";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import * as Yup from "yup";
 
 const CreateSyllabus = () => {
@@ -45,6 +45,7 @@ const CreateSyllabus = () => {
   const [groupedUnits, setGroupedUnits] = useState([]);
   const [expanded, setExpanded] = useState("panel1");
   const [open, setOpen] = React.useState(false);
+
   const [openDraft,setOpenDraft] = useState(false);
 
   const handleOpenDraft = () => {
@@ -54,6 +55,19 @@ const CreateSyllabus = () => {
   const handleCloseDraft = () => {
     setOpenDraft(false);
   }
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+
+    if (
+      decodedToken.userInfo[0] !== "Supper_Admin" &&
+      decodedToken.userInfo[0] !== "Admin"
+    ) {
+      navigate("/overview");
+    }
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -92,10 +106,8 @@ const CreateSyllabus = () => {
     console.log(page);
   };
 
-
   let levels = ["fresher", "junior", "senior"];
 
-  const navigate = useNavigate();
   const convertToUnitList = (values) => {
     const unitList = values.unitsByDay.flatMap((day) =>
       day.units.map((unit) => ({
@@ -124,29 +136,29 @@ const CreateSyllabus = () => {
       publish_status : "Active"
     };
     console.log("Dữ liệu đã gửi:", updatedValue);
-    
+
     console.log(selectedFile);
-    apiSyllabusInstance.post("/saveSyllabus", updatedValue).
-    then(response => {
-      if(selectedFile !== null){
+    apiSyllabusInstance.post("/saveSyllabus", updatedValue).then((response) => {
+      if (selectedFile !== null) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        apiSyllabusInstance.post(`/uploadMaterials/${response.data.payload.topic_code}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        apiSyllabusInstance.post(
+          `/uploadMaterials/${response.data.payload.topic_code}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       }
       console.log(response.data);
-      
+
       setTimeout(() => {
         const id = response.data.payload.topic_code; // Thay thế bằng id cụ thể bạn muốn navigate đến
-        navigate(`/view-syllabus/${id}`)
+        navigate(`/view-syllabus/${id}`);
       }, 2200);
     });
-
   };
 
   const handleSaveDraft = (values) => {
@@ -197,10 +209,10 @@ const CreateSyllabus = () => {
       event.preventDefault();
     } else if (event.key === "Backspace" && event.target.value === "") {
       // Remove the field when Backspace is pressed and the field is empty
-      if(index !== 0){
+      if (index !== 0) {
         remove(index);
       }
-      
+
       event.preventDefault();
     }
   };
@@ -210,7 +222,7 @@ const CreateSyllabus = () => {
       const newDayNumber = prevValues.dayNumber.filter(
         (_, index) => index !== indexToRemove
       );
-  
+
       return {
         ...prevValues,
         dayNumber: newDayNumber,
@@ -325,30 +337,29 @@ const CreateSyllabus = () => {
     "Seminar/Workshop",
   ];
 
-
   const validationSchema = Yup.object().shape({
     topic_name: Yup.string().required("Syllabus Name is required"),
     training_audience: Yup.number()
       .positive("Number of audience must be greater than 0")
       .required("Audience is required"),
-    technical_group:Yup.string().required("Technical Requirement is required"),
+    technical_group: Yup.string().required("Technical Requirement is required"),
     version: Yup.number()
-    .positive("Version must be greater than 0")
-    .required("Version is required"),
-    level:Yup.string()
-    .required("Level is required")
-    .oneOf(
+      .positive("Version must be greater than 0")
+      .required("Version is required"),
+    level: Yup.string().required("Level is required").oneOf(
       levels, // Các giá trị cho phép
       "Invalid level"
     ),
-    training_principles:Yup.string().required("Training principles is required")
-    .max(255, "Maximum 255 characters"),
-    learningList:Yup.array().min(2, "Course Objective(s) is required"),
+
+    training_principles: Yup.string()
+      .required("Training principles is required")
+      .max(255, "Maximum 255 characters"),
+    learningList: Yup.array().min(1, "Course Objective(s) is required"),
     unitsByDay: Yup.array().of(
       Yup.object().shape({
         units: Yup.array().of(
           Yup.object().shape({
-            unit_name : Yup.string().required("Unit name is required"),
+            unit_name: Yup.string().required("Unit name is required"),
             contentList: Yup.array().of(
               Yup.object().shape({
                 content: Yup.string().required("Content is required"),
@@ -471,72 +482,90 @@ const CreateSyllabus = () => {
               <Form>
                 {page === 1 ? (
                   <div className="scroll-container">
-                  <div className="create-general">
-                    <label>Syllabus Name:</label>
-                    <Field type="text" name="topic_name" />
-                    <ErrorMessage name="topic_name" component="div" className="error-mess"/>
-                    <label>Version: </label>
-                    <Field type="text" name="version" />
-                    <ErrorMessage name="version" component="div" className="error-mess"/>
-                    <label>Training audience: </label>
-                    <Field type="number" name="training_audience" />
-                    <ErrorMessage name="training_audience" component="div" className="error-mess"/>
-                    <label>Technical requirements:</label>
-                    <Field name="technical_group" as="textarea" />
-                    <ErrorMessage name="technical_group" component="div" className="error-mess"/>
-                    <label>Level</label>
-                    <Field name="level" as="select">
-                      <option>Select one</option>
-                      {levels.map((level) => (
-                        <option value={level}>{level}</option>
-                      ))}
-                    </Field>
-                    <ErrorMessage name="level" component="div" className="error-mess"/>
-                    <label>Course Objective(s)</label>
-                    <FieldArray name="learningList">
-                      {({ push, remove }) => (
-                        <div className="objective-wrapper">
-                          {values.learningList.map((a, lIndex) => (
-                            <div key={lIndex}>
-                              <Field
-                                className="objective-field"
-                                name={`learningList[${lIndex}].learningObjectList.learning_description`}
-                                onKeyDown={(e) =>
-                                  handleKeyPress(e, push, lIndex, remove)
-                                }
-                                type="text"
-                                autocomplete="off"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </FieldArray>
-                    <ErrorMessage name="learningList" component="div" className="error-mess"/>
-                    <div className="file-upload">
-                  <label
-                    htmlFor="fileInput"
-                    className="custom-file-input-label"
-                  >
-                    Choose File
-                  </label>
-                  <input
-                    type="file"
-                    id="fileInput"
-                    className="custom-file-input"
-                    accept=".zip"
-                    onChange={handleFileChange}
-                  />
-                  <div>
-                    {selectedFile
-                      ? selectedFile.name
-                      : null}
+                    <div className="create-general">
+                      <label>Syllabus Name:</label>
+                      <Field type="text" name="topic_name" />
+                      <ErrorMessage
+                        name="topic_name"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <label>Version: </label>
+                      <Field type="text" name="version" />
+                      <ErrorMessage
+                        name="version"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <label>Training audience: </label>
+                      <Field type="number" name="training_audience" />
+                      <ErrorMessage
+                        name="training_audience"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <label>Technical requirements:</label>
+                      <Field name="technical_group" as="textarea" />
+                      <ErrorMessage
+                        name="technical_group"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <label>Level</label>
+                      <Field name="level" as="select">
+                        <option>Select one</option>
+                        {levels.map((level) => (
+                          <option value={level}>{level}</option>
+                        ))}
+                      </Field>
+                      <ErrorMessage
+                        name="level"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <label>Course Objective(s)</label>
+                      <FieldArray name="learningList">
+                        {({ push, remove }) => (
+                          <div className="objective-wrapper">
+                            {values.learningList.map((a, lIndex) => (
+                              <div key={lIndex}>
+                                <Field
+                                  className="objective-field"
+                                  name={`learningList[${lIndex}].learningObjectList.learning_description`}
+                                  onKeyDown={(e) =>
+                                    handleKeyPress(e, push, lIndex, remove)
+                                  }
+                                  type="text"
+                                  autocomplete="off"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </FieldArray>
+                      <ErrorMessage
+                        name="learningList"
+                        component="div"
+                        className="error-mess"
+                      />
+                      <div className="file-upload">
+                        <label
+                          htmlFor="fileInput"
+                          className="custom-file-input-label"
+                        >
+                          Choose File
+                        </label>
+                        <input
+                          type="file"
+                          id="fileInput"
+                          className="custom-file-input"
+                          accept=".zip"
+                          onChange={handleFileChange}
+                        />
+                        <div>{selectedFile ? selectedFile.name : null}</div>
+                      </div>
+                    </div>
                   </div>
-                             
-                  </div>
-                  </div>
-                  </div>
-                  
                 ) : page === 2 ? (
                   //Outlie Screen
                   <div>
@@ -572,11 +601,10 @@ const CreateSyllabus = () => {
                                       Day {day.day_number}
                                     </Typography>
                                     <CiCircleMinus
-                                      onClick={() =>{
-                                        removeDay(dayIndex, setValues)
+                                      onClick={() => {
+                                        removeDay(dayIndex, setValues);
                                         console.log(values.dayNumber);
-                                      }
-                                      }
+                                      }}
                                       className="minus-icon"
                                     />
                                   </div>
@@ -612,7 +640,11 @@ const CreateSyllabus = () => {
                                                         remove(unitIndex)
                                                       }
                                                     />
-                                                    <ErrorMessage name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`} className="error-mess" component="div"/>
+                                                    <ErrorMessage
+                                                      name={`unitsByDay[${dayIndex}].units[${unitIndex}].unit_name`}
+                                                      className="error-mess"
+                                                      component="div"
+                                                    />
 
                                                     <FieldArray
                                                       name={`unitsByDay[${dayIndex}].units[${unitIndex}].contentList`}
@@ -700,7 +732,9 @@ const CreateSyllabus = () => {
                                                                   open={
                                                                     isModalVisible
                                                                   }
+
                                                                   onClose={handleCancel}
+
 
                                                                   name="modal-box"
                                                                   aria-labelledby="modal-modal-title"
@@ -879,7 +913,10 @@ const CreateSyllabus = () => {
                                                                             (
                                                                               error
                                                                             ) => {
-                                                                              if(error.unitsByDay !== undefined) {
+                                                                              if (
+                                                                                error.unitsByDay !==
+                                                                                undefined
+                                                                              ) {
                                                                                 if (
                                                                                   error
                                                                                     .unitsByDay[
@@ -891,37 +928,54 @@ const CreateSyllabus = () => {
                                                                                   console.log(
                                                                                     error
                                                                                   );
-                                                                                  if (error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                  if (
+                                                                                    error
+                                                                                      .unitsByDay[
+                                                                                      selectedContent.dayNumber -
+                                                                                        1
+                                                                                    ]
                                                                                       .units[
                                                                                       selectedContent
                                                                                         .unitIndex
                                                                                     ] !==
                                                                                     undefined
                                                                                   ) {
-                                                                                    if(error.unitsByDay[selectedContent.dayNumber - 1]
-                                                                                      .units[
-                                                                                      selectedContent
-                                                                                        .unitIndex
-                                                                                    ]
-                                                                                      .contentList !== undefined){
-                                                                                      if (error.unitsByDay[selectedContent.dayNumber - 1]
+                                                                                    if (
+                                                                                      error
+                                                                                        .unitsByDay[
+                                                                                        selectedContent.dayNumber -
+                                                                                          1
+                                                                                      ]
                                                                                         .units[
                                                                                         selectedContent
                                                                                           .unitIndex
                                                                                       ]
-                                                                                        .contentList[
-                                                                                        selectedContent
-                                                                                          .contentIndex
-                                                                                      ] !== undefined) {
-
+                                                                                        .contentList !==
+                                                                                      undefined
+                                                                                    ) {
+                                                                                      if (
+                                                                                        error
+                                                                                          .unitsByDay[
+                                                                                          selectedContent.dayNumber -
+                                                                                            1
+                                                                                        ]
+                                                                                          .units[
+                                                                                          selectedContent
+                                                                                            .unitIndex
+                                                                                        ]
+                                                                                          .contentList[
+                                                                                          selectedContent
+                                                                                            .contentIndex
+                                                                                        ] !==
+                                                                                        undefined
+                                                                                      ) {
+                                                                                      } else {
+                                                                                        handleCancel();
+                                                                                      }
                                                                                     } else {
                                                                                       handleCancel();
                                                                                     }
-                                                                                    }else{
-                                                                                      handleCancel();
 
-                                                                                    }
-                                                  
                                                                                     console.log(
                                                                                       error
                                                                                         .unitsByDay[
@@ -957,10 +1011,9 @@ const CreateSyllabus = () => {
                                                                                   );
                                                                                   handleCancel();
                                                                                 }
-                                                                              }else{
-                                                                                handleCancel()
+                                                                              } else {
+                                                                                handleCancel();
                                                                               }
-                                                                              
                                                                             }
                                                                           )
                                                                         }
@@ -1042,11 +1095,15 @@ const CreateSyllabus = () => {
                         onClick={() => {
                           let lastDayNumber = 0;
 
-                          {values.dayNumber.length !== 0 ? lastDayNumber = Number(
-                            values.dayNumber[
-                              Number(values.dayNumber.length - 1)
-                            ]
-                          ) : lastDayNumber = 0};
+                          {
+                            values.dayNumber.length !== 0
+                              ? (lastDayNumber = Number(
+                                  values.dayNumber[
+                                    Number(values.dayNumber.length - 1)
+                                  ]
+                                ))
+                              : (lastDayNumber = 0);
+                          }
                           console.log(lastDayNumber);
                           // Calculate the new day number
                           let newDayNumber = lastDayNumber + 1;
@@ -1082,8 +1139,8 @@ const CreateSyllabus = () => {
                                   ],
                                 };
                               }
-                            });
-                          
+                            );
+
                             return {
                               ...prevValues,
                               dayNumber: updatedDayNumber,
@@ -1158,8 +1215,8 @@ const CreateSyllabus = () => {
                     onClick={() => {
                       switchPage();
                     }
-                      
                     }
+
                   >
                     Save
                   </Button>
@@ -1175,8 +1232,6 @@ const CreateSyllabus = () => {
                     pauseOnHover
                     theme="light"
                   />
-
-
                 </div>
                 <Modal
                   open={open}
@@ -1195,22 +1250,36 @@ const CreateSyllabus = () => {
                     <Button
                       type="submit"
                       onClick={() => {
-                      validateForm().then((errors) => {
-                          if(
-                            errors.topic_name !== undefined || 
+                        validateForm().then((errors) => {
+                          if (
+                            errors.topic_name !== undefined ||
                             errors.version !== undefined ||
                             errors.training_audience !== undefined ||
                             errors.level !== undefined ||
-                            errors.technical_group !== undefined||
-                            errors.learningList !== undefined 
-                            )
-                          {
-                            toast.error( errors.topic_name || 
-                              errors.version ||
-                              errors.training_audience ||
-                              errors.technical_group ||
-                              errors.level ||
-                              errors.learningList  , {
+                            errors.technical_group !== undefined ||
+                            errors.learningList !== undefined
+                          ) {
+                            toast.error(
+                              errors.topic_name ||
+                                errors.version ||
+                                errors.training_audience ||
+                                errors.technical_group ||
+                                errors.level ||
+                                errors.learningList,
+                              {
+                                position: "top-center",
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                              }
+                            );
+                            console.log(errors);
+                          } else if (errors.unitsByDay !== undefined) {
+                            toast.error("Check your Outline Screen !", {
                               position: "top-center",
                               autoClose: 2000,
                               hideProgressBar: false,
@@ -1219,10 +1288,9 @@ const CreateSyllabus = () => {
                               draggable: true,
                               progress: undefined,
                               theme: "light",
-                              });
-                              console.log(errors)
-                          } else if(errors.unitsByDay !== undefined) {
-                            toast.error( "Check your Outline Screen !", {
+                            });
+                          } else if (errors.training_principles !== undefined) {
+                            toast.error(errors.training_principles, {
                               position: "top-center",
                               autoClose: 2000,
                               hideProgressBar: false,
@@ -1231,9 +1299,9 @@ const CreateSyllabus = () => {
                               draggable: true,
                               progress: undefined,
                               theme: "light",
-                              });
-                          } else if(errors.training_principles !== undefined) {
-                            toast.error( errors.training_principles, {
+                            });
+                          } else {
+                            toast.success("Create Successfully!", {
                               position: "top-center",
                               autoClose: 2000,
                               hideProgressBar: false,
@@ -1242,23 +1310,11 @@ const CreateSyllabus = () => {
                               draggable: true,
                               progress: undefined,
                               theme: "light",
-                              });
-                          } else{
-                            toast.success('Create Successfully!', {
-                              position: "top-center",
-                              autoClose: 2000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "light",
-                              });
-
+                            });
                           }
-                        })
+                        });
                         console.log(values.publish_status);
-                        handleClose()
+                        handleClose();
                       }}
                     >
                       Save

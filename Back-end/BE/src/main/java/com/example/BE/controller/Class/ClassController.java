@@ -1,10 +1,9 @@
 package com.example.BE.controller.Class;
 
-import com.example.BE.mapper.ClassMapper;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
-import com.example.BE.model.dto.response.ClassUserRespone;
+import com.example.BE.model.dto.response.ClassUserResponse;
 import com.example.BE.model.entity.*;
 import com.example.BE.model.entity.Class;
 import com.example.BE.repository.ClassUserRepository;
@@ -323,5 +322,67 @@ public class ClassController {
             classUserList.add(createdClassUser);
         }
         return new ResponseEntity<>(classUserList, HttpStatus.CREATED);
+    }
+    @GetMapping(value = {"/getUserByClassId"})
+    public ResponseEntity<ApiResponse<List<ClassUserDTO>>> getUserByClassId(@RequestParam(required = true) int classId) {
+        List<ClassUser> tmp = classUserService.getClassUserListByClassId(classId);
+        List<ClassUserDTO> cuDTO = new ArrayList<>();
+        for (ClassUser c: tmp) {
+            ClassUserDTO existingClassUserDTO = null;
+            for (ClassUserDTO cu: cuDTO) {
+                if (cu.getClassId() == c.getClass_object().getClassId()&& cu.getUserId() == c.getUser().getUserId()) {
+                    existingClassUserDTO = cu;
+                    break;
+                }
+            }
+
+            if (existingClassUserDTO == null) {
+                cuDTO.add(new ClassUserDTO(c));
+            } else {
+                cuDTO.add(existingClassUserDTO);
+            }
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(cuDTO);
+        return ResponseEntity.ok(apiResponse);
+    }
+    @GetMapping(value = {"/getAdminAndTrainerByClassId"})
+    public ResponseEntity<ApiResponse<List<ClassUserResponse>>> getAdminByClassId(@RequestParam(required = true) int classId) {
+        List<ClassUser> tmp = classUserService.getClassUserListByClassId(classId);
+        List<ClassUserDTO> cuDTO = new ArrayList<>();
+
+        for (ClassUser c: tmp) {
+            ClassUserDTO existingClassUserDTO = null;
+            for (ClassUserDTO cu: cuDTO) {
+                if (cu.getClassId() == c.getClass_object().getClassId()&& cu.getUserId() == c.getUser().getUserId()) {
+                    existingClassUserDTO = cu;
+                    break;
+                }
+            }
+
+            if (existingClassUserDTO == null) {
+                cuDTO.add(new ClassUserDTO(c));
+            } else {
+                cuDTO.add(existingClassUserDTO);
+            }
+        }
+        List<ClassUserDTO> admin = new ArrayList<>();
+        for (ClassUserDTO cu:cuDTO) {
+            if(cu.getUserType().equalsIgnoreCase("Admin")){
+                admin.add(cu);
+            }
+        }
+        List<ClassUserDTO> trainer = new ArrayList<>();
+        for (ClassUserDTO cu:cuDTO) {
+            if(cu.getUserType().equalsIgnoreCase("trainer")){
+                trainer.add(cu);
+            }
+        }
+        ClassUserResponse response = new ClassUserResponse();
+        response.setAdminList(admin);
+        response.setTrainerList(trainer);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.ok(response);
+        return ResponseEntity.ok(apiResponse);
     }
 }

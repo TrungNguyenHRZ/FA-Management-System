@@ -11,4 +11,5 @@ public interface ClassUserService {
     ClassUser convert(ClassUserDTO c);
     ClassUser update(ClassUser classUser, int userId, int classId, String userType);
     ClassUser getClassUserById(int userId, int classId);
+    List<ClassUser> getClassUserListByClassId(int classId);
 }
