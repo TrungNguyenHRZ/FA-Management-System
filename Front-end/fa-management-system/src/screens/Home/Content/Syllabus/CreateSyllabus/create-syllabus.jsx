@@ -1139,7 +1139,9 @@ const CreateSyllabus = () => {
                                   ],
                                 };
                               }
-                            });
+
+                          });
+
 
                             return {
                               ...prevValues,
@@ -1211,7 +1213,7 @@ const CreateSyllabus = () => {
                 </Modal>
                   <Button
                     className="form-create-syllabus-submit"
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       switchPage();
                     }
@@ -1311,6 +1313,7 @@ const CreateSyllabus = () => {
                               progress: undefined,
                               theme: "light",
                             });
+                            handleSubmit(values);
                           }
                         });
                         console.log(values.publish_status);
