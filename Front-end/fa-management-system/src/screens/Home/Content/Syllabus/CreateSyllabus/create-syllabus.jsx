@@ -1139,7 +1139,9 @@ const CreateSyllabus = () => {
                                   ],
                                 };
                               }
+
                           });
+
 
                             return {
                               ...prevValues,
