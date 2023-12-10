@@ -1,5 +1,6 @@
 package com.example.BE.controller.Class;
 
+import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.model.dto.ApiResponse;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.dto.response.ClassResponse;
@@ -49,6 +50,19 @@ public class ClassController {
 //        List<Class> classList = classService.findAllClass();
 //        return classMapper.toClassDTOList(classList);
 //    }
+//    @GetMapping(value = {"", "/all"})
+//    public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClass() {
+//        ApiResponse apiResponse = new ApiResponse();
+//        List<Class> clazz = classService.findAllClass();
+//        List<ClassResponse> clazzResponse = new ArrayList<>();
+//        for (Class c: clazz) {
+//            clazzResponse.add(new ClassResponse(c));
+//        }
+//        List<ClassResponse> tmp = classService.sortClassesByCreateDate(clazzResponse);
+//        List<ClassResponse> result = classService.sortByModifiedDate(tmp);
+//        apiResponse.ok(result);
+//        return ResponseEntity.ok(apiResponse);
+//    }
     @GetMapping(value = {"", "/all"})
     public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClass() {
         ApiResponse apiResponse = new ApiResponse();
@@ -57,7 +71,11 @@ public class ClassController {
         for (Class c: clazz) {
             clazzResponse.add(new ClassResponse(c));
         }
-        apiResponse.ok(clazzResponse);
+
+        // Sort by create date
+        List<ClassResponse> result = classService.sortClassesByCreateDate(clazzResponse);
+
+        apiResponse.ok(result);
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping(value = {"/searchByName"})
@@ -347,7 +365,7 @@ public class ClassController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping(value = {"/getAdminAndTrainerByClassId"})
-    public ResponseEntity<ApiResponse<List<ClassUserResponse>>> getAdminByClassId(@RequestParam(required = true) int classId) {
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getAdminByClassId(@RequestParam(required = true) int classId) {
         List<ClassUser> tmp = classUserService.getClassUserListByClassId(classId);
         List<ClassUserDTO> cuDTO = new ArrayList<>();
 
@@ -366,23 +384,35 @@ public class ClassController {
                 cuDTO.add(existingClassUserDTO);
             }
         }
-        List<ClassUserDTO> admin = new ArrayList<>();
+        List<UserResponse> admin = new ArrayList<>();
         for (ClassUserDTO cu:cuDTO) {
             if(cu.getUserType().equalsIgnoreCase("Admin")){
-                admin.add(cu);
+                User us = classUserService.getUserById(cu.getUserId());
+                admin.add(new UserResponse(us));
             }
         }
-        List<ClassUserDTO> trainer = new ArrayList<>();
+        List<UserResponse> trainer = new ArrayList<>();
         for (ClassUserDTO cu:cuDTO) {
             if(cu.getUserType().equalsIgnoreCase("trainer")){
-                trainer.add(cu);
+                User us = classUserService.getUserById(cu.getUserId());
+                trainer.add(new UserResponse(us) );
             }
         }
         ClassUserResponse response = new ClassUserResponse();
+        if(admin.isEmpty()){
+        }
         response.setAdminList(admin);
         response.setTrainerList(trainer);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.ok(response);
         return ResponseEntity.ok(apiResponse);
     }
+    @DeleteMapping(value = {"/DeleteClassUser"})
+    public ResponseEntity<ApiResponse<Integer>> DeleteClassUser(@RequestParam int userId, @RequestParam int classId){
+        ApiResponse apiResponse = new ApiResponse();
+        classUserService.deleteByUserIdAndClassId(userId, classId);
+        apiResponse.okv2("Xoa r");
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }

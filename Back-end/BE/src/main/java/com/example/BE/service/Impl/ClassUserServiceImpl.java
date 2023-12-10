@@ -3,7 +3,9 @@ package com.example.BE.service.Impl;
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.entity.ClassUser;
 import com.example.BE.model.entity.ClassUserId;
+import com.example.BE.model.entity.User;
 import com.example.BE.repository.ClassUserRepository;
+import com.example.BE.repository.UserRepository;
 import com.example.BE.service.ClassService;
 import com.example.BE.service.ClassUserService;
 import com.example.BE.service.UserService;
@@ -20,6 +22,8 @@ public class ClassUserServiceImpl implements ClassUserService {
     UserService userService;
     @Autowired
     ClassService classService;
+    @Autowired
+    UserRepository userRepository;
     @Override
     public List<ClassUser> getAllClassUserList() {
         return classUserRepository.findAll();
@@ -60,5 +64,15 @@ public class ClassUserServiceImpl implements ClassUserService {
     @Override
     public List<ClassUser> getClassUserListByClassId(int classId) {
         return classUserRepository.findAllClassUserByClassId(classId);
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return userRepository.getUserById(id);
+    }
+
+    @Override
+    public void deleteByUserIdAndClassId(int userId, int classId) {
+        classUserRepository.deleteByUserIdAndClassId(userId, classId);
     }
 }
