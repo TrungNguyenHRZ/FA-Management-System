@@ -173,6 +173,7 @@ const DetailClass = () => {
             </div>
           </div>
           <div className="detail-class-syllabus-item-container">
+
             {thisTrainingProgram.syllabuses?.map((item, index) => (
               <div className="detail-class-syllabus-item">
                 <div className="detail-class-syllabus-item-img">Hinh</div>
@@ -184,6 +185,7 @@ const DetailClass = () => {
                   <div className="detail-class-syllabus-item-info-detail">
                     Created on {item.createdDate} by {item.create_by}
                   </div>
+
                 </div>
               </div>
             ))}

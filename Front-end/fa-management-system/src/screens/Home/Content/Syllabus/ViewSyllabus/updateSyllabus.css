@@ -71,4 +71,9 @@
 .modal-title{
 	display: flex;
 	flex-wrap:wrap;
+	justify-content: space-between;
+}
+
+.plus-icon-course {
+	
 }

@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import "./create-trainingprogram.css";
+import { useNavigate } from "react-router";
 
 const SignupSchema = Yup.object().shape({
   training_name: Yup.string()
@@ -207,7 +208,17 @@ const CreateTrainingProgram = () => {
   const [TrainingProgram, setTrainingProgram] = useState({});
   const [showFormChooseSyllabus, setShowFormChooseSyllabus] = useState(false);
   const [trainingProgramID, setTrainingProgramID] = useState(0);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+    if (
+      decodedToken.userInfo[0] !== "Supper_Admin" &&
+      decodedToken.userInfo[0] !== "Admin"
+    ) {
+      navigate("/overview");
+    }
+  }, []);
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {

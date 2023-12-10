@@ -9,7 +9,6 @@ import {
   FaUserGroup,
   FaGraduationCap,
 } from "react-icons/fa6";
-import { AiFillSchedule } from "react-icons/ai";
 import Header from "./Header/header";
 import Footer from "./Footer/footer";
 import jwtDecode from "jwt-decode";
@@ -62,9 +61,6 @@ const Sidebar = () => {
     setPage(10);
   };
 
-  const changeCreateSchedules = () => {
-    setPage(11);
-  };
   const toggleSubMenuSyllabus = () => {
     setSubMenuSyllabus(!isSubMenuSyllabus);
   };
@@ -114,14 +110,18 @@ const Sidebar = () => {
                   View Syllabus
                 </Link>
               </li>
-              <li
-                className={isPage === 3 ? "sidebar-page" : ""}
-                onClick={changeCreateSyllabus}
-              >
-                <Link to={"/create-syllabus"} className="home-link">
-                  Create Syllabus
-                </Link>
-              </li>
+              {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
+                <li
+                  className={isPage === 3 ? "sidebar-page" : ""}
+                  onClick={changeCreateSyllabus}
+                >
+                  <Link to={"/create-syllabus"} className="home-link">
+                    Create Syllabus
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
             </ul>
 
             <li onClick={toggleSubMenuTrainingProgram}>
@@ -141,14 +141,18 @@ const Sidebar = () => {
                   View Training Program
                 </Link>
               </li>
-              <li
-                className={isPage === 10 ? "sidebar-page" : ""}
-                onClick={changeCreateTrainingProgram}
-              >
-                <Link to={"/create-trainingprogram"} className="home-link">
-                  Create Training Program
-                </Link>
-              </li>
+              {info[0] === "Supper_Admin" || info[0] === "Admin" ? (
+                <li
+                  className={isPage === 10 ? "sidebar-page" : ""}
+                  onClick={changeCreateTrainingProgram}
+                >
+                  <Link to={"/create-trainingprogram"} className="home-link">
+                    Create Training Program
+                  </Link>
+                </li>
+              ) : (
+                <></>
+              )}
             </ul>
 
             <li onClick={toggleSubMenuClass}>
@@ -179,7 +183,7 @@ const Sidebar = () => {
                 <></>
               )}
             </ul>
-            {info[0] === "Supper_Admin"  ? (
+            {info[0] === "Supper_Admin" ? (
               <>
                 <li onClick={toggleSubMenuUser}>
                   <FaUserGroup className="icon-sidebar" />

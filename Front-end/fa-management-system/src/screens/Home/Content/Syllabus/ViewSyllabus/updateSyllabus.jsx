@@ -40,6 +40,7 @@ import TextField from "@mui/material/TextField";
 import * as Yup from "yup";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import Snackbar from '@mui/material/Snackbar';
 import { ToastContainer, toast } from 'react-toastify';
 import "./updateSyllabus.css";
 
@@ -54,6 +55,15 @@ const UpdateSyllabus = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [permission,setPermission] = useState("");
+  const [openDraft,setOpenDraft] = useState(false);
+
+  const handleOpenDraft = () => {
+    setOpenDraft(true);
+  }
+
+  const handleCloseDraft = () => {
+    setOpenDraft(false);
+  }
   const handleOpen = () => {
     setOpen(true);
   };
@@ -135,50 +145,26 @@ const UpdateSyllabus = () => {
 
   const formikRef = React.useRef(null);
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await apiSyllabusInstance.get(`/viewSyllabus/${paramName.id}`);
-//         console.log(response.data.payload);
-//         setSyllabus(response.data.payload);
-  
-//         const groupedUnits = response.data.payload.unitList.reduce(
-//           (acc, unit) => {
-//             const { day_number, ...rest } = unit;
-//             if (!acc[day_number]) {
-//               acc[day_number] = { day_number, units: [] };
-//             }
-//             acc[day_number].units.push(rest);
-//             return acc;
-//           },
-//           []
-//         );
-//         const unitsByDay = groupedUnits.filter((day) => day !== undefined);
-  
-//         setGroupedUnits(unitsByDay);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
-  
-//     fetchData();
-//   }, [paramName.id, formikRef]);
-
-  
-// useEffect(() => {
-//   // Code trong useEffect thứ hai nếu cần
-// }, [syllabus, groupedUnits]);
   const initialValues = {
     ...syllabus,
     groupedUnits,
   };
   
   const removeDay = (indexToRemove, setValues) => {
-
+    console.log(indexToRemove);
     setValues((prevValues) => {
       const updatedGroupedUnits = [...prevValues.groupedUnits];
+      const indexInGroupedUnits = initialValues.groupedUnits.findIndex(
+        (day) => day.day_number === indexToRemove + 1
+      );
+      console.log(initialValues.groupedUnits[indexInGroupedUnits]);
+      if(indexInGroupedUnits !== -1){
+        initialValues.groupedUnits[indexInGroupedUnits].units.map((unit) => {
+          deleteUnit(unit.unit_code);
+        })
+      }
       updatedGroupedUnits.splice(indexToRemove, 1);
-      console.log(updatedGroupedUnits)
+      console.log(updatedGroupedUnits);
       return {
         ...prevValues,
         groupedUnits: updatedGroupedUnits,
@@ -208,6 +194,19 @@ const UpdateSyllabus = () => {
     setIsModalVisible(true);
     console.log(isModalVisible);
   };
+  const [validContent,setValidContent] = useState({
+    content:null,
+    deliveryType:null,
+    duration:0
+  })
+
+  const getValidContent = (content,deliveryType, duration) =>{
+    setValidContent({
+      content : content,
+      deliveryType : deliveryType,
+      duration : duration
+    })
+  }
 
   // Hàm đóng modal
   const handleCancel = () => {
@@ -295,7 +294,20 @@ const UpdateSyllabus = () => {
     apiSyllabusInstance.put(
       `/updateSyllabus/${syllabus.topic_code}`,
       updatedValue
-    ).then(response => console.log(response.data));
+    ).then(response => {
+      if(selectedFile !== null){
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        apiSyllabusInstance.post(`/uploadMaterials/${response.data.payload.topic_code}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      }
+      
+    });
 
     apiSyllabusInstance.post(`/saveUnit/${values.topic_code}`,newUnits)
     console.log(newUnits);
@@ -369,7 +381,6 @@ const UpdateSyllabus = () => {
           type: "",
         },
       });
-      // Ngăn chặn sự kiện mặc định (ví dụ: ngăn chặn việc submit form)
       event.preventDefault();
     } else if (event.key === "Backspace" && event.target.value === "") {
       // Remove the field when Backspace is pressed and the field is empty
@@ -497,6 +508,7 @@ const UpdateSyllabus = () => {
       })
     ),
   });
+let check = false;
 
 
   return (
@@ -573,10 +585,20 @@ const UpdateSyllabus = () => {
                       ))}
                     </Field>
                   <ErrorMessage name="level" component="div" className="error-mess"/>
-                  <label>Course Objective(s)</label>
+                  <label>Course Objective(s)</label> 
+                  
                   <FieldArray name="learningList">
                     {({ push, remove }) => (
                       <>
+                      <CiCirclePlus className="plus-icon-course" onClick={() => {
+                         push({
+                          learningObjectList: {
+                          learning_name: "",
+                          learning_description: "",
+                          type: "",
+                          },
+                        });
+                      }}/>
                         {values.learningList &&
                           values.learningList.map((a, lIndex) => (
                             <div key={lIndex}>
@@ -614,9 +636,7 @@ const UpdateSyllabus = () => {
                       ? selectedFile.name
                       : syllabus.training_materials}
                   </div>
-                  <FaCloudUploadAlt 
-                  onClick={handleUpload} 
-                  className="upload-button"/>               
+              
                   </div>
                   
                 </div>
@@ -692,7 +712,7 @@ const UpdateSyllabus = () => {
                                                     <CiCircleMinus
                                                       className="minus-icon"
                                                       type="button"
-                                                      onClick={() =>{
+                                                      onClick={() => {
                                                         if(values.groupedUnits[dayIndex].units[unitIndex].unit_code !== 0) {
                                                           deleteUnit(values.groupedUnits[dayIndex].units[unitIndex].unit_code)
                                                           remove(unitIndex);
@@ -707,7 +727,9 @@ const UpdateSyllabus = () => {
                                                     <FieldArray
                                                       name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList`}
                                                     >
+                                                      
                                                       {({ push, remove }) => (
+                                                        
                                                         <div className="unit-content-container">
                                                           {unit.contentList.map(
                                                             (
@@ -721,11 +743,17 @@ const UpdateSyllabus = () => {
                                                                 id={`${unitIndex}-${contentIndex}`}
                                                                 className="syllabus-content-box"
                                                               >
+                                                              {/* {setValidContent({
+                                                                content: groupedUnits[dayIndex].units[unitIndex].contentList[contentIndex].content,
+                                                                deliveryType: groupedUnits[dayIndex].units[unitIndex].contentList[contentIndex].deliveryType,
+                                                                duration: groupedUnits[dayIndex].units[unitIndex].contentList[contentIndex].duration
+                                                              })} */}
                                                                 <div className="syllabus-content-name">
                                                                   <Field
                                                                     type="text"
                                                                     name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].content`}
                                                                     placeholder="Content"
+                                                                  
                                                                     readOnly
                                                                     className="syllabus-content-name-c"
                                                                   />
@@ -736,6 +764,7 @@ const UpdateSyllabus = () => {
                                                                     type="text"
                                                                     name={`groupedUnits[${dayIndex}].units[${unitIndex}].contentList[${contentIndex}].deliveryType`}
                                                                     placeholder="DeliveryType"
+                                                                    
                                                                     readOnly
                                                                     className="syllabus-content-format-c"
                                                                   />
@@ -806,13 +835,12 @@ const UpdateSyllabus = () => {
                                                                     <p>
                                                                       Edit
                                                                       Content -
-                                                                      Day{" "}
+                                                                      Day{" "}s
                                                                       {
                                                                         selectedContent.dayNumber
                                                                       }
                                                                     </p>
-
-                                                                    <MdClose />
+                                                                  
                                                                     </div>
                                                                     
                                                                     <Form className="form-modal">
@@ -1071,7 +1099,7 @@ const UpdateSyllabus = () => {
                                                                   "",
                                                                 note: "",
                                                                 trainingFormat:
-                                                                  "",
+                                                                  "Offline",
                                                               })
                                                             }
                                                           />
@@ -1096,7 +1124,7 @@ const UpdateSyllabus = () => {
                                                       duration: 0,
                                                       learningObjective: "",
                                                       note: "",
-                                                      trainingFormat: "",
+                                                      trainingFormat: "Offline",
                                                     },
                                                   ],
                                                 })
@@ -1163,6 +1191,17 @@ const UpdateSyllabus = () => {
                     className="form-create-syllabus-draft"
                     type="submit"
                     onClick={() => {
+                      toast.success('Save as Draft Successfully!', {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        });
+                      handleOpenDraft();
                       setFieldValue("publish_status", "Draft");
                       console.log(values.publish_status);
                     }}
@@ -1171,7 +1210,7 @@ const UpdateSyllabus = () => {
                   </Button>
                   <Button
                     className="form-create-syllabus-submit"
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       handleOpen();
                     }
@@ -1202,7 +1241,7 @@ const UpdateSyllabus = () => {
                 >
                   <Box sx={{ ...style1, width: 400 }}>
                     <h4 id="child-modal-title">
-                      Are you sure you want to create this Syllabus ?
+                      Are you sure you want to update this Syllabus ?
                     </h4>
 
                     <Button type="button" onClick={handleClose}>
@@ -1271,10 +1310,19 @@ const UpdateSyllabus = () => {
                               theme: "light",
                               });
                               console.log(errors)
+                              
+                              handleSubmit(values);
+                              check = true;
+                            setTimeout(() => {
+                              const id = paramName.id; // Thay thế bằng id cụ thể bạn muốn navigate đến
+                              navigate(`/view-syllabus/${id}`)
+                            }, 2200);
                           }
+                          handleClose();
                         })
                         console.log(values.publish_status);
-                        handleClose()
+                        
+
                       }}
                     >
                       Save
