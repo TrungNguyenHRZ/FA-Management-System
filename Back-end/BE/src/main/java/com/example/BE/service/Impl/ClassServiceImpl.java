@@ -116,6 +116,29 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public List<ClassResponse> sortClassesByCreateDate(List<ClassResponse> classes) {
+        Collections.sort(classes, new Comparator<ClassResponse>() {
+            @Override
+            public int compare(ClassResponse class1, ClassResponse class2) {
+                Date createDate1 = class1.getCreatedDate();
+                Date createDate2 = class2.getCreatedDate();
+
+                if (createDate1 == null && createDate2 == null) {
+                    return 0;
+                } else if (createDate1 == null) {
+                    return 1; // Đẩy những mục có modifiedDate là null xuống cuối
+                } else if (createDate2 == null) {
+                    return -1; // Đẩy những mục có modifiedDate là null xuống cuối
+                } else {
+                    return createDate2.compareTo(createDate1); // Sắp xếp từ mới nhất đến cũ nhất
+                }
+            }
+        });
+
+        return classes;
+    }
+
+    @Override
     public List<ClassResponse> isEnable(List<Class> classList) {
         List<ClassResponse> classResponseList  = new ArrayList<>();
         for (Class c: classList) {

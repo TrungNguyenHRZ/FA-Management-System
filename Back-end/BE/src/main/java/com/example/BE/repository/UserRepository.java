@@ -1,5 +1,6 @@
 package com.example.BE.repository;
 
+import com.example.BE.dto.response.user.UserResponse;
 import com.example.BE.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,5 +29,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         nativeQuery = true
     )
     Page<User> findAllWithSearch(@Param("keyword") String keyword, Pageable pageable);
-
 }

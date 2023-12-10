@@ -29,5 +29,6 @@ public interface ClassService {
     List<ClassResponse> findClassByFSU(String keyword);
     List<ClassResponse> findClassByLocation(String keyword);
     List<ClassResponse> sortClassesByModifiedDate(List<ClassResponse> classes);
+    List<ClassResponse> sortClassesByCreateDate(List<ClassResponse> classes);
     List<ClassResponse> isEnable(List<Class> classList);
 }

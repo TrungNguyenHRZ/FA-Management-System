@@ -2,6 +2,7 @@ package com.example.BE.service;
 
 import com.example.BE.model.dto.ClassUserDTO;
 import com.example.BE.model.entity.ClassUser;
+import com.example.BE.model.entity.User;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface ClassUserService {
     ClassUser update(ClassUser classUser, int userId, int classId, String userType);
     ClassUser getClassUserById(int userId, int classId);
     List<ClassUser> getClassUserListByClassId(int classId);
+    User getUserById(int id);
+    void deleteByUserIdAndClassId(int userId, int classId);
 }
