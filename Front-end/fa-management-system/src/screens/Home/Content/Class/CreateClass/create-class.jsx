@@ -111,12 +111,13 @@ const CreateClass = () => {
         tmp.create_by = userInfo.name;
         tmp.duration = addTrainingProgram.duration;
         tmp.start_date = addTrainingProgram.start_time;
-
+        console.log(tmp);
         if (values != null) {
           apiClassInstance.post("/CreateClass", tmp).then((response) => {
             console.log(response.data);
             setItem(response.data.payload.classId);
           });
+
           toast.success("Add class successfully !!!");
           openForm1();
         }

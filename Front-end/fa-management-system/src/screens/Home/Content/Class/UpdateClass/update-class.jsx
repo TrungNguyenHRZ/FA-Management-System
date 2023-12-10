@@ -1,14 +1,74 @@
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import apiClassInstance from "../../../../../service/api-class";
+import apiUserInstance from "../../../../../service/api-user";
 import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
+import "./update-class.css";
+import { useNavigate } from "react-router";
+import Authorization from "../../../../Authentication/Auth";
 
 const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [thisClass, setThisClass] = useState({});
   const [listTrainingProgram, setListTrainingProgram] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+  const [listAllUser, setListAllUser] = useState({});
+
+  const [allUser, setAllUser] = useState([]);
+  const [filterAllUser, setFilterAllUser] = useState([]);
+  const [remainUser, setRemainUser] = useState({});
+  const [totalUser, setTotalUser] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    Authorization();
+    const token = Cookies.get("token");
+    const decodedToken = jwtDecode(token);
+
+    if (decodedToken.userInfo[0] !== "Supper_Admin") {
+      navigate("/overview");
+    }
+  }, []);
+
+  useEffect(() => {
+    apiUserInstance
+      .get("/all")
+      .then((response) => {
+        setAllUser(response.data.userResponseList);
+        console.log(response.data.userResponseList);
+        setFilterAllUser(
+          response.data.userResponseList.filter((item) =>
+            item.userType.startsWith("Trainer")
+          )
+        );
+        setRemainUser(
+          response.data.userResponseList.filter((item) =>
+            item.userType.startsWith("Trainer")
+          )[0]
+        );
+
+        apiClassInstance
+          .get(`/getUserByClassId?classId=${classId}`)
+          .then((response2) => {
+            console.log(response2.data.payload);
+            setListAllUser(response2.data.payload);
+            let tmp = [];
+            response.data.userResponseList.map((item1, index1) => {
+              response2.data.payload.map((item2, index2) => {
+                if (item1.id == item2.userId) {
+                  tmp.push(item1);
+                }
+              });
+            });
+            setTotalUser(tmp);
+            console.log(totalUser);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   useEffect(() => {
     apiClassInstance
@@ -38,6 +98,53 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       setUserInfo(decodedToken);
     }
   }, []);
+
+  const changeTrainer = (e) => {
+    if (e.target.value == "Trainer") {
+      setFilterAllUser(
+        allUser.filter((item) => item.userType.startsWith("Trainer"))
+      );
+      setRemainUser(
+        allUser.filter((item) => item.userType.startsWith("Trainer"))[0]
+      );
+    } else {
+      setFilterAllUser(
+        allUser.filter((item) => item.userType.startsWith("Admin"))
+      );
+      setRemainUser(
+        allUser.filter((item) => item.userType.startsWith("Admin"))[0]
+      );
+    }
+  };
+
+  const changeUser = (e) => {
+    setRemainUser(allUser.filter((item) => item.id == e.target.value)[0]);
+    console.log(allUser.filter((item) => item.id == e.target.value)[0]);
+  };
+
+  const addNewUser = (e) => {
+    if (totalUser.filter((item) => item == remainUser)[0] == remainUser) {
+    } else {
+      let flag = true;
+      for (const item of totalUser) {
+        if (item.userType == remainUser.userType) {
+          flag = false;
+        }
+      }
+      if (flag) {
+        setTotalUser([...totalUser, remainUser]);
+      }
+      console.log(remainUser);
+    }
+  };
+
+  const deleteUser = (e) => {
+    const tmp = allUser.filter((item) => item.id == e.target.value)[0];
+    console.log(tmp);
+    const tmp2 = totalUser.filter((item) => item !== tmp);
+    setTotalUser(tmp2);
+    console.log(tmp2);
+  };
 
   const handleCloseForm = (e) => {
     e.preventDefault();
@@ -138,6 +245,72 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       .catch(function (error) {
         console.log(error);
       });
+
+    if (totalUser.length == 2 && listAllUser.length == 2) {
+      let flag = 0;
+      totalUser.map((item, index) => {
+        apiClassInstance.put(
+          `/UpdateClassUser/${listAllUser[flag].userId}/${classId}`,
+          {
+            userId: item.id,
+            classId: classId,
+            userType: "",
+          }
+        );
+        flag = flag + 1;
+      });
+    }
+
+    if (totalUser.length == 1 && listAllUser.length == 1) {
+      totalUser.map((item, index) => {
+        apiClassInstance.put(
+          `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
+          {
+            userId: item.id,
+            classId: classId,
+            userType: "",
+          }
+        );
+      });
+    }
+
+    if (totalUser.length == 2 && listAllUser.length == 1) {
+      apiClassInstance.put(
+        `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
+        {
+          userId: totalUser[0].id,
+          classId: classId,
+          userType: "",
+        }
+      );
+
+      apiClassInstance
+        .post("/CreateClassUser", {
+          userId: totalUser[1].id,
+          classId: classId,
+          userType: "",
+        })
+        .then((response) => {
+          console.log(response.data);
+        });
+    }
+
+    if (totalUser.length > 0 && listAllUser.length == 0) {
+      const tmp = [];
+      for (const item of totalUser) {
+        tmp.push({
+          userId: item.id,
+          classId: classId,
+          userType: item.userType,
+        });
+      }
+      console.log(tmp);
+      apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
+        console.log(response.data);
+      });
+      updateForm();
+    }
+
     updateForm();
   };
 
@@ -275,50 +448,70 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
               </div>
             </div>
           </div>
-          <div className="ip ip-phone-doba">
-            <div className="user-dob">
-              <label htmlFor="">Start date</label>
-              <div className="input-form input-dob">
-                <input
-                  type="date"
-                  defaultValue={thisClass.start_date}
-                  onChange={changeStart_date}
-                />
+          <div className="pickTrainer-form-container">
+            <div className="pickTrainer-form-Pick-container">
+              <div>
+                <div>
+                  <h1>Pick Trainer / Admin</h1>
+                </div>
+                <div className="pickTrainer-form-Pick-Trainer">
+                  <div className="form-add-pick-trainer">
+                    <div className="form-pick-trainer-admin">
+                      <div>Trainer/Admin</div>
+                      <select name="" id="" onChange={changeTrainer}>
+                        <option value="Trainer">Trainer</option>
+                        <option value="Admin">Admin</option>
+                      </select>
+                    </div>
+                    <div className="form-pick-user">
+                      <div>User</div>
+                      <select name="" id="" onChange={changeUser}>
+                        {filterAllUser.map((item, index) => (
+                          <option selected={item == remainUser} value={item.id}>
+                            {item.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-btn-add-container">
+                      <button
+                        className="form-btn-add"
+                        onClick={(e) => addNewUser(e)}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="user-dob">
-              <label htmlFor="">End date</label>
-              <div className="input-form input-dob">
-                <input
-                  type="date"
-                  defaultValue={thisClass.end_date}
-                  onChange={changeEnd_date}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="ip ip-phone-doba">
-            <div className="user-dob">
-              <label htmlFor="">Created date</label>
-              <div className="input-form input-dob">
-                <input
-                  type="date"
-                  defaultValue={thisClass.createdDate}
-                  onChange={changeCreatedDate}
-                />
-              </div>
-            </div>
-
-            <div className="user-dob">
-              <label htmlFor="">Modified date</label>
-              <div className="input-form input-dob">
-                <input
-                  type="date"
-                  defaultValue={thisClass.modified_date}
-                  onChange={changeModified_date}
-                />
+              <div>
+                <div className="picked-user-container-update">
+                  {totalUser?.map((item, index) => (
+                    <div className="picked-user-item">
+                      <div>
+                        Name: {item.name}
+                        <br />
+                        Day of birth: {item.dob}
+                        <br />
+                        <div className="picked-user-role-container">
+                          Role:{" "}
+                          <div
+                            className={`picked-user-role ${
+                              item.userType === "Admin" ? "admin" : "trainer"
+                            }`}
+                          >
+                            {item.userType}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <button value={item.id} onClick={deleteUser}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
