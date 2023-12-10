@@ -280,6 +280,44 @@ const UpdateSyllabus = () => {
   ];
   //   console.log(syllabus);
 
+  const handleSubmitAsDraft = (values) => {
+    // apiSyllabusInstance.put(`/updateSyllabus/${syllabus.topic_code}`,values);
+    const afterValue = convertToUnitList(values);
+    const newUnits = convertToNewUnitList(values);
+
+    const updatedValue = {
+      ...values,
+      unitList: afterValue,
+      groupedUnits: null,
+      publish_status:"Draft"
+    };
+    console.log(updatedValue);
+    apiSyllabusInstance.put(
+      `/updateSyllabus/${syllabus.topic_code}`,
+      updatedValue
+    ).then(response => {
+      if(selectedFile !== null){
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        apiSyllabusInstance.post(`/uploadMaterials/${response.data.payload.topic_code}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      }
+      
+    });
+
+    apiSyllabusInstance.post(`/saveUnit/${values.topic_code}`,newUnits)
+    console.log(newUnits);
+
+    // setTimeout(() => {
+    //   const id = values.topic_code; // Thay thế bằng id cụ thể bạn muốn navigate đến
+    //   navigate(`/view-syllabus/${id}`)
+    // }, 2200);
+  };
   const handleSubmit = (values) => {
     // apiSyllabusInstance.put(`/updateSyllabus/${syllabus.topic_code}`,values);
     const afterValue = convertToUnitList(values);
@@ -289,6 +327,7 @@ const UpdateSyllabus = () => {
       ...values,
       unitList: afterValue,
       groupedUnits: null,
+      publish_status:"Active"
     };
     console.log(updatedValue);
     apiSyllabusInstance.put(
@@ -1189,7 +1228,7 @@ let check = false;
              <div className="form-create-syllabus-action">
                   <Button
                     className="form-create-syllabus-draft"
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       toast.success('Save as Draft Successfully!', {
                         position: "top-center",
@@ -1201,8 +1240,8 @@ let check = false;
                         progress: undefined,
                         theme: "light",
                         });
-                      handleOpenDraft();
                       setFieldValue("publish_status", "Draft");
+                      handleSubmitAsDraft(values);
                       console.log(values.publish_status);
                     }}
                   >
