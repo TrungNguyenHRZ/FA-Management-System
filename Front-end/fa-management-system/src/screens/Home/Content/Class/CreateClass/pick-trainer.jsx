@@ -72,7 +72,15 @@ const PickTrainer = ({ showForm, closeForm, classId, updateForm }) => {
   const addNewUser = (e) => {
     if (totalUser.filter((item) => item == remainUser)[0] == remainUser) {
     } else {
-      setTotalUser([...totalUser, remainUser]);
+      let flag = true;
+      for (const item of totalUser) {
+        if (item.userType == remainUser.userType) {
+          flag = false;
+        }
+      }
+      if (flag) {
+        setTotalUser([...totalUser, remainUser]);
+      }
       console.log(remainUser);
     }
   };
@@ -86,19 +94,21 @@ const PickTrainer = ({ showForm, closeForm, classId, updateForm }) => {
   };
 
   const addAll = (e) => {
-    const tmp = [];
-    for (const item of totalUser) {
-      tmp.push({
-        userId: item.id,
-        classId: classId,
-        userType: item.userType,
+    if (totalUser.length > 0) {
+      const tmp = [];
+      for (const item of totalUser) {
+        tmp.push({
+          userId: item.id,
+          classId: classId,
+          userType: item.userType,
+        });
+      }
+      console.log(tmp);
+      apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
+        console.log(response.data);
       });
+      updateForm();
     }
-    console.log(tmp);
-    apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
-      console.log(response.data);
-    });
-    updateForm();
   };
 
   return (

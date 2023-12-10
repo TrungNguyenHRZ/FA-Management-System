@@ -11,20 +11,50 @@ import "./detailClass.css";
 import dayjs from "dayjs";
 import { useParams, Link } from "react-router-dom";
 import apiClassInstance from "../../../../../service/api-class";
+import apiTrainingProgramInstance from "../../../../../service/ClassApi/api-trainingProgram";
 import React, { useEffect, useState } from "react";
 
 const DetailClass = () => {
   const [startDate, setStartDate] = useState(dayjs("2022-04-17"));
   const [endDate, setEndDate] = useState(dayjs("2023-09-30"));
   const [thisClass, setThisClass] = useState({});
+  const [thisTrainingProgram, setThisTrainingProgram] = useState({});
+  const [listAdmin, setListAdmin] = useState({});
+  const [listTrainer, setListTrainer] = useState({});
+
   const paramName = useParams();
 
   useEffect(() => {
     apiClassInstance
       .get("/" + paramName.id)
-      .then((response) => {
+      .then(async (response) => {
         setThisClass(response.data);
         console.log(response.data);
+
+        apiTrainingProgramInstance
+          .get(`/detail/${response.data.trainingProgram_id}`)
+          .then((response) => {
+            setThisTrainingProgram(response.data.payload);
+            console.log(response.data.payload);
+            apiClassInstance
+              .get(`/getUserByClassId?classId=${paramName.id}`)
+              .then((response2) => {
+                for (const item of response2.data.payload) {
+                  if (item.userType === "Admin") {
+                    setListAdmin(item);
+                    console.log(item);
+                  } else {
+                    setListTrainer(item);
+                  }
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         console.error(error);
@@ -83,10 +113,12 @@ const DetailClass = () => {
                       </div>
                       <div className="detail-class-form-input">
                         <p>10:00 - 11:00</p>
-                        <p>Ho Chi Minh</p>
-                        <p>TruongTT9</p>
-                        <p>NganDDT</p>
-                        <p>FUM</p>
+                        <p>{thisClass.location}</p>
+                        {/* <p>{listTrainer.}</p>
+                        <p>{listAdmin}</p> */}
+                        <p>...</p>
+                        <p>...</p>
+                        <p>{thisClass.fsu}</p>
                       </div>
                     </div>
                   </div>
@@ -129,53 +161,34 @@ const DetailClass = () => {
         </div>
         <div className="detail-class-syllabus">
           <div className="detail-class-syllabus-title">
-            <h1>DevOps Foundation</h1>
+            <h1>{thisTrainingProgram.training_name}</h1>
             <div>
               <p>
                 <i>
-                  31 Days (97 hours) | Modified on 23/07/2022 by{" "}
-                  <strong>Warrior</strong>
+                  {thisTrainingProgram.duration} Days | Modified on{" "}
+                  {thisTrainingProgram.modified_date} by{" "}
+                  <strong>{thisTrainingProgram.modified_by}</strong>
                 </i>
               </p>
             </div>
           </div>
           <div className="detail-class-syllabus-item-container">
-            <div className="detail-class-syllabus-item">
-              <div className="detail-class-syllabus-item-img">Hinh</div>
-              <div className="detail-class-syllabus-item-info">
-                <div className="detail-class-syllabus-item-info-title">
-                  <div>LINUX</div>
-                  <div>Avtive</div>
-                </div>
-                <div className="detail-class-syllabus-item-info-detail">
-                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
-                </div>
-              </div>
-            </div>
-            <div className="detail-class-syllabus-item">
-              <div className="detail-class-syllabus-item-img">Hinh</div>
-              <div className="detail-class-syllabus-item-info">
-                <div className="detail-class-syllabus-item-info-title">
-                  <div>LINUX</div>
-                  <div>Avtive</div>
-                </div>
-                <div className="detail-class-syllabus-item-info-detail">
-                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johny Deep
+
+            {thisTrainingProgram.syllabuses?.map((item, index) => (
+              <div className="detail-class-syllabus-item">
+                <div className="detail-class-syllabus-item-img">Hinh</div>
+                <div className="detail-class-syllabus-item-info">
+                  <div className="detail-class-syllabus-item-info-title">
+                    <div>{item.topic_name}</div>
+                    <div>{item.publish_status}</div>
+                  </div>
+                  <div className="detail-class-syllabus-item-info-detail">
+                    Created on {item.createdDate} by {item.create_by}
+                  </div>
+
                 </div>
               </div>
-            </div>
-            <div className="detail-class-syllabus-item">
-              <div className="detail-class-syllabus-item-img">Hinh</div>
-              <div className="detail-class-syllabus-item-info">
-                <div className="detail-class-syllabus-item-info-title">
-                  <div>LINUX</div>
-                  <div>Active</div>
-                </div>
-                <div className="detail-class-syllabus-item-info-detail">
-                  LIN v2.0 | 4 days (12 hours) | on 23/07/2022 by Johnny Depp
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

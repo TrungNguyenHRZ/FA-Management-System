@@ -113,6 +113,7 @@ public class ViewSyllabusController {
 		for (SyllabusResponse syr : syList) {
 			List<SyllabusObject> syObj = syObjectRepo.getSyllabusObjectBySyllabusCode(syr.getTopic_code());
 			List<SyllabusObjectResponse> syObjsResult = syObjectMapper.toSyObjectList(syObj);
+
 			int duration = 0;
 
 			if(syr.getUnitList() != null){
