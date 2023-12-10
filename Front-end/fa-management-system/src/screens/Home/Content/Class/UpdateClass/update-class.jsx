@@ -19,6 +19,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   const [filterAllUser, setFilterAllUser] = useState([]);
   const [remainUser, setRemainUser] = useState({});
   const [totalUser, setTotalUser] = useState([]);
+  const [totalChange, setTotalChange] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -133,6 +134,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       }
       if (flag) {
         setTotalUser([...totalUser, remainUser]);
+        setTotalChange(true);
       }
       console.log(remainUser);
     }
@@ -156,70 +158,60 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       closeForm();
     }
   };
-  let className = null;
+  const [className, setClassName] = useState();
   const changeName = (e) => {
-    className = e.target.value;
-    console.log(className);
+    setClassName(e.target.value);
   };
 
-  let classCode = null;
+  const [classCode, setClassCode] = useState();
   const changeCode = (e) => {
-    classCode = e.target.value;
+    setClassCode(e.target.value);
   };
 
-  let classDuration = null;
+  const [classDuration, setClassDuration] = useState();
   const changeDuration = (e) => {
-    classDuration = e.target.value;
+    setClassDuration(e.target.value);
   };
 
-  let classLocation = null;
+  const [classLocation, setClassLocation] = useState();
   const changeLocation = (e) => {
-    classLocation = e.target.value;
+    setClassLocation(e.target.value);
   };
 
-  let classFsu = null;
+  const [classFsu, setClassFsu] = useState();
   const changeFsu = (e) => {
-    classFsu = e.target.value;
+    setClassFsu(e.target.value);
   };
 
-  let classStart_date = null;
+  const [classStart_date, setClassStart_date] = useState();
   const changeStart_date = (e) => {
-    classStart_date = e.target.value;
+    classStart_date(e.target.value);
   };
 
-  let classStatus = null;
+  const [classStatus, setClassStatus] = useState();
   const changeStatus = (e) => {
-    classStatus = e.target.value;
+    setClassStatus(e.target.value);
   };
 
   let classEnd_date = null;
-  const changeEnd_date = (e) => {
-    classEnd_date = e.target.value;
-  };
 
-  let classCreate_by = null;
+  const [classCreate_by, setClassCreate_by] = useState();
   const changeCreate_by = (e) => {
-    classCreate_by = e.target.value;
+    setClassCreate_by(e.target.value);
   };
 
   let classCreatedDate = null;
-  const changeCreatedDate = (e) => {
-    classCreatedDate = e.target.value;
-  };
 
   let classModified_date = null;
-  const changeModified_date = (e) => {
-    classModified_date = e.target.value;
-  };
 
-  let classModified_by = null;
+  const [classModified_by, setClassModified_by] = useState();
   const changeModified_by = (e) => {
-    classModified_by = e.target.value;
+    setClassModified_by(e.target.value);
   };
 
-  let classTrainingProgram_id = null;
+  const [classTrainingProgram_id, setClassTrainingProgram_id] = useState();
   const changeTrainingProgram_id = (e) => {
-    classTrainingProgram_id = e.target.value;
+    setClassTrainingProgram_id(e.target.value);
   };
 
   const update = async (e) => {
@@ -246,7 +238,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
         console.log(error);
       });
 
-    if (totalUser.length == 2 && listAllUser.length == 2) {
+    if (totalUser.length == 2 && listAllUser.length == 2 && totalChange) {
       let flag = 0;
       totalUser.map((item, index) => {
         apiClassInstance.put(
@@ -261,7 +253,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       });
     }
 
-    if (totalUser.length == 1 && listAllUser.length == 1) {
+    if (totalUser.length == 1 && listAllUser.length == 1 && totalChange) {
       totalUser.map((item, index) => {
         apiClassInstance.put(
           `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
@@ -274,7 +266,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       });
     }
 
-    if (totalUser.length == 2 && listAllUser.length == 1) {
+    if (totalUser.length == 2 && listAllUser.length == 1 && totalChange) {
       apiClassInstance.put(
         `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
         {
@@ -295,7 +287,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
         });
     }
 
-    if (totalUser.length > 0 && listAllUser.length == 0) {
+    if (totalUser.length > 0 && listAllUser.length == 0 && totalChange) {
       const tmp = [];
       for (const item of totalUser) {
         tmp.push({
@@ -308,7 +300,6 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
         console.log(response.data);
       });
-      updateForm();
     }
 
     updateForm();
