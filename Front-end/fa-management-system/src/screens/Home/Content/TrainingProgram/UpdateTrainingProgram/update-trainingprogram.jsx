@@ -80,29 +80,32 @@ const UpdateTrainingProgram = ({
     setListDeleteSyllabus(new_arr);
   };
 
-  let tmp_trainingprogram = {
-    training_name: thisTrainingProgram.training_name,
-    status: thisTrainingProgram.status,
-    modified_date: "2023-12-01",
-    generalInfo: thisTrainingProgram.generalInfo,
-  };
+  const [training_name, setTraining_name] = useState();
+  const [generalInfo, setGeneralInfo] = useState();
+  const [status, setStatus] = useState();
+
   const ChangeName = (e) => {
-    tmp_trainingprogram.training_name = e.target.value;
+    setTraining_name(e.target.value);
   };
 
   const ChangeInfo = (e) => {
-    tmp_trainingprogram.generalInfo = e.target.value;
+    setGeneralInfo(e.target.value);
   };
   const ChangeStatus = (e) => {
-    tmp_trainingprogram.status = e.target.value;
+    setStatus(e.target.value);
   };
 
-  const SaveTrainingProgram = (e) => {
-    apiTrainingProgramInstance
-      .put(`/update-training-program/${trainingProgramId}`, tmp_trainingprogram)
+  const SaveTrainingProgram = async (e) => {
+    await apiTrainingProgramInstance
+      .put(`/update-training-program/${trainingProgramId}`, {
+        training_name: training_name,
+        generalInfo: generalInfo,
+        status: status,
+      })
       .then((response) => {
         console.log(response.data.payload);
       });
+
     if (listDeleteSyllabus.length > 0) {
       listDeleteSyllabus.map((item, index) => {
         apiTrainingProgramInstance.delete(
