@@ -275,10 +275,11 @@ public class ClassController {
 //            return ResponseEntity.ok(apiResponse);
 //        }
 //    }
+    // sửa này
         @PutMapping(value = {"/UpdateClassUser/{userId}/{classId}"})
         public ResponseEntity<ApiResponse<ClassUser>> updateClassUser(@PathVariable("userId") int userId,
-                                                                             @PathVariable("classId") int classId,
-                                                                             @RequestBody ClassUserDTO classUserDTO) {
+                                                                      @PathVariable("classId") int classId,
+                                                                      @RequestBody ClassUserDTO classUserDTO) {
             ApiResponse apiResponse = new ApiResponse();
             ClassUser classUser = classUserService.getClassUserById(userId, classId);
             if (classUser == null) {

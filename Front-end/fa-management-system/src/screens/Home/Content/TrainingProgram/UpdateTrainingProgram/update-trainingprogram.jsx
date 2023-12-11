@@ -68,10 +68,17 @@ const UpdateTrainingProgram = ({
     setListAddNewSyllabus(new_arr);
   };
 
+  // const addToDeleteList = (e, item2) => {
+  //   setListDeleteSyllabus([...listDeleteSyllabus, item2]);
+  //   let new_arr = addNewSyllabus.filter((item7) => item7 !== item2);
+  //   setAddNewSyllabus(new_arr);
+  // };
   const addToDeleteList = (e, item2) => {
-    setListDeleteSyllabus([...listDeleteSyllabus, item2]);
-    let new_arr = addNewSyllabus.filter((item7) => item7 !== item2);
-    setAddNewSyllabus(new_arr);
+    if (!listDeleteSyllabus.some(item => item.topic_code === item2.topic_code)) { // Kiểm tra trùng lặp trước
+      addNewSyllabus.splice(addNewSyllabus.indexOf(item2), 1);
+      setAddNewSyllabus(addNewSyllabus);
+      setListDeleteSyllabus([...listDeleteSyllabus, item2]);
+    }
   };
 
   const addToRemainList = (e, item4) => {
