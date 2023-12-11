@@ -4,6 +4,7 @@
 }
 .detail-class-form-container {
   display: flex;
+  flex: 2;
   gap: 50px;
 }
 .detail-class-header {
@@ -16,8 +17,8 @@
 }
 .detail-class-content {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  /* flex-direction: column; */
+  /* gap: 10px; */
   padding: 10px;
   height: 520px;
   overflow-y: scroll;
@@ -45,6 +46,7 @@
 }
 .detail-class-syllabus {
   display: flex;
+  flex: 8;
   flex-direction: column;
   gap: 10px;
 }
