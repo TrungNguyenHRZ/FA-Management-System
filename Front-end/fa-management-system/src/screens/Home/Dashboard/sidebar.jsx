@@ -200,14 +200,14 @@ const Sidebar = () => {
                       User list
                     </Link>
                   </li>
-                  <li
+                  {/* <li
                     className={isPage === 8 ? "sidebar-page" : ""}
                     onClick={changeUserPermission}
                   >
                     <Link to={"/user-permission"} className="home-link">
                       User permission
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               </>
             ) : (

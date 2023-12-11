@@ -85,6 +85,10 @@ const Syllabus = () => {
       console.log(firstTime)
   };
 
+  const capitalizeFirstLetter = (text) => {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
   const handlePageClick = (data) => {
     setThisPage(data.selected);
     console.log(data.selected);
@@ -127,7 +131,7 @@ const Syllabus = () => {
               {item.topic_name}
             </Link>
           </td>
-          <td>{item.topic_code}</td>
+          <td>{capitalizeFirstLetter(item.level) }</td>
           <td>{item.createdDate}</td>
           <td className="td-user-list-name">
             <Avatar
@@ -233,7 +237,7 @@ const Syllabus = () => {
             <tr>
               <th>No.</th>
               <th>Syllabus</th>
-              <th>Code</th>
+              <th>Level</th>
               <th>Create on</th>
               <th>Create by</th>
               <th>Duration</th>

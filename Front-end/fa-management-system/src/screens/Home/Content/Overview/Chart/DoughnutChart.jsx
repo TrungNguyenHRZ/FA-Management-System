@@ -1,10 +1,32 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import "./DoughnutChart.css";
+import apiClassInstance from "../../../../../service/api-class";
 
 const DoughnutChart = () => {
+  const [java, setJava] = useState([]);
+  const [react, setReact] = useState([]);
+  const [net, setNet] = useState([]);
+  const [devops, setDevops] = useState([]);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+
+  useEffect(() => {
+    apiClassInstance.get(`/searchClassByKeyword?key=java`).then((response) => {
+      setJava(response.data.payload);
+    });
+    apiClassInstance.get(`/searchClassByKeyword?key=react`).then((response) => {
+      setReact(response.data.payload);
+    });
+    apiClassInstance.get(`/searchClassByKeyword?key=net`).then((response) => {
+      setNet(response.data.payload);
+    });
+    apiClassInstance
+      .get(`/searchClassByKeyword?key=devops`)
+      .then((response) => {
+        setDevops(response.data.payload);
+      });
+  }, []);
 
   useEffect(() => {
     if (chartInstance.current) {
@@ -18,7 +40,7 @@ const DoughnutChart = () => {
         labels: ["Java", "React", "DevOps", ".NET"],
         datasets: [
           {
-            data: [100, 150, 100, 60],
+            data: [java.length, react.length, devops.length, net.length],
             backgroundColor: [
               "rgb(255, 0, 0)",
               "rgb(0, 102, 255)",
@@ -35,7 +57,7 @@ const DoughnutChart = () => {
         chartInstance.current.destroy();
       }
     };
-  }, []);
+  }, [java, react, net, devops]);
   return (
     <div className="donut-container">
       <div>

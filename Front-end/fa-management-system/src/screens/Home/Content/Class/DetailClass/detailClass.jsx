@@ -119,38 +119,6 @@ const DetailClass = () => {
               </AccordionDetails>
             </Accordion>
           </div>
-          <div>
-            <Accordion defaultExpanded={true}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <CalendarTodayIcon />
-                  Time frame
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  <div className="detail-class-calender">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DateCalendar
-                        value={startDate}
-                        onChange={(newValue) => setStartDate(newValue)}
-                      />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DateCalendar
-                        value={endDate}
-                        onChange={(newValue) => setEndDate(newValue)}
-                      />
-                    </LocalizationProvider>
-                  </div>
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </div>
         </div>
         <div className="detail-class-syllabus">
           <div className="detail-class-syllabus-title">
@@ -168,7 +136,7 @@ const DetailClass = () => {
           <div className="detail-class-syllabus-item-container">
             {thisTrainingProgram.syllabuses?.map((item, index) => (
               <div className="detail-class-syllabus-item">
-                <div className="detail-class-syllabus-item-img">Hinh</div>
+                <div className="detail-class-syllabus-item-img"></div>
                 <div className="detail-class-syllabus-item-info">
                   <div className="detail-class-syllabus-item-info-title">
                     <div>{item.topic_name}</div>

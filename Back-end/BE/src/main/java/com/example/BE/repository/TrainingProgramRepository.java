@@ -11,16 +11,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Integer> {
-    @Query("SELECT tp FROM TrainingProgram tp WHERE tp.toggle = true")
+    @Query("SELECT tp FROM TrainingProgram tp WHERE tp.toggle = true order by tp.createdDate desc")
     List<TrainingProgramResponse> findByToggleTrue();
 
-    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name LIKE %?1% AND tp.toggle = true")
+    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.training_name LIKE %?1% AND tp.toggle = true order by tp.createdDate desc")
     List<TrainingProgramResponse> findByTrainingName(@Param("name") String name);
 
     @Query("SELECT tp FROM TrainingProgram tp WHERE tp.training_code = :id AND tp.toggle = true")
     TrainingProgram findByIdWithToggleTrue(@Param("id") int id);
 
-    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.toggle = true AND tp.training_name LIKE %?1% OR tp.create_by LIKE %?2%")
+    @Query("SELECT tp FROM TrainingProgram tp LEFT JOIN FETCH tp.syllabus WHERE tp.toggle = true AND tp.training_name LIKE %?1% OR tp.create_by LIKE %?2% order by tp.createdDate desc")
     List<TrainingProgramResponse> findTPByKeyword(@Param("keyword1") String keyword1, @Param("keyword2") String keyword2);
 
     @Query("SELECT tp FROM TrainingProgram tp")

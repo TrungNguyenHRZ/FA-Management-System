@@ -33,7 +33,6 @@ const Info = () => {
   }, [decodedToken.id]);
 
   const handleSave = async () => {
-    // console.log("User edited: ", listInfoUser);
     const afterValue = {
       name: listInfoUser.name,
       phone: listInfoUser.phone,
