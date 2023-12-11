@@ -240,7 +240,7 @@ const UpdateTrainingProgram = ({
               ))}
             </div>
           </div>
-          2
+        
         </div>
         <div className="training-program-main-update">
           <div className="training-program-content-main-2-update">
