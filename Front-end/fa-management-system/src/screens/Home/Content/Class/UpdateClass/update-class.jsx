@@ -238,7 +238,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
         console.log(error);
       });
 
-    if (totalUser.length == 2 && listAllUser.length == 2 && totalChange) {
+    if (totalUser.length === 2 && listAllUser.length === 2 && totalChange) {
       let flag = 0;
       totalUser.map((item, index) => {
         apiClassInstance.put(
@@ -253,7 +253,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       });
     }
 
-    if (totalUser.length == 1 && listAllUser.length == 1 && totalChange) {
+    if (totalUser.length === 1 && listAllUser.length === 1 && totalChange) {
       totalUser.map((item, index) => {
         apiClassInstance.put(
           `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
@@ -266,19 +266,23 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       });
     }
 
-    if (totalUser.length == 2 && listAllUser.length == 1 && totalChange) {
-      apiClassInstance.put(
-        `/UpdateClassUser/${listAllUser[0].userId}/${classId}`,
-        {
-          userId: totalUser[0].id,
+    if (totalUser.length === 2 && listAllUser.length === 1 && totalChange) {
+      const tmp1 = totalUser[0];
+      const tmp2 = totalUser[1];
+      await apiClassInstance
+        .put(`/UpdateClassUser/${listAllUser[0].userId}/${classId}`, {
+          userId: tmp1.id,
           classId: classId,
           userType: "",
-        }
-      );
+        })
+        .then((response) => {
+          console.log(response.data);
+        });
+      console.log(totalUser);
 
-      apiClassInstance
+      await apiClassInstance
         .post("/CreateClassUser", {
-          userId: totalUser[1].id,
+          userId: tmp2.id,
           classId: classId,
           userType: "",
         })
