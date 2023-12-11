@@ -36,21 +36,6 @@ const DetailClass = () => {
           .then((response) => {
             setThisTrainingProgram(response.data.payload);
             console.log(response.data.payload);
-            apiClassInstance
-              .get(`/getUserByClassId?classId=${paramName.id}`)
-              .then((response2) => {
-                for (const item of response2.data.payload) {
-                  if (item.userType === "Admin") {
-                    setListAdmin(item);
-                    console.log(item);
-                  } else {
-                    setListTrainer(item);
-                  }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
           })
           .catch((error) => {
             console.error(error);
@@ -58,6 +43,14 @@ const DetailClass = () => {
       })
       .catch((error) => {
         console.error(error);
+      });
+    apiClassInstance
+      .get(`/getAdminAndTrainerByClassId?classId=${paramName.id}`)
+      .then((response) => {
+        setListAdmin(response.data.payload.adminList[0]);
+        setListTrainer(response.data.payload.trainerList[0]);
+        console.log(response.data.payload);
+        console.log(response.data.payload.adminList[0]);
       });
   }, []);
 
@@ -116,8 +109,8 @@ const DetailClass = () => {
                         <p>{thisClass.location}</p>
                         {/* <p>{listTrainer.}</p>
                         <p>{listAdmin}</p> */}
-                        <p>...</p>
-                        <p>...</p>
+                        <p>{listTrainer?.name}.</p>
+                        <p>{listAdmin?.name}.</p>
                         <p>{thisClass.fsu}</p>
                       </div>
                     </div>
@@ -173,7 +166,6 @@ const DetailClass = () => {
             </div>
           </div>
           <div className="detail-class-syllabus-item-container">
-
             {thisTrainingProgram.syllabuses?.map((item, index) => (
               <div className="detail-class-syllabus-item">
                 <div className="detail-class-syllabus-item-img">Hinh</div>
@@ -185,7 +177,6 @@ const DetailClass = () => {
                   <div className="detail-class-syllabus-item-info-detail">
                     Created on {item.createdDate} by {item.create_by}
                   </div>
-
                 </div>
               </div>
             ))}
