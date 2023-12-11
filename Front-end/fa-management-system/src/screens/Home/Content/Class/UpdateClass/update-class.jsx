@@ -146,6 +146,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
     const tmp2 = totalUser.filter((item) => item !== tmp);
     setTotalUser(tmp2);
     console.log(tmp2);
+    setTotalChange(true);
   };
 
   const handleCloseForm = (e) => {
@@ -215,6 +216,8 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
   };
 
   const update = async (e) => {
+    console.log(totalUser);
+    console.log(listAllUser);
     await apiClassInstance
       .put(`/UpdateClass/${classId}`, {
         className: className,
@@ -246,7 +249,7 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
           {
             userId: item.id,
             classId: classId,
-            userType: "",
+            userType: item.userType,
           }
         );
         flag = flag + 1;
@@ -260,35 +263,34 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
           {
             userId: item.id,
             classId: classId,
-            userType: "",
+            userType: item.userType,
           }
         );
       });
     }
 
     if (totalUser.length === 2 && listAllUser.length === 1 && totalChange) {
-      const tmp1 = totalUser[0];
-      const tmp2 = totalUser[1];
       await apiClassInstance
-        .put(`/UpdateClassUser/${listAllUser[0].userId}/${classId}`, {
-          userId: tmp1.id,
-          classId: classId,
-          userType: "",
-        })
+        .delete(
+          `/DeleteClassUser?userId=${listAllUser[0].userId}&classId=${classId}`
+        )
         .then((response) => {
-          console.log(response.data);
+          console.log(response.data.payload);
         });
       console.log(totalUser);
 
-      await apiClassInstance
-        .post("/CreateClassUser", {
-          userId: tmp2.id,
+      const tmp = [];
+      for (const item of totalUser) {
+        tmp.push({
+          userId: item.id,
           classId: classId,
-          userType: "",
-        })
-        .then((response) => {
-          console.log(response.data);
+          userType: item.userType,
         });
+      }
+      console.log(tmp);
+      apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
+        console.log(response.data);
+      });
     }
 
     if (totalUser.length > 0 && listAllUser.length == 0 && totalChange) {
@@ -303,6 +305,31 @@ const UpdateClass = ({ showForm, closeForm, classId, updateForm }) => {
       console.log(tmp);
       apiClassInstance.post("/CreateMultiClassUser", tmp).then((response) => {
         console.log(response.data);
+      });
+    }
+
+    if (totalUser.length == 0 && listAllUser.length >= 1 && totalChange) {
+      listAllUser.map((item, index) => {
+        apiClassInstance
+          .delete(`/DeleteClassUser?userId=${item.userId}&classId=${classId}`)
+          .then((response) => {
+            console.log(response.data.payload);
+          });
+      });
+    }
+
+    if (totalUser.length == 1 && listAllUser.length == 2 && totalChange) {
+      listAllUser.map((item, index) => {
+        apiClassInstance
+          .delete(`/DeleteClassUser?userId=${item.userId}&classId=${classId}`)
+          .then((response) => {
+            console.log(response.data.payload);
+          });
+      });
+      apiClassInstance.post("/CreateClassUser", {
+        userId: totalUser[0].id,
+        classId: classId,
+        userType: totalUser[0].userType,
       });
     }
 
