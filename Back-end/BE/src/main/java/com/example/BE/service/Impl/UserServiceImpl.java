@@ -165,117 +165,117 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    @Override
-//    public UserResponse updateInfoUser(UpdateUserRequest request) {
-//        try {
-//            log.info("Update user with request :{}", request.toString());
-//            String email = SecurityUtils.getUsernameAuth();
-//            User userAdmin = userRepository.findByEmail(email).orElse(null);
-//            log.info("User Admin : {}", userAdmin);
-//            if (Objects.isNull(userAdmin)) {
-//                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
-//            }
-//
-//            // check permission
-//            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().getUserManagement());
-//            if (!isPermission) {
-//                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
-//            }
-//
-//            User user = userRepository.findByUserId(request.getId()).orElse(null);
-//            if (Objects.isNull(user)) {
-//                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
-//            }
-//
-//            if (StringUtils.isNoneBlank(request.getName())) {
-//                user.setName(request.getName());
-//            }
-//
-//            if (StringUtils.isNotBlank(request.getDob())) {
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//                Date dateOfBirth = dateFormat.parse(request.getDob());
-//                user.setDob(dateOfBirth);
-//            }
-//
-//            if (StringUtils.isNotBlank(request.getPhone())) {
-//                user.setPhone(request.getPhone());
-//            }
-//
-//            if (Objects.nonNull(request.getGenderTrueMale())) {
-//                String gender = request.getGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
-//                user.setGender(gender);
-//            }
-//            if (Objects.nonNull(request.getStatus())) {
-//
-//                user.setStatus(request.getStatus().getStatus());
-//            }
-//
-//            user.setModifiedBy(userAdmin.getName());
-//            user.setModifiedDate(new Date());
-//            user = userRepository.save(user);
-//            return new UserResponse(user);
-//        } catch (BusinessException e) {
-//            throw e;
-//        } catch (Exception e) {
-//            throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
-//        }
-//    }
-@Override
-public UserResponse updateInfoUser(UpdateUserRequest request) {
-    try {
-        log.info("Update user with request :{}", request.toString());
-        String email = SecurityUtils.getUsernameAuth();
-        User user = userRepository.findByEmail(email).orElse(null);
-        log.info("User : {}", user);
+    @Override
+    public UserResponse updateInfoUser(UpdateUserRequest request) {
+        try {
+            log.info("Update user with request :{}", request.toString());
+            String email = SecurityUtils.getUsernameAuth();
+            User userAdmin = userRepository.findByEmail(email).orElse(null);
+            log.info("User Admin : {}", userAdmin);
+            if (Objects.isNull(userAdmin)) {
+                throw new BusinessException(ErrorMessage.USER_ADMIN_INVALID);
+            }
 
-        if (Objects.isNull(user)) {
-            throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
-        }
-
-        // check if the user is updating their own information
-        if (user.getUserId()!= (request.getId())) {
             // check permission
-            boolean isPermission = userPermissionService.checkUpdatePermission(user.getPermission().getUserManagement());
+            boolean isPermission = userPermissionService.checkUpdatePermission(userAdmin.getPermission().getUserManagement());
             if (!isPermission) {
                 throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
             }
-        }
 
-        // validate user input
-        // ... (implement validation logic) ...
+            User user = userRepository.findByUserId(request.getId()).orElse(null);
+            if (Objects.isNull(user)) {
+                throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+            }
 
-        if (StringUtils.isNoneBlank(request.getName())) {
-            user.setName(request.getName());
-        }
+            if (StringUtils.isNoneBlank(request.getName())) {
+                user.setName(request.getName());
+            }
 
-        if (StringUtils.isNotBlank(request.getDob())) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date dateOfBirth = dateFormat.parse(request.getDob());
-            user.setDob(dateOfBirth);
-        }
+            if (StringUtils.isNotBlank(request.getDob())) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date dateOfBirth = dateFormat.parse(request.getDob());
+                user.setDob(dateOfBirth);
+            }
 
-        if (StringUtils.isNotBlank(request.getPhone())) {
-            user.setPhone(request.getPhone());
-        }
+            if (StringUtils.isNotBlank(request.getPhone())) {
+                user.setPhone(request.getPhone());
+            }
 
-        if (Objects.nonNull(request.getGenderTrueMale())) {
-            String gender = request.getGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
-            user.setGender(gender);
-        }
-        if (Objects.nonNull(request.getStatus())) {
-            user.setStatus(request.getStatus().getStatus());
-        }
+            if (Objects.nonNull(request.getGenderTrueMale())) {
+                String gender = request.getGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
+                user.setGender(gender);
+            }
+            if (Objects.nonNull(request.getStatus())) {
 
-        user.setModifiedBy(user.getName());
-        user.setModifiedDate(new Date());
-        user = userRepository.save(user);
-        return new UserResponse(user);
-    } catch (BusinessException e) {
-        throw e;
-    } catch (Exception e) {
-        throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
+                user.setStatus(request.getStatus().getStatus());
+            }
+
+            user.setModifiedBy(userAdmin.getName());
+            user.setModifiedDate(new Date());
+            user = userRepository.save(user);
+            return new UserResponse(user);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
+        }
     }
-}
+//@Override
+//public UserResponse updateInfoUser(UpdateUserRequest request) {
+//    try {
+//        log.info("Update user with request :{}", request.toString());
+//        String email = SecurityUtils.getUsernameAuth();
+//        User user = userRepository.findByEmail(email).orElse(null);
+//        log.info("User : {}", user);
+//
+//        if (Objects.isNull(user)) {
+//            throw new BusinessException(ErrorMessage.USER_NOT_FOUND);
+//        }
+//
+//        // check if the user is updating their own information
+//        if (user.getUserId()!= (request.getId())) {
+//            // check permission
+//            boolean isPermission = userPermissionService.checkUpdatePermission(user.getPermission().getUserManagement());
+//            if (!isPermission) {
+//                throw new BusinessException(ErrorMessage.USER_DO_NOT_PERMISSION);
+//            }
+//        }
+//
+//        // validate user input
+//        // ... (implement validation logic) ...
+//
+//        if (StringUtils.isNoneBlank(request.getName())) {
+//            user.setName(request.getName());
+//        }
+//
+//        if (StringUtils.isNotBlank(request.getDob())) {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//            Date dateOfBirth = dateFormat.parse(request.getDob());
+//            user.setDob(dateOfBirth);
+//        }
+//
+//        if (StringUtils.isNotBlank(request.getPhone())) {
+//            user.setPhone(request.getPhone());
+//        }
+//
+//        if (Objects.nonNull(request.getGenderTrueMale())) {
+//            String gender = request.getGenderTrueMale() ? Gender.MALE.getGender() : Gender.FEMALE.getGender();
+//            user.setGender(gender);
+//        }
+//        if (Objects.nonNull(request.getStatus())) {
+//            user.setStatus(request.getStatus().getStatus());
+//        }
+//
+//        user.setModifiedBy(user.getName());
+//        user.setModifiedDate(new Date());
+//        user = userRepository.save(user);
+//        return new UserResponse(user);
+//    } catch (BusinessException e) {
+//        throw e;
+//    } catch (Exception e) {
+//        throw new BusinessException(ErrorMessage.USER_UPDATE_FAIL);
+//    }
+//}
 
     @Override
     public UserResponse gantPermissionUser(GantPermissionUserRequest request) {
